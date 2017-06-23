@@ -5,6 +5,7 @@ import {Route, IndexRedirect, IndexRoute, Link} from 'react-router'
 import Scratchpad from './scratchpad'
 import Whiteboard from './whiteboard'
 import Chat from './chat'
+import Board from './board'
 
 const Index = ({children}) => <div>
   <h1>Demos!</h1>
@@ -24,6 +25,11 @@ const Index = ({children}) => <div>
     The whiteboard demonstrates the <i>journal</i> pattern, a way to use Firebase
     to synchronize the state of Redux stores on all collaborators machines.
   </p>
+
+  <h2><Link to='demos/board/test'>Board</Link></h2>
+  <p>
+    Our preliminary board for Hot Spot
+  </p>
 </div>
 
 export default <Route path="/demos" component={({children}) => children}>
@@ -31,4 +37,5 @@ export default <Route path="/demos" component={({children}) => children}>
   <Route path='scratchpad/:title' component={Scratchpad}/>
   <Route path='whiteboard/:title' component={Whiteboard}/>
   <Route path='chat/:room' component={Chat}/>
+  <Route path='board/:id' component={Board}/>
 </Route>

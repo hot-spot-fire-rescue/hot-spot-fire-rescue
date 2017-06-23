@@ -1,0 +1,38 @@
+.row {
+  margin: 0;
+  line-height: 0px;
+}
+
+.cell {
+  border: 1px solid black;
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  position: relative;
+}
+
+.horizontal-wall {
+  width: 32px;
+  height: 5px;
+  position: absolute;
+  background-color: black;
+  top: 26px;
+}
+
+.vertical-wall {
+  width: 5px;
+  height: 32px;
+  position: absolute;
+  background-color: black;
+  left: 26px;
+}
+
+.player {
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: green;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
