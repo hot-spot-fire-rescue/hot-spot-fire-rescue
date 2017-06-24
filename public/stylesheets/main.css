@@ -12,7 +12,7 @@
 }
 
 .horizontal-wall {
-  width: 32px;
+  width: 30px;
   height: 5px;
   position: absolute;
   background-color: black;
@@ -21,7 +21,7 @@
 
 .vertical-wall {
   width: 5px;
-  height: 32px;
+  height: 30px;
   position: absolute;
   background-color: black;
   left: 26px;
