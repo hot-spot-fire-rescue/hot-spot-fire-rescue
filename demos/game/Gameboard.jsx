@@ -15,7 +15,7 @@ export const Gameboard = ({cells, boundaries, fetchInitialData}) => {
     alert(`this is cell #${num}`)
   }
 
-  // do this in Router's onEnter
+  // Not sure if this is the right place to fetch initial data
   if (cells.isEmpty()) {
     fetchInitialData()
   }
