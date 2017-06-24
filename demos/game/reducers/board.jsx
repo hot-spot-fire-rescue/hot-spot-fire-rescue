@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux'
-import {Map} from 'immutable'
+import {OrderedMap} from 'immutable'
 
 `
 Legend for Cells:
@@ -27,21 +27,18 @@ export const createCell = (number) => ({
 })
 
 export const CREATE_BOUNDARY = 'CREATE_BOUNDARY'
-export const createBoundary = (location, kind, position) => ({
+export const createBoundary = (location, kind, status) => ({
   type: CREATE_BOUNDARY,
   location,
   kind,
-  position,
-  status: 0
+  status
 })
-
-// -- // -- // Setup // -- // -- //
 
 // -- // -- // State // -- // -- //
 
 const initial = {
-  cells: Map(),
-  boundaries: Map()
+  cells: OrderedMap(),
+  boundaries: OrderedMap()
 }
 
 // -- // -- // Reducer // -- // -- //
@@ -63,7 +60,6 @@ const boardReducer = (state = initial, action) => {
     return {...state,
       boundaries: state.boundaries.setIn([action.location], {
         kind: action.kind,
-        position: action.position,
         status: action.status
       })
     }
