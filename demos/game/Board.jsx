@@ -92,12 +92,12 @@ export default class extends React.Component {
     this.setState({store})
   }
 
-  // clear = () => {
-  //   // Blow away the journal
-  //   this.props.fireRef.set(null)
-  //   // Reload the store
-  //   this.mountStoreAtRef(this.props.fireRef)
-  // }
+  clear = () => {
+    // Blow away the journal
+    this.props.fireRef.set(null)
+    // Reload the store
+    this.mountStoreAtRef(this.props.fireRef)
+  }
 
   render() {
     const {store} = this.state || {}
@@ -116,6 +116,7 @@ export default class extends React.Component {
     // That's fine!
     return <Provider store={store}>
       <div className="gameboard">
+        <button onClick={this.clear}>clear</button>
         <Gameboard/>
       </div>
     </Provider>

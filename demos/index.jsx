@@ -5,7 +5,7 @@ import {Route, IndexRedirect, IndexRoute, Link} from 'react-router'
 import Scratchpad from './scratchpad'
 import Whiteboard from './whiteboard'
 import Chat from './chat'
-import Board from './board'
+import Game from './game'
 
 const Index = ({children}) => <div>
   <h1>Demos!</h1>
@@ -26,7 +26,7 @@ const Index = ({children}) => <div>
     to synchronize the state of Redux stores on all collaborators machines.
   </p>
 
-  <h2><Link to='demos/board/test'>Board</Link></h2>
+  <h2><Link to='demos/game/test'>Board</Link></h2>
   <p>
     Our preliminary board for Hot Spot
   </p>
@@ -37,5 +37,5 @@ export default <Route path="/demos" component={({children}) => children}>
   <Route path='scratchpad/:title' component={Scratchpad}/>
   <Route path='whiteboard/:title' component={Whiteboard}/>
   <Route path='chat/:room' component={Chat}/>
-  <Route path='board/:id' component={Board}/>
+  <Route path='game/:id' component={Game}/>
 </Route>

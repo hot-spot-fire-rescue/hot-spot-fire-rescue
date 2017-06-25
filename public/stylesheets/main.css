@@ -1,3 +1,9 @@
+.gameboard {
+  margin: 0;
+  line-height: 0px;
+  width: 330px;
+}
+
 .row {
   margin: 0;
   line-height: 0px;
@@ -12,7 +18,7 @@
 }
 
 .horizontal-wall {
-  width: 32px;
+  width: 30px;
   height: 5px;
   position: absolute;
   background-color: black;
@@ -21,10 +27,42 @@
 
 .vertical-wall {
   width: 5px;
-  height: 32px;
+  height: 30px;
   position: absolute;
   background-color: black;
   left: 26px;
+}
+
+.vertical-door-closed {
+  width: 5px;
+  height: 30px;
+  position: absolute;
+  background-color: orange;
+  left: 26px;
+}
+
+.vertical-door-open {
+  width: 5px;
+  height: 30px;
+  position: absolute;
+  background-color: blue;
+  left: 26px;
+}
+
+.horizontal-door-closed {
+  width: 30px;
+  height: 5px;
+  position: absolute;
+  background-color: orange;
+  top: 26px;
+}
+
+.horizontal-door-open {
+  width: 30px;
+  height: 5px;
+  position: absolute;
+  background-color: blue;
+  top: 26px;
 }
 
 .player {
