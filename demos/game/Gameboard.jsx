@@ -1,9 +1,10 @@
 'use strict'
 import React from 'react'
 import {connect} from 'react-redux'
+
 import {switchDoor, switchWall} from './reducers/board'
 import {setupBoard} from './utils/setup'
-import {setPlayer} from './reducers/player'
+import {setPlayer, subtractAp} from './reducers/player'
 
 class Gameboard extends React.Component {
   componentWillMount() {
@@ -19,7 +20,8 @@ class Gameboard extends React.Component {
       cells,
       boundaries,
       fetchInitialData,
-      setPlayerLocation} = this.props
+      setPlayerLocation,
+      useAp} = this.props
 
     const handleWallDamage = (event, coord, status) => {
       event.stopPropagation()
@@ -27,14 +29,13 @@ class Gameboard extends React.Component {
       if (status === 0) {
         newStatus = 1
       } else if (status === 1) {
-        console.log('heloo2')
         newStatus = 2
       }
-      console.log('new WALLLL status', newStatus)
       this.props.changeWallStatus(coord, newStatus)
     }
 
     const handleDoorSwitch = (event, coord, status) => {
+      event.stopPropagation()
       let newStatus = (status === 0) ? 1 : 0
       this.props.openOrCloseDoor(coord, newStatus)
     }
@@ -58,22 +59,37 @@ class Gameboard extends React.Component {
       }
     }
 
-    const alertCell = (event, cellNum) => {
+    const findApCost = (next) => {
+      const nextCellStatus = cells.get(next).status
+      if (nextCellStatus === 0) {
+        return 1
+      } else if (nextCellStatus === 1) { // TODO: check if carrying victim
+        return 2
+      }
+    }
+
+    const handleCellClick = (event, cellNum) => {
       event.stopPropagation()
-      // check if there is enough AP
-      const currentPlayerLocation = players[currentPlayerId].location
+      const currentPlayer = players[currentPlayerId]
+      const currentPlayerLocation = currentPlayer.location
+      const apCost = findApCost(cellNum)
+
       if (cellNum !== currentPlayerLocation &&
           isAdjacent(cellNum, currentPlayerLocation) &&
-          isPassable(cellNum, currentPlayerLocation)) {
+          isPassable(cellNum, currentPlayerLocation) &&
+          currentPlayer.ap - apCost >= 0) {
         setPlayerLocation(currentPlayerId, cellNum)
-        // alert(`moved to cell #${cellNum}`)
+        useAp(currentPlayerId, apCost)
       } else {
         alert('this is not a legal move :(')
       }
     }
 
+    const remainingAp = players[currentPlayerId] ? players[currentPlayerId].ap : 0
+
     return (
       <div>
+        <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
         {
           cells.map(cell => {
             const eastBoundaryCoord = `[${cell.number}, ${cell.number + 1}]`
@@ -85,7 +101,7 @@ class Gameboard extends React.Component {
               <div key={cell.number}
               className="cell"
               id={cell.number}
-              onClick={(evt) => alertCell(evt, cell.number)}>
+              onClick={(evt) => handleCellClick(evt, cell.number)}>
                 {
                   player
                   ? <div className='player'
@@ -192,6 +208,9 @@ const mapDispatch = dispatch => ({
   },
   setPlayerLocation: (id, location) => {
     dispatch(setPlayer(id, location))
+  },
+  useAp: (id, newLocation) => {
+    dispatch(subtractAp(id, newLocation))
   }
 })
 
