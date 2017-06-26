@@ -15,7 +15,7 @@ class Gameboard extends React.Component {
   render() {
     const {
       players,
-      currentPlayer,
+      currentPlayerId,
       cells,
       boundaries,
       fetchInitialData,
@@ -32,8 +32,10 @@ class Gameboard extends React.Component {
     }
 
     const isPassable = (next, current) => {
-      const sortedCoords = [next, current].sort()
-      const boundary = boundaries.get(`[${sortedCoords[0]}, ${sortedCoords[1]}]`)
+      const sortedCoords = next < current ? [next, current] : [current, next]
+      const boundaryCoords = `[${sortedCoords[0]}, ${sortedCoords[1]}]`
+      const boundary = boundaries.get(boundaryCoords)
+
       if (!boundary) {
         return true
       } else if (boundary.kind === 'door') {
@@ -46,12 +48,12 @@ class Gameboard extends React.Component {
     const alertCell = (event, cellNum) => {
       event.stopPropagation()
       // check if there is enough AP
-      if (cellNum !== currentPlayer.location &&
-          isAdjacent(cellNum, currentPlayer.location) &&
-          isPassable(cellNum, currentPlayer.location)) {
-        // updateCurrentPlayerLocation(currentPlayer.id, cellNum)
-        // call 'setPlayerLocation' on "End my turn" button
-        alert(`moved to cell #${cellNum}`)
+      const currentPlayerLocation = players[currentPlayerId].location
+      if (cellNum !== currentPlayerLocation &&
+          isAdjacent(cellNum, currentPlayerLocation) &&
+          isPassable(cellNum, currentPlayerLocation)) {
+        setPlayerLocation(currentPlayerId, cellNum)
+        // alert(`moved to cell #${cellNum}`)
       } else {
         alert('this is not a legal move :(')
       }
@@ -134,7 +136,7 @@ const mapState = ({board, player}) => ({
   cells: board.cells,
   boundaries: board.boundaries,
   players: player.players,
-  currentPlayer: player.current
+  currentPlayerId: player.currentId
 })
 
 const mapDispatch = dispatch => ({

@@ -35,7 +35,7 @@ export const setPlayer = (id, location) => ({
 
 const initial = {
   players: [],
-  current: {}
+  currentId: 0
 }
 
 // -- // -- // Reducer // -- // -- //
@@ -49,7 +49,7 @@ const playerReducer = (state = initial, action) => {
 
   case UPDATE_CURRENT_PLAYER:
     return {...state,
-      current: action.player
+      currentId: action.player
     }
 
   case CREATE_PLAYER:
