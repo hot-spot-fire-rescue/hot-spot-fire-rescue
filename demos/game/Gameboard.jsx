@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 import {setupBoard} from './utils/setup'
 
-export const Gameboard = ({cells, boundaries, fetchInitialData}) => {
+export const Gameboard = ({cells, boundaries, players, fetchInitialData}) => {
   const alertWall = (event, coord) => {
     event.stopPropagation()
     alert(`this is a boundary with coordinates ${coord}`)
@@ -28,11 +28,19 @@ export const Gameboard = ({cells, boundaries, fetchInitialData}) => {
           const southBoundaryCoord = `[${cell.number}, ${cell.number + 10}]`
           const eastBoundary = boundaries.get(eastBoundaryCoord)
           const southBoundary = boundaries.get(southBoundaryCoord)
+          const player = players.find(player => player.location === cell.number)
+          console.log(player, "~~~~~~~~~~~~")
           return (
             <div key={cell.number}
             className="cell"
             id={cell.number}
             onClick={(evt) => alertCell(evt, cell.number)}>
+              {
+                player 
+                ? <div className='player'
+                  id={player.id} style={{backgroundColor: player.color}}/>
+                : null
+              }
               {
                 eastBoundary && eastBoundary.kind === 'wall'
                 ? <div className='vertical-wall'
@@ -85,9 +93,10 @@ export const Gameboard = ({cells, boundaries, fetchInitialData}) => {
 
 // -- // -- // Container // -- // -- //
 
-const mapState = ({board}) => ({
+const mapState = ({board, player}) => ({
   cells: board.cells,
-  boundaries: board.boundaries
+  boundaries: board.boundaries,
+  players: player.players
 })
 
 const mapDispatch = dispatch => ({
