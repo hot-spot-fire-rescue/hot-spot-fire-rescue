@@ -31,6 +31,13 @@ export const setPlayer = (id, location) => ({
   location
 })
 
+export const SUBTRACT_AP = 'SUBTRACT_AP'
+export const subtractAp = (id, points) => ({
+  type: SUBTRACT_AP,
+  id,
+  points
+})
+
 // -- // -- // State // -- // -- //
 
 const initial = {
@@ -66,10 +73,18 @@ const playerReducer = (state = initial, action) => {
       players: state.players.map(player => {
         if (player.id === action.id) {
           player.location = action.location
-          return player
-        } else {
-          return player
         }
+        return player
+      })
+    }
+
+  case SUBTRACT_AP:
+    return {...state,
+      players: state.players.map(player => {
+        if (player.id === action.id) {
+          player.ap -= action.points
+        }
+        return player
       })
     }
   }
