@@ -3,7 +3,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {switchDoor, switchWall} from './reducers/board'
 import {setupBoard} from './utils/setup'
-import {setPlayer} from './reducers/player'
+import {setPlayer, setNextPlayer} from './reducers/player'
 
 class Gameboard extends React.Component {
   componentWillMount() {
@@ -19,16 +19,17 @@ class Gameboard extends React.Component {
       cells,
       boundaries,
       fetchInitialData,
-      setPlayerLocation} = this.props
+      setPlayerLocation,
+      setNextPlayer} = this.props
 
     const handleWallSwitch = (event, coord, status) => {
       event.stopPropagation()
-      let newStatus = (status === 0) ? 1 : 0
+      const newStatus = (status === 0) ? 1 : 0
       this.props.changeWallStatus(coord, newStatus)
     }
 
     const handleDoorSwitch = (event, coord, status) => {
-      let newStatus = (status === 0) ? 1 : 0
+      const newStatus = (status === 0) ? 1 : 0
       this.props.openCloseDoor(coord, newStatus)
     }
 
@@ -63,6 +64,7 @@ class Gameboard extends React.Component {
       } else {
         alert('this is not a legal move :(')
       }
+      setNextPlayer(currentPlayerId+1)
     }
 
     return (
@@ -157,6 +159,9 @@ const mapDispatch = dispatch => ({
   },
   setPlayerLocation: (id, location) => {
     dispatch(setPlayer(id, location))
+  },
+  setNextPlayer: (id) => {
+    dispatch(setNextPlayer(id))
   }
 })
 
