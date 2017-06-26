@@ -3,6 +3,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {switchDoor, switchWall} from './reducers/board'
 import {setupBoard} from './utils/setup'
+import {setPlayer} from './reducers/player'
 
 class Gameboard extends React.Component {
   componentWillMount() {
@@ -12,24 +13,56 @@ class Gameboard extends React.Component {
   }
 
   render() {
-    const {players, cells, boundaries, fetchInitialData} = this.props
+    const {
+      players,
+      currentPlayerId,
+      cells,
+      boundaries,
+      fetchInitialData,
+      setPlayerLocation} = this.props
 
     const handleWallSwitch = (event, coord, status) => {
       event.stopPropagation()
       let newStatus = (status === 0) ? 1 : 0
-      console.log('wall~~~~~is about to be switched', coord, status, newStatus)
       this.props.changeWallStatus(coord, newStatus)
     }
 
     const handleDoorSwitch = (event, coord, status) => {
       let newStatus = (status === 0) ? 1 : 0
-      console.log('dooooor****** is about to be switched', coord, status, newStatus)
       this.props.openCloseDoor(coord, newStatus)
     }
 
-    const alertCell = (event, num) => {
+    const isAdjacent = (next, current) => {
+      const adjCells = [current + 1, current - 1, current - 10, current + 10]
+      return adjCells.includes(next)
+    }
+
+    const isPassable = (next, current) => {
+      const sortedCoords = next < current ? [next, current] : [current, next]
+      const boundaryCoords = `[${sortedCoords[0]}, ${sortedCoords[1]}]`
+      const boundary = boundaries.get(boundaryCoords)
+
+      if (!boundary) {
+        return true
+      } else if (boundary.kind === 'door') {
+        return boundary.status === 1 || boundary.status === 2
+      } else if (boundary.kind === 'wall') {
+        return boundary.status === 2
+      }
+    }
+
+    const alertCell = (event, cellNum) => {
       event.stopPropagation()
-      alert(`this is cell #${num}`)
+      // check if there is enough AP
+      const currentPlayerLocation = players[currentPlayerId].location
+      if (cellNum !== currentPlayerLocation &&
+          isAdjacent(cellNum, currentPlayerLocation) &&
+          isPassable(cellNum, currentPlayerLocation)) {
+        setPlayerLocation(currentPlayerId, cellNum)
+        // alert(`moved to cell #${cellNum}`)
+      } else {
+        alert('this is not a legal move :(')
+      }
     }
 
     return (
@@ -108,7 +141,8 @@ class Gameboard extends React.Component {
 const mapState = ({board, player}) => ({
   cells: board.cells,
   boundaries: board.boundaries,
-  players: player.players
+  players: player.players,
+  currentPlayerId: player.currentId
 })
 
 const mapDispatch = dispatch => ({
@@ -120,6 +154,9 @@ const mapDispatch = dispatch => ({
   },
   changeWallStatus: (coord, status) => {
     dispatch(switchWall(coord, status))
+  },
+  setPlayerLocation: (id, location) => {
+    dispatch(setPlayer(id, location))
   }
 })
 

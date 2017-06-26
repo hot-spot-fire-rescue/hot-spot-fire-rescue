@@ -1,5 +1,5 @@
 import {createCell, createBoundary} from '../reducers/board'
-import {createPlayer} from '../reducers/player'
+import {createPlayer, updateCurrentPlayer} from '../reducers/player'
 
 `
 Legend for Cells:
@@ -36,12 +36,15 @@ const initialOpenDoorCoords = () => {
   .concat(cellsWithEastOpenDoor.map(num => `[${num}, ${num + 1}]`))
 }
 
-const cellsWithPlayer = [6,30,73,49]
+const cellsWithPlayer = [6, 30, 73, 49]
 const colors = ['blue', 'green', 'red', 'orange']
-const initialPlayers = [[1,6,'blue'],[2,30,'green'],[3,73,'red'],[4,49,'orange']]
+const initialPlayers = [
+  [0, 6, 'blue'],
+  [1, 30, 'green'],
+  [2, 73, 'red'],
+  [3, 49, 'orange']]
 
 export const setupBoard = () => dispatch => {
-  // TODO: check if no board exists somewhere onEnter
   for (let idx = 0; idx < 80; idx++) {
     dispatch(createCell(idx))
   }
