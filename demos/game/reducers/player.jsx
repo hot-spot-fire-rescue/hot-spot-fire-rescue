@@ -18,9 +18,9 @@ export const receivePlayers = players => ({
   players
 })
 
-export const RECEIVE_PLAYER = 'RECEIVE_PLAYER'
-export const receivePlayer = player => ({
-  type: RECEIVE_PLAYER,
+export const UPDATE_CURRENT_PLAYER = 'UPDATE_CURRENT_PLAYER'
+export const updateCurrentPlayer = player => ({
+  type: UPDATE_CURRENT_PLAYER,
   player
 })
 
@@ -35,38 +35,43 @@ export const setPlayer = (id, location) => ({
 
 const initial = {
   players: [],
-  selected: {}
+  current: {}
 }
 
 // -- // -- // Reducer // -- // -- //
 
 const playerReducer = (state = initial, action) => {
   switch (action.type) {
-    case RECEIVE_PLAYERS:
-      return {...state,
-        players: action.players
-      }
+  case RECEIVE_PLAYERS:
+    return {...state,
+      players: action.players
+    }
 
-    case RECEIVE_PLAYER:
-      return {...state,
-        selected: action.player
-      }
+  case UPDATE_CURRENT_PLAYER:
+    return {...state,
+      current: action.player
+    }
 
-    case CREATE_PLAYER:
-      return {...state,
-        players: state.players.concat([{id: action.id, ap: action.ap, location: action.location, color: action.color}])
-      }
+  case CREATE_PLAYER:
+    return {...state,
+      players: state.players.concat([{
+        id: action.id,
+        ap: action.ap,
+        location: action.location,
+        color: action.color}])
+    }
 
-    case SET_PLAYER:
-      return {...state,
-        players: state.players.map(player => {
-          if (player.id === action.id) {
-            player.location = action.location
-            return player
-          }
-        })
-      }
-
+  case SET_PLAYER:
+    return {...state,
+      players: state.players.map(player => {
+        if (player.id === action.id) {
+          player.location = action.location
+          return player
+        } else {
+          return player
+        }
+      })
+    }
   }
 
   return state
