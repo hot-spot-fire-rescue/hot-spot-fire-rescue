@@ -117,7 +117,7 @@ export default class extends React.Component {
     return <Provider store={store}>
       <div className="gameboard">
         <button onClick={this.clear}>clear</button>
-        <Gameboard/>
+        <Gameboard fireRef={this.props.fireRef}/>
       </div>
     </Provider>
   }
