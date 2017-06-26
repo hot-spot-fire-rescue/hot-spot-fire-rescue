@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 import {switchDoor, switchWall} from './reducers/board'
 import {setupBoard} from './utils/setup'
-import {setPlayer, subtractAp} from './reducers/player'
+import {setPlayer, setNextPlayer, subtractAp} from './reducers/player'
 
 class Gameboard extends React.Component {
   componentWillMount() {
@@ -21,6 +21,7 @@ class Gameboard extends React.Component {
       boundaries,
       fetchInitialData,
       setPlayerLocation,
+      setNextPlayer,
       useAp} = this.props
 
     const handleWallDamage = (event, coord, status) => {
@@ -85,11 +86,18 @@ class Gameboard extends React.Component {
       }
     }
 
+    const handleEndTurnClick = () => {
+      let nextPlayerId = (currentPlayerId === players.length - 1) ? 0 : currentPlayerId + 1
+      setNextPlayer(nextPlayerId)
+    }
+
     const remainingAp = players[currentPlayerId] ? players[currentPlayerId].ap : 0
 
     return (
       <div>
+        <button onClick={() => handleEndTurnClick()}>End Turn</button>
         <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
+        
         {
           cells.map(cell => {
             const eastBoundaryCoord = `[${cell.number}, ${cell.number + 1}]`
@@ -208,6 +216,9 @@ const mapDispatch = dispatch => ({
   },
   setPlayerLocation: (id, location) => {
     dispatch(setPlayer(id, location))
+  },
+  setNextPlayer: (id) => {
+    dispatch(setNextPlayer(id))
   },
   useAp: (id, newLocation) => {
     dispatch(subtractAp(id, newLocation))

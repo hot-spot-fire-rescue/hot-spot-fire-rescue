@@ -31,6 +31,12 @@ export const setPlayer = (id, location) => ({
   location
 })
 
+export const SET_NEXT_PLAYER = 'SET_NEXT_PLAYER'
+export const setNextPlayer = (id) => ({
+  type: SET_NEXT_PLAYER,
+  id
+})
+
 export const SUBTRACT_AP = 'SUBTRACT_AP'
 export const subtractAp = (id, points) => ({
   type: SUBTRACT_AP,
@@ -87,6 +93,10 @@ const playerReducer = (state = initial, action) => {
         return player
       })
     }
+
+  case SET_NEXT_PLAYER:
+    return {...state,
+      currentId: action.id}
   }
 
   return state
