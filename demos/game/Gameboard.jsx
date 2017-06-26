@@ -79,14 +79,25 @@ class Gameboard extends React.Component {
       } else {
         alert('this is not a legal move :(')
       }
-      setNextPlayer(currentPlayerId+1)
+    }
+
+    const handleEndTurnClick = () => {
+      let nextPlayerId
+      if (currentPlayerId === players.length - 1) {
+        nextPlayerId = 0  
+      } else {
+        nextPlayerId = currentPlayerId + 1
+      }
+      setNextPlayer(nextPlayerId)
     }
 
     const remainingAp = players[currentPlayerId] ? players[currentPlayerId].ap : 0
 
     return (
       <div>
+        <button onClick={() => handleEndTurnClick()}>End Turn</button>
         <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
+        
         {
           cells.map(cell => {
             const eastBoundaryCoord = `[${cell.number}, ${cell.number + 1}]`
