@@ -86,6 +86,14 @@ const boardReducer = (state = initial, action) => {
         status: action.status
       })
     }
+
+  case SWITCH_WALL :
+    return {...state,
+      boundaries: state.boundaries.setIn([action.coord], {
+        kind: 'wall',
+        status: action.status
+      })
+    }
   }
 
   return state

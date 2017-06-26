@@ -23,17 +23,22 @@ class Gameboard extends React.Component {
       setPlayerLocation,
       setNextPlayer,
       useAp} = this.props
-      
-    const handleWallSwitch = (event, coord, status) => {
+
+    const handleWallDamage = (event, coord, status) => {
       event.stopPropagation()
-      const newStatus = (status === 0) ? 1 : 0
+      let newStatus
+      if (status === 0) {
+        newStatus = 1
+      } else if (status === 1) {
+        newStatus = 2
+      }
       this.props.changeWallStatus(coord, newStatus)
     }
 
     const handleDoorSwitch = (event, coord, status) => {
       event.stopPropagation()
-      const newStatus = (status === 0) ? 1 : 0
-      this.props.openCloseDoor(coord, newStatus)
+      let newStatus = (status === 0) ? 1 : 0
+      this.props.openOrCloseDoor(coord, newStatus)
     }
 
     const isAdjacent = (next, current) => {
@@ -82,12 +87,7 @@ class Gameboard extends React.Component {
     }
 
     const handleEndTurnClick = () => {
-      let nextPlayerId
-      if (currentPlayerId === players.length - 1) {
-        nextPlayerId = 0  
-      } else {
-        nextPlayerId = currentPlayerId + 1
-      }
+      let nextPlayerId = (currentPlayerId === players.length - 1) ? 0 : currentPlayerId + 1
       setNextPlayer(nextPlayerId)
     }
 
@@ -117,17 +117,45 @@ class Gameboard extends React.Component {
                   : null
                 }
                 {
-                  eastBoundary && eastBoundary.kind === 'wall'
+                  eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 0
                   ? <div className='vertical-wall'
                     id={eastBoundaryCoord}
-                    onClick={(evt) => handleWallSwitch(evt, eastBoundaryCoord, eastBoundary.status)} />
+                    onClick={(evt) => handleWallDamage(evt, eastBoundaryCoord, eastBoundary.status)} />
                   : null
                 }
                 {
-                  southBoundary && southBoundary.kind === 'wall'
+                  eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 1
+                  ? <div className='vertical-wall-damagedOnce'
+                    id={eastBoundaryCoord}
+                    onClick={(evt) => handleWallDamage(evt, eastBoundaryCoord, eastBoundary.status)} />
+                  : null
+                }
+                {
+                  eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 2
+                  ? <div className='vertical-wall-damagedTwice'
+                    id={eastBoundaryCoord}
+                    onClick={(evt) => handleWallDamage(evt, eastBoundaryCoord, eastBoundary.status)} />
+                  : null
+                }
+                {
+                  southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 0
                   ? <div className='horizontal-wall'
                     id={southBoundaryCoord}
-                    onClick={(evt) => handleWallSwitch(evt, southBoundaryCoord)} />
+                    onClick={(evt) => handleWallDamage(evt, southBoundaryCoord, southBoundary.status)} />
+                  : null
+                }
+                {
+                  southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 1
+                  ? <div className='horizontal-wall-damagedOnce'
+                    id={southBoundaryCoord}
+                    onClick={(evt) => handleWallDamage(evt, southBoundaryCoord, southBoundary.status)} />
+                  : null
+                }
+                {
+                  southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 2
+                  ? <div className='horizontal-wall-damagedTwice'
+                    id={southBoundaryCoord}
+                    onClick={(evt) => handleWallDamage(evt, southBoundaryCoord, southBoundary.status)} />
                   : null
                 }
                 {
@@ -180,7 +208,7 @@ const mapDispatch = dispatch => ({
   fetchInitialData: () => {
     dispatch(setupBoard())
   },
-  openCloseDoor: (coord, status) => {
+  openOrCloseDoor: (coord, status) => {
     dispatch(switchDoor(coord, status))
   },
   changeWallStatus: (coord, status) => {
