@@ -34,11 +34,26 @@ export const createBoundary = (location, kind, status) => ({
   status
 })
 
+export const SWITCH_DOOR = 'SWTICH_DOOR'
+export const switchDoor = (coord, status) => ({
+  type: SWITCH_DOOR,
+  coord,
+  status
+})
+
+export const SWITCH_WALL = 'SWTICH_WALL'
+export const switchWall = (coord, status) => ({
+  type: SWITCH_WALL,
+  coord,
+  status
+})
+
 // -- // -- // State // -- // -- //
 
 const initial = {
   cells: OrderedMap(),
   boundaries: OrderedMap()
+
 }
 
 // -- // -- // Reducer // -- // -- //
@@ -60,6 +75,14 @@ const boardReducer = (state = initial, action) => {
     return {...state,
       boundaries: state.boundaries.setIn([action.location], {
         kind: action.kind,
+        status: action.status
+      })
+    }
+
+  case SWITCH_DOOR :
+    return {...state,
+      boundaries: state.boundaries.setIn([action.coord], {
+        kind: 'door',
         status: action.status
       })
     }
