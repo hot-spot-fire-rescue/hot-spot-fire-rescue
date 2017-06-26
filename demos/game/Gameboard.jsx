@@ -3,6 +3,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 
 import {setupBoard} from './utils/setup'
+import {setPlayer} from './reducers/player'
 
 class Gameboard extends React.Component {
   componentWillMount() {
@@ -12,16 +13,50 @@ class Gameboard extends React.Component {
   }
 
   render() {
-    const {cells, boundaries, fetchInitialData} = this.props
+    const {
+      players,
+      currentPlayerId,
+      cells,
+      boundaries,
+      fetchInitialData,
+      setPlayerLocation} = this.props
 
     const alertWall = (event, coord) => {
       event.stopPropagation()
       alert(`this is a boundary with coordinates ${coord}`)
     }
 
-    const alertCell = (event, num) => {
+    const isAdjacent = (next, current) => {
+      const adjCells = [current + 1, current - 1, current - 10, current + 10]
+      return adjCells.includes(next)
+    }
+
+    const isPassable = (next, current) => {
+      const sortedCoords = next < current ? [next, current] : [current, next]
+      const boundaryCoords = `[${sortedCoords[0]}, ${sortedCoords[1]}]`
+      const boundary = boundaries.get(boundaryCoords)
+
+      if (!boundary) {
+        return true
+      } else if (boundary.kind === 'door') {
+        return boundary.status === 1 || boundary.status === 2
+      } else if (boundary.kind === 'wall') {
+        return boundary.status === 2
+      }
+    }
+
+    const alertCell = (event, cellNum) => {
       event.stopPropagation()
-      alert(`this is cell #${num}`)
+      // check if there is enough AP
+      const currentPlayerLocation = players[currentPlayerId].location
+      if (cellNum !== currentPlayerLocation &&
+          isAdjacent(cellNum, currentPlayerLocation) &&
+          isPassable(cellNum, currentPlayerLocation)) {
+        setPlayerLocation(currentPlayerId, cellNum)
+        // alert(`moved to cell #${cellNum}`)
+      } else {
+        alert('this is not a legal move :(')
+      }
     }
 
     return (
@@ -39,7 +74,7 @@ class Gameboard extends React.Component {
               id={cell.number}
               onClick={(evt) => alertCell(evt, cell.number)}>
                 {
-                  player 
+                  player
                   ? <div className='player'
                     id={player.id} style={{backgroundColor: player.color}}/>
                   : null
@@ -100,12 +135,16 @@ class Gameboard extends React.Component {
 const mapState = ({board, player}) => ({
   cells: board.cells,
   boundaries: board.boundaries,
-  players: player.players
+  players: player.players,
+  currentPlayerId: player.currentId
 })
 
 const mapDispatch = dispatch => ({
   fetchInitialData: () => {
     dispatch(setupBoard())
+  },
+  setPlayerLocation: (id, location) => {
+    dispatch(setPlayer(id, location))
   }
 })
 
