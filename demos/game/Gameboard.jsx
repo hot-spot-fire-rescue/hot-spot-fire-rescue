@@ -45,7 +45,7 @@ class Gameboard extends React.Component {
       }
     }
 
-    const alertCell = (event, cellNum) => {
+    const handleCellClick = (event, cellNum) => {
       event.stopPropagation()
       // check if there is enough AP
       const currentPlayerLocation = players[currentPlayerId].location
@@ -53,7 +53,7 @@ class Gameboard extends React.Component {
           isAdjacent(cellNum, currentPlayerLocation) &&
           isPassable(cellNum, currentPlayerLocation)) {
         setPlayerLocation(currentPlayerId, cellNum)
-        // alert(`moved to cell #${cellNum}`)
+        subtractAp(currentPlayerId, cellNum)
       } else {
         alert('this is not a legal move :(')
       }
@@ -72,7 +72,7 @@ class Gameboard extends React.Component {
               <div key={cell.number}
               className="cell"
               id={cell.number}
-              onClick={(evt) => alertCell(evt, cell.number)}>
+              onClick={(evt) => handleCellClick(evt, cell.number)}>
                 {
                   player
                   ? <div className='player'
