@@ -49,7 +49,7 @@ export const switchWall = (coord, status) => ({
 })
 
 // -- // -- // State // -- // -- //
-
+/* Cells and boundaries may each need their own reducers -Ashi */
 const initial = {
   cells: OrderedMap(),
   boundaries: OrderedMap()
@@ -65,14 +65,16 @@ const boardReducer = (state = initial, action) => {
 
   case CREATE_CELL:
     return {...state,
+      /* Use set instead of setIn -Ashi */
       cells: state.cells.setIn([action.number], {
         number: action.number,
         status: action.status
       })
     }
-
+/* action.location is already an array, don't convert to string and then you don't need to use sq. brackets -Ashi */
   case CREATE_BOUNDARY:
     return {...state,
+      /* write a function that normalizes coordinates -Ashi*/
       boundaries: state.boundaries.setIn([action.location], {
         kind: action.kind,
         status: action.status
