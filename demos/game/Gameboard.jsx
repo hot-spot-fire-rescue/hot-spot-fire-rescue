@@ -24,7 +24,7 @@ class Gameboard extends React.Component {
       useAp} = this.props
 
     const handleWallSwitch = (event, coord, status) => {event.stopPropagation()
-      const newStatus = (status === 0) ? 1 : 0
+      let newStatus = (status === 0) ? 1 : 0
       this.props.changeWallStatus(coord, newStatus)
     }
 
@@ -39,7 +39,7 @@ class Gameboard extends React.Component {
       }
 
       event.stopPropagation()
-      const newStatus = (status === 0) ? 1 : 0
+      let newStatus = (status === 0) ? 1 : 0
       this.props.changeWallStatus(coord, newStatus)
       this.props.useAp(currentPlayerId, 1)
     }
@@ -55,10 +55,10 @@ class Gameboard extends React.Component {
       }
       event.stopPropagation()
 
-      const newStatus = (status === 0) ? 1 : 0
+      let newStatus = (status === 0) ? 1 : 0
       this.props.openCloseDoor(coord, newStatus)
 
-      let newStatus = (status === 0) ? 1 : 0
+      newStatus = (status === 0) ? 1 : 0
       this.props.openOrCloseDoor(coord, newStatus)
       this.props.useAp(currentPlayerId, 1)
     }
