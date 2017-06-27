@@ -1,4 +1,5 @@
-import {createCell, createBoundary} from '../reducers/board'
+import {createCell} from '../reducers/board'
+import {createBoundary} from '../reducers/boundary'
 import {createPlayer, updateCurrentPlayer} from '../reducers/player'
 
 `
@@ -16,24 +17,24 @@ const initialWallCoords = () => {
   const cellsWithSouthWall = [1, 2, 3, 4, 5, 7, 8, 23, 24, 25, 26, 27, 41, 42, 43, 45, 46, 47, 48, 61, 62, 64, 65, 66, 67, 68]
   const cellsWithEastWall = [10, 15, 18, 20, 23, 28, 36, 38, 40, 42, 50, 55, 57, 58, 60, 68]
 
-  return cellsWithSouthWall.map(num => `[${num}, ${num + 10}]`)
-  .concat(cellsWithEastWall.map(num => `[${num}, ${num + 1}]`))
+  return cellsWithSouthWall.map(num => [num, num + 10])
+  .concat(cellsWithEastWall.map(num => [num, num + 1]))
 }
 
 const initialClosedDoorCoords = () => {
   const cellsWithSouthDoor = [28, 44]
   const cellsWithEastDoor = [13, 25, 32, 46, 65, 67]
 
-  return cellsWithSouthDoor.map(num => `[${num}, ${num + 10}]`)
-  .concat(cellsWithEastDoor.map(num => `[${num}, ${num + 1}]`))
+  return cellsWithSouthDoor.map(num => [num, num + 10])
+  .concat(cellsWithEastDoor.map(num => [num, num + 1]))
 }
 
 const initialOpenDoorCoords = () => {
   const cellsWithSouthOpenDoor = [6, 63]
   const cellsWithEastOpenDoor = [30, 48]
 
-  return cellsWithSouthOpenDoor.map(num => `[${num}, ${num + 10}]`)
-  .concat(cellsWithEastOpenDoor.map(num => `[${num}, ${num + 1}]`))
+  return cellsWithSouthOpenDoor.map(num => [num, num + 10])
+  .concat(cellsWithEastOpenDoor.map(num => [num, num + 1]))
 }
 
 const cellsWithPlayer = [6, 30, 73, 49]
@@ -51,13 +52,13 @@ export const setupBoard = () => dispatch => {
   initialPlayers.forEach(info => {
     dispatch(createPlayer(info[0], 4, info[1], info[2]))
   })
-  initialWallCoords().forEach(wallCoords => {
-    dispatch(createBoundary(wallCoords, 'wall', 0))
+  initialWallCoords().forEach(wallCoord => {
+    dispatch(createBoundary(wallCoord, 'wall', 0))
   })
-  initialClosedDoorCoords().forEach(doorCoords => {
-    dispatch(createBoundary(doorCoords, 'door', 0))
+  initialClosedDoorCoords().forEach(doorCoord => {
+    dispatch(createBoundary(doorCoord, 'door', 0))
   })
-  initialOpenDoorCoords().forEach(doorCoords => {
-    dispatch(createBoundary(doorCoords, 'door', 1))
+  initialOpenDoorCoords().forEach(doorCoord => {
+    dispatch(createBoundary(doorCoord, 'door', 1))
   })
 }

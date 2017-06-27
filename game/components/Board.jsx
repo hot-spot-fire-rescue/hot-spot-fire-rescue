@@ -4,8 +4,11 @@ import {connect} from 'react-redux'
 
 import CellDice from './CellDice'
 import {setupBoard} from '../utils/setup'
-import {switchDoor, switchWall} from '../reducers/board'
-import {setPlayer, setNextPlayer, setAp} from '../reducers/player'
+import {switchDoor,
+        damageWall} from '../reducers/boundary'
+import {setPlayer,
+        setNextPlayer,
+        setAp} from '../reducers/player'
 
 class Board extends React.Component {
   componentWillMount() {
@@ -146,16 +149,17 @@ class Board extends React.Component {
 
         {
           cells.map(cell => {
-            const eastBoundaryCoord = `[${cell.number}, ${cell.number + 1}]`
-            const southBoundaryCoord = `[${cell.number}, ${cell.number + 10}]`
+            const eastBoundaryCoord = [cell.cellNum, cell.cellNum + 1].toString()
+            const southBoundaryCoord = [cell.cellNum, cell.cellNum + 10].toString()
             const eastBoundary = boundaries.get(eastBoundaryCoord)
             const southBoundary = boundaries.get(southBoundaryCoord)
-            const player = players.find(player => player.location === cell.number)
+            const player = players.find(player => player.location === cell.cellNum)
+
             return (
-              <div key={cell.number}
+              <div key={cell.cellNum}
               className="cell"
-              id={cell.number}
-              onClick={(evt) => handleCellClick(evt, cell.number)}>
+              id={cell.cellNum}
+              onClick={(evt) => handleCellClick(evt, cell.cellNum)}>
                 {
                   player
                   && <div className='player'
@@ -214,9 +218,9 @@ class Board extends React.Component {
 
 // -- // -- // Container // -- // -- //
 
-const mapState = ({board, player}) => ({
-  cells: board.cells,
-  boundaries: board.boundaries,
+const mapState = ({board, boundary, player}) => ({
+  cells: board,
+  boundaries: boundary,
   players: player.players,
   currentPlayerId: player.currentId
 })
@@ -229,7 +233,7 @@ const mapDispatch = dispatch => ({
     dispatch(switchDoor(coord, status))
   },
   changeWallStatus: (coord, status) => {
-    dispatch(switchWall(coord, status))
+    dispatch(damageWall(coord, status))
   },
   setPlayerLocation: (id, location) => {
     dispatch(setPlayer(id, location))
