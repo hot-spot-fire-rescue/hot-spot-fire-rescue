@@ -1,10 +1,10 @@
 'use strict'
 import React from 'react'
 import {connect} from 'react-redux'
-
+import CellDice from './Pieces/CellDice'
 import {switchDoor, switchWall} from './reducers/board'
 import {setupBoard} from './utils/setup'
-import {setPlayer, setNextPlayer, subtractAp} from './reducers/player'
+import {setPlayer, subtractAp} from './reducers/player'
 
 class Gameboard extends React.Component {
   componentWillMount() {
@@ -21,24 +21,18 @@ class Gameboard extends React.Component {
       boundaries,
       fetchInitialData,
       setPlayerLocation,
-      setNextPlayer,
       useAp} = this.props
 
-    const handleWallDamage = (event, coord, status) => {
+    const handleWallSwitch = (event, coord, status) => {
       event.stopPropagation()
-      let newStatus
-      if (status === 0) {
-        newStatus = 1
-      } else if (status === 1) {
-        newStatus = 2
-      }
+      const newStatus = (status === 0) ? 1 : 0
       this.props.changeWallStatus(coord, newStatus)
     }
 
     const handleDoorSwitch = (event, coord, status) => {
       event.stopPropagation()
-      let newStatus = (status === 0) ? 1 : 0
-      this.props.openOrCloseDoor(coord, newStatus)
+      const newStatus = (status === 0) ? 1 : 0
+      this.props.openCloseDoor(coord, newStatus)
     }
 
     const isAdjacent = (next, current) => {
@@ -86,18 +80,12 @@ class Gameboard extends React.Component {
       }
     }
 
-    const handleEndTurnClick = () => {
-      let nextPlayerId = (currentPlayerId === players.length - 1) ? 0 : currentPlayerId + 1
-      setNextPlayer(nextPlayerId)
-    }
-
     const remainingAp = players[currentPlayerId] ? players[currentPlayerId].ap : 0
 
     return (
       <div>
-        <button onClick={() => handleEndTurnClick()}>End Turn</button>
+        <CellDice/>
         <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
-        
         {
           cells.map(cell => {
             const eastBoundaryCoord = `[${cell.number}, ${cell.number + 1}]`
@@ -117,45 +105,17 @@ class Gameboard extends React.Component {
                   : null
                 }
                 {
-                  eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 0
+                  eastBoundary && eastBoundary.kind === 'wall'
                   ? <div className='vertical-wall'
                     id={eastBoundaryCoord}
-                    onClick={(evt) => handleWallDamage(evt, eastBoundaryCoord, eastBoundary.status)} />
+                    onClick={(evt) => handleWallSwitch(evt, eastBoundaryCoord, eastBoundary.status)} />
                   : null
                 }
                 {
-                  eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 1
-                  ? <div className='vertical-wall-damagedOnce'
-                    id={eastBoundaryCoord}
-                    onClick={(evt) => handleWallDamage(evt, eastBoundaryCoord, eastBoundary.status)} />
-                  : null
-                }
-                {
-                  eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 2
-                  ? <div className='vertical-wall-damagedTwice'
-                    id={eastBoundaryCoord}
-                    onClick={(evt) => handleWallDamage(evt, eastBoundaryCoord, eastBoundary.status)} />
-                  : null
-                }
-                {
-                  southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 0
+                  southBoundary && southBoundary.kind === 'wall'
                   ? <div className='horizontal-wall'
                     id={southBoundaryCoord}
-                    onClick={(evt) => handleWallDamage(evt, southBoundaryCoord, southBoundary.status)} />
-                  : null
-                }
-                {
-                  southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 1
-                  ? <div className='horizontal-wall-damagedOnce'
-                    id={southBoundaryCoord}
-                    onClick={(evt) => handleWallDamage(evt, southBoundaryCoord, southBoundary.status)} />
-                  : null
-                }
-                {
-                  southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 2
-                  ? <div className='horizontal-wall-damagedTwice'
-                    id={southBoundaryCoord}
-                    onClick={(evt) => handleWallDamage(evt, southBoundaryCoord, southBoundary.status)} />
+                    onClick={(evt) => handleWallSwitch(evt, southBoundaryCoord)} />
                   : null
                 }
                 {
@@ -208,7 +168,7 @@ const mapDispatch = dispatch => ({
   fetchInitialData: () => {
     dispatch(setupBoard())
   },
-  openOrCloseDoor: (coord, status) => {
+  openCloseDoor: (coord, status) => {
     dispatch(switchDoor(coord, status))
   },
   changeWallStatus: (coord, status) => {
@@ -216,9 +176,6 @@ const mapDispatch = dispatch => ({
   },
   setPlayerLocation: (id, location) => {
     dispatch(setPlayer(id, location))
-  },
-  setNextPlayer: (id) => {
-    dispatch(setNextPlayer(id))
   },
   useAp: (id, newLocation) => {
     dispatch(subtractAp(id, newLocation))
