@@ -60,7 +60,7 @@ class Gameboard extends React.Component {
         return
       }
       let newStatus = (status === 0) ? 1 : 0
-      this.props.openCloseDoor(coord, newStatus)
+      this.props.openOrCloseDoor(coord, newStatus)
 
       newStatus = (status === 0) ? 1 : 0
       this.props.openOrCloseDoor(coord, newStatus)
@@ -157,9 +157,8 @@ class Gameboard extends React.Component {
               onClick={(evt) => handleCellClick(evt, cell.number)}>
                 {
                   player
-                  ? <div className='player'
+                  && <div className='player'
                     id={player.id} style={{backgroundColor: player.color}}/>
-                  : null
                 }
                 {
                   eastBoundary && eastBoundary.kind === 'wall'
@@ -225,7 +224,7 @@ const mapDispatch = dispatch => ({
   fetchInitialData: () => {
     dispatch(setupBoard())
   },
-  openCloseDoor: (coord, status) => {
+  openOrCloseDoor: (coord, status) => {
     dispatch(switchDoor(coord, status))
   },
   changeWallStatus: (coord, status) => {
