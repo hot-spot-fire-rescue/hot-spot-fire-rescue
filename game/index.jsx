@@ -2,7 +2,7 @@
 import React from 'react'
 import {Route, IndexRedirect, IndexRoute, Link} from 'react-router'
 
-import Game from './game'
+import GamePageWrapper from './GamePageWrapper'
 
 const Index = ({children}) => <div>
   <h1>Home Page</h1>
@@ -15,5 +15,5 @@ const Index = ({children}) => <div>
 
 export default <Route path="/home" component={({children}) => children}>
   <IndexRoute component={Index}/>
-  <Route path='/game/:id' component={Game}/>
+  <Route path='/game/:id' component={GamePageWrapper}/>
 </Route>

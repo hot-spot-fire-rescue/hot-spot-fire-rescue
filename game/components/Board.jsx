@@ -1,12 +1,13 @@
 'use strict'
 import React from 'react'
 import {connect} from 'react-redux'
-import CellDice from './Pieces/CellDice'
-import {switchDoor, switchWall} from './reducers/board'
-import {setupBoard} from './utils/setup'
-import {setPlayer, setNextPlayer, setAp} from './reducers/player'
 
-class Gameboard extends React.Component {
+import CellDice from './CellDice'
+import {setupBoard} from '../utils/setup'
+import {switchDoor, switchWall} from '../reducers/board'
+import {setPlayer, setNextPlayer, setAp} from '../reducers/player'
+
+class Board extends React.Component {
   componentWillMount() {
     this.props.fireRef.once('value', (snapshot) => {
       if (!snapshot.exists()) this.props.fetchInitialData()
@@ -241,4 +242,4 @@ const mapDispatch = dispatch => ({
   }
 })
 
-export default connect(mapState, mapDispatch)(Gameboard)
+export default connect(mapState, mapDispatch)(Board)
