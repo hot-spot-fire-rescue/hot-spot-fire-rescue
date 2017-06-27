@@ -74,7 +74,7 @@ const playerReducer = (state = initial, action) => {
         location: action.location,
         color: action.color}])
     }
-
+/* Make this a MOVE_PLAYER action that checks that it is that player's turn and they have the required action points, it's a valid move, etc. - KHAKLM */
   case SET_PLAYER:
     return {...state,
       players: state.players.map(player => {

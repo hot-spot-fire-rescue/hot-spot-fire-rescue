@@ -12,7 +12,7 @@ class Gameboard extends React.Component {
       if (!snapshot.exists()) this.props.fetchInitialData()
     })
   }
-
+/* move action functions out of render, into reducer -Ashi */
   render() {
     const {
       players,
@@ -142,7 +142,7 @@ class Gameboard extends React.Component {
         <button onClick={() => handleEndTurnClick()}>End Turn</button>
         <h5>Player0-blue,  Player1-green,  Player2-red,  Player3-orange </h5>
         <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
-
+{/* consider making cells a list instead of a map - Ashi */}
         {
           cells.map(cell => {
             const eastBoundaryCoord = `[${cell.number}, ${cell.number + 1}]`
@@ -154,6 +154,8 @@ class Gameboard extends React.Component {
               <div key={cell.number}
               className="cell"
               id={cell.number}
+{/* Click should just dispatch actions to reducer -Ashi
+ Ternaries ending with null could be replaced with additional &&. Explore other ways to consolidate this. -Kate */}
               onClick={(evt) => handleCellClick(evt, cell.number)}>
                 {
                   player

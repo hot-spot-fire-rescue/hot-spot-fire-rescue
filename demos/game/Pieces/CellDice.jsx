@@ -2,6 +2,8 @@ import React from 'react'
 import {connect} from 'react-redux'
 import ReactDice from 'react-dice-complete'
 
+/* Find a way to make dice go up to 8. -Luisa*/
+/* Make die roll an asyncronous action that updates board in the reducer -Ashi */
 export default class RowDice extends React.Component {
   constructor(props) {
     super()
