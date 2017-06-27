@@ -97,7 +97,7 @@ class Gameboard extends React.Component {
       <div>
         <button onClick={() => handleEndTurnClick()}>End Turn</button>
         <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
-        
+
         {
           cells.map(cell => {
             const eastBoundaryCoord = `[${cell.number}, ${cell.number + 1}]`
