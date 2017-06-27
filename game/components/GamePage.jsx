@@ -7,8 +7,8 @@ import {Provider} from 'react-redux'
 import createLogger from 'redux-logger'
 import thunkMiddleware from 'redux-thunk'
 
-import reducer from './reducers'
-import Gameboard from './Gameboard'
+import reducer from '../reducers'
+import Board from './Board'
 
 export default class extends React.Component {
   componentDidMount() {
@@ -117,7 +117,7 @@ export default class extends React.Component {
     return <Provider store={store}>
       <div className="gameboard">
         <button onClick={this.clear}>clear</button>
-        <Gameboard fireRef={this.props.fireRef}/>
+        <Board fireRef={this.props.fireRef}/>
       </div>
     </Provider>
   }
