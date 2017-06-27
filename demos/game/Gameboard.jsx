@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import CellDice from './Pieces/CellDice'
 import {switchDoor, switchWall} from './reducers/board'
 import {setupBoard} from './utils/setup'
-import {setPlayer, subtractAp} from './reducers/player'
+import {setPlayer, setNextPlayer, setAp} from './reducers/player'
 
 class Gameboard extends React.Component {
   componentWillMount() {
@@ -21,7 +21,8 @@ class Gameboard extends React.Component {
       boundaries,
       fetchInitialData,
       setPlayerLocation,
-      useAp} = this.props
+      setNextPlayer,
+      updateAp} = this.props
 
     const handleWallSwitch = (event, coord, status) => {event.stopPropagation()
       let newStatus = (status === 0) ? 1 : 0
@@ -109,10 +110,22 @@ class Gameboard extends React.Component {
           isPassable(cellNum, currentPlayerLocation) &&
           currentPlayer.ap - apCost >= 0) {
         setPlayerLocation(currentPlayerId, cellNum)
-        useAp(currentPlayerId, apCost)
+        updateAp(currentPlayerId, currentPlayer.ap - apCost)
       } else {
         alert('this is not a legal move :(')
       }
+    }
+
+    const handleEndTurnClick = () => {
+      const nextPlayerId = (currentPlayerId === players.length - 1) ? 0 : currentPlayerId + 1
+      // if current AP > 4, set to 4
+      const currentPlayer = players[currentPlayerId]
+      if (currentPlayer.ap > 4) {
+        updateAp(currentPlayerId, 4)
+      }
+      // add 4 AP to current AP for next turn
+      updateAp(currentPlayerId, currentPlayer.ap + 4)
+      setNextPlayer(nextPlayerId)
     }
 
     const remainingAp = players[currentPlayerId] ? players[currentPlayerId].ap : 0
@@ -218,8 +231,11 @@ const mapDispatch = dispatch => ({
   setPlayerLocation: (id, location) => {
     dispatch(setPlayer(id, location))
   },
-  useAp: (id, newLocation) => {
-    dispatch(subtractAp(id, newLocation))
+  setNextPlayer: (id) => {
+    dispatch(setNextPlayer(id))
+  },
+  updateAp: (id, newLocation) => {
+    dispatch(setAp(id, newLocation))
   }
 })
 

@@ -37,9 +37,9 @@ export const setNextPlayer = (id) => ({
   id
 })
 
-export const SUBTRACT_AP = 'SUBTRACT_AP'
-export const subtractAp = (id, points) => ({
-  type: SUBTRACT_AP,
+export const SET_AP = 'SET_AP'
+export const setAp = (id, points) => ({
+  type: SET_AP,
   id,
   points
 })
@@ -84,11 +84,11 @@ const playerReducer = (state = initial, action) => {
       })
     }
 
-  case SUBTRACT_AP:
+  case SET_AP:
     return {...state,
       players: state.players.map(player => {
         if (player.id === action.id) {
-          player.ap -= action.points
+          player.ap = action.points
         }
         return player
       })
