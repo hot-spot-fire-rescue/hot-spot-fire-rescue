@@ -25,6 +25,14 @@ class Gameboard extends React.Component {
       useAp} = this.props
 
     const handleWallDamage = (event, coord, status) => {
+      if (adjacentWallOrDoor(coord, players[currentPlayerId].location) === false) {
+        alert('This wall is too far !')
+        return
+      }
+      if (players[currentPlayerId].ap === 0) {
+        alert('No Action Points available !')
+        return
+      }
       event.stopPropagation()
       let newStatus
       if (status === 0) {
@@ -33,12 +41,28 @@ class Gameboard extends React.Component {
         newStatus = 2
       }
       this.props.changeWallStatus(coord, newStatus)
+      this.props.useAp(currentPlayerId, 1)
     }
 
     const handleDoorSwitch = (event, coord, status) => {
+      if (adjacentWallOrDoor(coord, players[currentPlayerId].location) === false) {
+        alert('This wall is too far !')
+        return
+      }
+      if (players[currentPlayerId].ap === 0) {
+        alert('No Action Points available !')
+        return
+      }
       event.stopPropagation()
       let newStatus = (status === 0) ? 1 : 0
       this.props.openOrCloseDoor(coord, newStatus)
+      this.props.useAp(currentPlayerId, 1)
+    }
+
+    const adjacentWallOrDoor = (doorOrWallLocation, playerLocation) => {
+      let location = doorOrWallLocation.slice(1, -1).split(',')
+      console.log('player', playerLocation)
+      return (Number(location[0]) === playerLocation || Number(location[1]) === playerLocation)
     }
 
     const isAdjacent = (next, current) => {
@@ -96,8 +120,9 @@ class Gameboard extends React.Component {
     return (
       <div>
         <button onClick={() => handleEndTurnClick()}>End Turn</button>
+        <h5>Player0-blue,  Player1-green,  Player2-red,  Player3-orange </h5>
         <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
-        
+
         {
           cells.map(cell => {
             const eastBoundaryCoord = `[${cell.number}, ${cell.number + 1}]`
