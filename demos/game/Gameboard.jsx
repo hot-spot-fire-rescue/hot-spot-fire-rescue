@@ -30,22 +30,27 @@ class Gameboard extends React.Component {
     }
 
     const handleWallDamage = (event, coord, status) => {
+      event.stopPropagation()
       if (adjacentWallOrDoor(coord, players[currentPlayerId].location) === false) {
         alert('This wall is too far !')
         return
       }
-      if (players[currentPlayerId].ap === 0) {
+      if (players[currentPlayerId].ap < 2) {
         alert('No Action Points available !')
         return
       }
-
-      event.stopPropagation()
-      let newStatus = (status === 0) ? 1 : 0
+      let newStatus
+      if (status === 0) {
+        newStatus = 1
+      } else if (status === 1) {
+        newStatus = 2
+      }
       this.props.changeWallStatus(coord, newStatus)
-      this.props.useAp(currentPlayerId, 1)
+      this.props.updateAp(currentPlayerId, players[currentPlayerId].ap - 2)
     }
 
     const handleDoorSwitch = (event, coord, status) => {
+      event.stopPropagation()
       if (adjacentWallOrDoor(coord, players[currentPlayerId].location) === false) {
         alert('This wall is too far !')
         return
@@ -54,14 +59,12 @@ class Gameboard extends React.Component {
         alert('No Action Points available !')
         return
       }
-      event.stopPropagation()
-
       let newStatus = (status === 0) ? 1 : 0
       this.props.openCloseDoor(coord, newStatus)
 
       newStatus = (status === 0) ? 1 : 0
       this.props.openOrCloseDoor(coord, newStatus)
-      this.props.useAp(currentPlayerId, 1)
+      this.props.updateAp(currentPlayerId, players[currentPlayerId].ap - 1)
     }
 
     const adjacentWallOrDoor = (doorOrWallLocation, playerLocation) => {
