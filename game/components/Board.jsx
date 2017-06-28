@@ -7,7 +7,6 @@ import {sortCoord,
         switchDoor,
         damageWall} from '../reducers/boundary'
 import {movePlayer,
-        setNextPlayer,
         setAp,
         endTurn} from '../reducers/player'
 
@@ -28,8 +27,6 @@ class Board extends React.Component {
       move,
       changeWallStatus,
       openOrCloseDoor,
-      setNextPlayer,
-      updateAp,
       endTurn} = this.props
 
     const handleWallDamage = (event, wall) => {
@@ -183,12 +180,6 @@ const mapDispatch = dispatch => ({
   },
   move: (id, nextCell, nextBoundary) => {
     dispatch(movePlayer(id, nextCell, nextBoundary))
-  },
-  setNextPlayer: (id) => {
-    dispatch(setNextPlayer(id))
-  },
-  updateAp: (id, newLocation) => {
-    dispatch(setAp(id, newLocation))
   }
 })
 
