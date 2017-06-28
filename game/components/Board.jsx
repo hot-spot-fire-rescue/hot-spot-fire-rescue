@@ -77,12 +77,9 @@ class Board extends React.Component {
     }
 
     const handleEndTurnClick = () => {
-      const nextPlayerId = (currentPlayerId === players.length - 1) ? 0 : currentPlayerId + 1
-      // if current AP > 4, set to 4
-      const currentPlayer = players[currentPlayerId]
-      if (currentPlayer.ap > 4) {
-        updateAp(currentPlayerId, 4)
-      }
+      const nextPlayerId = (currentPlayerId === players.count() - 1)
+                           ? 0 : currentPlayerId + 1
+      const currentPlayer = players.get(currentPlayerId)
       // add 4 AP to current AP for next turn
       updateAp(currentPlayerId, currentPlayer.ap + 4)
       setNextPlayer(nextPlayerId)

@@ -87,7 +87,9 @@ const initial = {
 // -- // -- // Reducer // -- // -- //
 
 const playerReducer = (state = initial, action) => {
-  let currentPlayer, currentPlayerLocation
+  let currentPlayer,
+    currentPlayerLocation,
+    nextAp
   switch (action.type) {
   case UPDATE_CURRENT_PLAYER:
     return {...state,
@@ -140,9 +142,10 @@ const playerReducer = (state = initial, action) => {
   case SET_AP:
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
+    nextAp = (action.points > 8) ? 8 : action.points
     return {...state,
       players: state.players.set(action.id, {
-        ap: action.points,
+        ap: nextAp,
         location: currentPlayer.location,
         color: currentPlayer.color,
         error: null
