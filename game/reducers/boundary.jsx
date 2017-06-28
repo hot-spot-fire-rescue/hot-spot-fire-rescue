@@ -31,10 +31,6 @@ export const damageWall = (coord, status) => ({
   status
 })
 
-// -- // -- //  State  // -- // -- //
-
-const initial = Map()
-
 // -- // -- // Helpers // -- // -- //
 
 export const sortCoord = (coord) => {
@@ -42,12 +38,19 @@ export const sortCoord = (coord) => {
   return first > second ? [second, first] : [first, second]
 }
 
+
+
+// -- // -- //  State  // -- // -- //
+
+const initial = Map()
+
 // -- // -- // Reducer // -- // -- //
 
 const boundaryReducer = (state = initial, action) => {
+  let sortedCoord
   switch (action.type) {
   case CREATE_BOUNDARY:
-    let sortedCoord = sortCoord(action.coord)
+    sortedCoord = sortCoord(action.coord)
     return state.set(sortedCoord.toString(), {
       kind: action.kind,
       status: action.status,
@@ -55,15 +58,19 @@ const boundaryReducer = (state = initial, action) => {
     })
 
   case SWITCH_DOOR :
-    return state.set(action.coord, {
+    sortedCoord = sortCoord(action.coord)
+    return state.set(sortedCoord.toString(), {
       kind: 'door',
-      status: action.status
+      status: action.status,
+      coord: sortedCoord
     })
 
   case DAMAGE_WALL :
-    return state.set(action.coord, {
+    sortedCoord = sortCoord(action.coord)
+    return state.set(sortedCoord.toString(), {
       kind: 'wall',
-      status: action.status
+      status: action.status,
+      coord: sortedCoord
     })
   }
 

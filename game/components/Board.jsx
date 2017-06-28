@@ -25,57 +25,55 @@ class Board extends React.Component {
       boundaries,
       fetchInitialData,
       move,
+      changeWallStatus,
+      openOrCloseDoor,
       setNextPlayer,
       updateAp} = this.props
 
-    const handleWallSwitch = (event, coord, status) => {event.stopPropagation()
-      let newStatus = (status === 0) ? 1 : 0
-      this.props.changeWallStatus(coord, newStatus)
-    }
-
-    const handleWallDamage = (event, coord, status) => {
+    const handleWallDamage = (event, wall) => {
       event.stopPropagation()
-      if (adjacentWallOrDoor(coord, players[currentPlayerId].location) === false) {
+      let wallCoord = wall.coord
+      let currentPlayer = players.get(currentPlayerId)
+
+      if (isBoundaryAdjacent(wallCoord, currentPlayer.location) === false) {
         alert('This wall is too far !')
         return
       }
-      if (players[currentPlayerId].ap < 2) {
+      if (currentPlayer.ap < 2) {
         alert('No Action Points available !')
         return
       }
       let newStatus
-      if (status === 0) {
+      if (wall.status === 0) {
         newStatus = 1
-      } else if (status === 1) {
+      } else if (wall.status === 1) {
         newStatus = 2
       }
-      this.props.changeWallStatus(coord, newStatus)
-      this.props.updateAp(currentPlayerId, players[currentPlayerId].ap - 2)
+      changeWallStatus(wallCoord, newStatus)
+      updateAp(currentPlayerId, currentPlayer.ap - 2)
     }
 
-    const handleDoorSwitch = (event, coord, status) => {
+    const handleDoorSwitch = (event, door) => {
       event.stopPropagation()
-      if (adjacentWallOrDoor(coord, players[currentPlayerId].location) === false) {
+      let doorCoord = door.coord
+      let currentPlayer = players.get(currentPlayerId)
+
+      if (isBoundaryAdjacent(doorCoord, currentPlayer.location) === false) {
         alert('This wall is too far !')
         return
       }
-      if (players[currentPlayerId].ap === 0) {
+      if (currentPlayer.ap === 0) {
         alert('No Action Points available !')
         return
       }
-      let newStatus = (status === 0) ? 1 : 0
-      this.props.openOrCloseDoor(coord, newStatus)
-
-      newStatus = (status === 0) ? 1 : 0
-      this.props.openOrCloseDoor(coord, newStatus)
-      this.props.updateAp(currentPlayerId, players[currentPlayerId].ap - 1)
+      let newStatus = (door.status === 0) ? 1 : 0
+      openOrCloseDoor(doorCoord, newStatus)
+      updateAp(currentPlayerId, currentPlayer.ap - 1)
     }
 
-    const adjacentWallOrDoor = (doorOrWallLocation, playerLocation) => {
-      let location = doorOrWallLocation.slice(1, -1).split(',')
-      console.log('player', playerLocation)
-      return (Number(location[0]) === playerLocation || Number(location[1]) === playerLocation)
-
+    const isBoundaryAdjacent = (boundaryLocation, playerLocation) => {
+      return (boundaryLocation[0] === playerLocation ||
+              boundaryLocation[1] === playerLocation)
     }
 
     const handleEndTurnClick = () => {
@@ -128,40 +126,70 @@ class Board extends React.Component {
                     style={{backgroundColor: player.color}}/>
                 }
                 {
-                  eastBoundary && eastBoundary.kind === 'wall'
+                  eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 0
                   ? <div className='vertical-wall'
-                    onClick={(evt) => handleWallSwitch(evt, eastBoundaryCoord, eastBoundary.status)} />
+                    id={eastBoundaryCoord}
+                    onClick={(evt) => handleWallDamage(evt, eastBoundary)} />
                   : null
                 }
                 {
-                  southBoundary && southBoundary.kind === 'wall'
+                  eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 1
+                  ? <div className='vertical-wall-damagedOnce'
+                    id={eastBoundaryCoord}
+                    onClick={(evt) => handleWallDamage(evt, eastBoundary)} />
+                  : null
+                }
+                {
+                  eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 2
+                  ? <div className='vertical-wall-damagedTwice'
+                    id={eastBoundaryCoord}
+                    onClick={(evt) => handleWallDamage(evt, eastBoundary)} />
+                  : null
+                }
+                {
+                  southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 0
                   ? <div className='horizontal-wall'
-                    onClick={(evt) => handleWallSwitch(evt, southBoundaryCoord)} />
+                    id={southBoundaryCoord}
+                    onClick={(evt) => handleWallDamage(evt, southBoundary)} />
                   : null
                 }
                 {
-                  eastBoundary && eastBoundary.kind === 'door' && eastBoundary.status === 0
-                  ? <div className='vertical-door-closed'
-                    onClick={(evt) => handleDoorSwitch(evt, eastBoundaryCoord, eastBoundary.status)} />
+                  southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 1
+                  ? <div className='horizontal-wall-damagedOnce'
+                    id={southBoundaryCoord}
+                    onClick={(evt) => handleWallDamage(evt, southBoundary)} />
                   : null
                 }
                 {
-                  southBoundary && southBoundary.kind === 'door' && southBoundary.status === 0
-                  ? <div className='horizontal-door-closed'
-                    onClick={(evt) => handleDoorSwitch(evt, southBoundaryCoord, eastBoundary.status)} />
+                  southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 2
+                  ? <div className='horizontal-wall-damagedTwice'
+                    id={southBoundaryCoord}
+                    onClick={(evt) => handleWallDamage(evt, southBoundary)} />
                   : null
                 }
                 {
-                  eastBoundary && eastBoundary.kind === 'door' && eastBoundary.status === 1
-                  ? <div className='vertical-door-open'
-                    onClick={(evt) => handleDoorSwitch(evt, eastBoundaryCoord, eastBoundary.status)} />
-                  : null
+                  eastBoundary && eastBoundary.kind === 'door'
+                  && eastBoundary.status === 0
+                  && <div className='vertical-door-closed'
+                    onClick={(evt) => handleDoorSwitch(evt, eastBoundary)} />
                 }
                 {
-                  southBoundary && southBoundary.kind === 'door' && southBoundary.status === 1
-                  ? <div className='horizontal-door-open'
-                    onClick={(evt) => handleDoorSwitch(evt, southBoundaryCoord, southBoundary.status)} />
-                  : null
+                  southBoundary && southBoundary.kind === 'door'
+                  && southBoundary.status === 0
+                  && <div className='horizontal-door-closed'
+                    onClick={(evt) => handleDoorSwitch(evt, southBoundary)} />
+                }
+                {
+                  eastBoundary && eastBoundary.kind === 'door'
+                  && eastBoundary.status === 1
+                  && <div className='vertical-door-open'
+                    onClick={(evt) => handleDoorSwitch(evt, eastBoundary)} />
+                }
+                {
+                  southBoundary && southBoundary.kind === 'door'
+                  && southBoundary.status === 1
+                  && <div className='horizontal-door-open'
+                    onClick={(evt) => handleDoorSwitch(evt, southBoundary)} />
                 }
               </div>
             )

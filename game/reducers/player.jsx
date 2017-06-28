@@ -44,13 +44,6 @@ export const setAp = (id, points) => ({
   points
 })
 
-// -- // -- // State // -- // -- //
-
-const initial = {
-  players: List(),
-  currentId: 0
-}
-
 // -- // -- // Helpers // -- // -- //
 
 const isAdjacent = (next, current) => {
@@ -59,9 +52,6 @@ const isAdjacent = (next, current) => {
 }
 
 const isPassable = (boundary) => {
-  // const sortedCoords = next < current ? [next, current] : [current, next]
-  // const boundaryCoords = `[${sortedCoords[0]}, ${sortedCoords[1]}]`
-  // const boundary = boundaries.get(boundaryCoords)
   if (!boundary) {
     return true
   } else if (boundary.kind === 'door') {
@@ -72,7 +62,6 @@ const isPassable = (boundary) => {
 }
 
 const findApCost = (nextCell) => {
-  console.log('nextCell', nextCell)
   const nextCellStatus = nextCell.status
   if (nextCellStatus === 0) {
     return 1
@@ -88,15 +77,18 @@ const hasEnoughAp = (currentPlayer, cost) => {
   return currentPlayer.ap - cost >= 0
 }
 
+// -- // -- // State // -- // -- //
+
+const initial = {
+  players: List(),
+  currentId: 0
+}
+
 // -- // -- // Reducer // -- // -- //
 
 const playerReducer = (state = initial, action) => {
+  let currentPlayer, currentPlayerLocation
   switch (action.type) {
-  // case RECEIVE_PLAYERS:
-  //   return {...state,
-  //     players: action.players
-  //   }
-
   case UPDATE_CURRENT_PLAYER:
     return {...state,
       currentId: action.player
@@ -116,8 +108,8 @@ const playerReducer = (state = initial, action) => {
     const nextCell = action.nextCell
     const nextCellNum = nextCell.cellNum
     const nextBoundary = action.nextBoundary
-    const currentPlayer = state.players.get(state.currentId)
-    const currentPlayerLocation = currentPlayer.location
+    currentPlayer = state.players.get(state.currentId)
+    currentPlayerLocation = currentPlayer.location
     const apCost = findApCost(nextCell)
 
     if (nextCellNum !== currentPlayerLocation &&
@@ -132,17 +124,8 @@ const playerReducer = (state = initial, action) => {
           error: null
         })
       }
-      // setPlayerLocation(currentPlayerId, cellNum)
-      // return {...state,
-      //   players: state.players.map(player => {
-      //     if (player.id === action.id) {
-      //       player.location = action.location
-      //     }
-      //     return player
-      //   })
-      // }
-      // updateAp(currentPlayerId, currentPlayer.ap - apCost)
     } else {
+      // Send this error to the error message component
       console.error('This is not a legal move')
       return {...state,
         players: state.players.set(action.id, {
@@ -155,6 +138,8 @@ const playerReducer = (state = initial, action) => {
     }
 
   case SET_AP:
+    currentPlayer = state.players.get(state.currentId)
+    currentPlayerLocation = currentPlayer.location
     return {...state,
       players: state.players.set(action.id, {
         ap: action.points,
