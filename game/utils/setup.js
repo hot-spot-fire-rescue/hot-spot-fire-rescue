@@ -1,6 +1,7 @@
 import {createCell} from '../reducers/board'
 import {createBoundary} from '../reducers/boundary'
 import {createPlayer, updateCurrentPlayer} from '../reducers/player'
+import {createDanger} from '../reducers/danger'
 
 `
 Legend for Cells:
@@ -38,12 +39,23 @@ const initialOpenDoorCoords = () => {
 }
 
 const cellsWithPlayer = [6, 30, 73, 49]
-const colors = ['blue', 'green', 'red', 'orange']
+const cellsWithFire = [14, 18, 25, 37, 43, 56, 53, 68]
+const colors = ['blue', 'green', 'purple', 'orange']
 const initialPlayers = [
   [0, 6, 'blue'],
   [1, 30, 'green'],
-  [2, 73, 'red'],
+  [2, 73, 'purple'],
   [3, 49, 'orange']]
+const initialFire = [
+  [14, 'fire', 1],
+  [37, 'fire', 1],
+  [43, 'fire', 1],
+  [56, 'fire', 1],
+  [53, 'fire', 1],
+  [68, 'fire', 1],
+  [25, 'fire', 1],
+  [18, 'fire', 1]
+]
 
 export const setupBoard = () => dispatch => {
   for (let idx = 0; idx < 80; idx++) {
@@ -51,6 +63,9 @@ export const setupBoard = () => dispatch => {
   }
   initialPlayers.forEach(info => {
     dispatch(createPlayer(info[0], 4, info[1], info[2]))
+  })
+  initialFire.forEach(fire => {
+    dispatch(createDanger(fire[0], fire[1], fire[2]))
   })
   initialWallCoords().forEach(wallCoord => {
     dispatch(createBoundary(wallCoord, 'wall', 0))

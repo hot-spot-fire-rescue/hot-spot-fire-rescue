@@ -1,4 +1,4 @@
-import {List} from 'immutable'
+import {List, Map} from 'immutable'
 
 `
 Legend for Danger:
@@ -8,21 +8,22 @@ smoke: 0 = removed, 1 = exist
 
 // -- // -- // Actions // -- // -- //
 
-export const CREATE_FIRE = 'CREATE_FIRE'
-export const createFire = (location) => ({
-  type: CREATE_FIRE,
-  location,
-  kind: 'fire',
-  status: 1
-})
-
-export const CREATE_SMOKE = 'CREATE_SMOKE'
-export const createSmoke = (location) => ({
-  type: CREATE_SMOKE,
-  location,
-  kind: 'smoke',
-  status: 1
-})
+export const CREATE_DANGER = 'CREATE_DANGER'
+export const createDanger = (location, kind, status) => {
+  console.log("THIS IS THE CREATEDANGERFUNC BEING ACCESSED")
+    return ({
+    type: CREATE_DANGER,
+    location,
+    kind,
+    status})
+}
+// export const CREATE_SMOKE = 'CREATE_SMOKE'
+// export const createSmoke = (location) => ({
+//   type: CREATE_SMOKE,
+//   location,
+//   kind: 'smoke',
+//   status: 1
+// })
 
 export const FIRE_TO_SMOKE = 'FIRE_TO_SMOKE'
 export const fireToSmoke = (location) => ({
@@ -63,19 +64,19 @@ const initial = List()
 
 const dangerReducer = (state = initial, action) => {
   switch (action.type) {
-    case CREATE_FIRE:
+    case CREATE_DANGER:
       return state.set(action.location, {
           location: action.location,
           kind: action.kind,
           status: action.status
         })
 
-    case CREATE_SMOKE:
-      return state.set(action.location, {
-          location: action.location,
-          kind: action.kind,
-          status: action.status
-        })
+    // case CREATE_SMOKE:
+    //   return state.set(action.location, {
+    //       location: action.location,
+    //       kind: action.kind,
+    //       status: action.status
+    //     })
 
     // case FIRE_TO_SMOKE:
     //   return (
@@ -121,34 +122,13 @@ const dangerReducer = (state = initial, action) => {
       return state.setIn([action.location, 'kind'],action.kind)
 
     case SMOKE_TO_FIRE:
-      return (
-        danger.map(danger => {
-          if (danger.location === action.location) {
-            danger.kind = action.kind
-          }
-          return danger
-        })
-      )
+      return state.setIn([action.location, 'kind'],action.kind)
 
     case REMOVE_FIRE:
-      return (
-        danger.map(danger => {
-          if (danger.location === action.location) {
-            danger.status = action.status
-          }
-          return danger
-        })
-      )
+      return state.update(action.location, val => Object.assign(val, {status: action.status}))
 
-      case REMOVE_SMOKE:
-      return (
-        danger.map(danger => {
-          if (danger.location === action.location) {
-            danger.status = action.status
-          }
-          return danger
-        })
-      )
+    case REMOVE_SMOKE:
+      return state.setIn([action.location, 'status'],action.status)
   }
 
   return state

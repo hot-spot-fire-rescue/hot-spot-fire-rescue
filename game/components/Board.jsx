@@ -1,7 +1,6 @@
 'use strict'
 import React from 'react'
 import {connect} from 'react-redux'
-
 import CellDice from './CellDice'
 import {setupBoard} from '../utils/setup'
 import {switchDoor,
@@ -9,6 +8,7 @@ import {switchDoor,
 import {setPlayer,
         setNextPlayer,
         setAp} from '../reducers/player'
+import Danger from '../components/Danger'
 
 class Board extends React.Component {
   componentWillMount() {
@@ -18,8 +18,10 @@ class Board extends React.Component {
   }
 
   render() {
+    console.log('board re rendering')
     const {
       players,
+      danger, 
       currentPlayerId,
       cells,
       boundaries,
@@ -154,12 +156,16 @@ class Board extends React.Component {
             const eastBoundary = boundaries.get(eastBoundaryCoord)
             const southBoundary = boundaries.get(southBoundaryCoord)
             const player = players.find(player => player.location === cell.cellNum)
+            const fire = danger.get(cell.cellNum)
 
             return (
               <div key={cell.cellNum}
               className="cell"
               id={cell.cellNum}
               onClick={(evt) => handleCellClick(evt, cell.cellNum)}>
+                {
+                  fire && <Danger location={fire.location} kind={fire.kind} status={fire.status} />
+                }
                 {
                   player
                   && <div className='player'
@@ -218,15 +224,17 @@ class Board extends React.Component {
 
 // -- // -- // Container // -- // -- //
 
-const mapState = ({board, boundary, player}) => ({
+const mapState = ({board, boundary, player, danger}) => ({
   cells: board,
   boundaries: boundary,
   players: player.players,
-  currentPlayerId: player.currentId
+  currentPlayerId: player.currentId,
+  danger: danger
 })
 
 const mapDispatch = dispatch => ({
   fetchInitialData: () => {
+    console.log('I am here')
     dispatch(setupBoard())
   },
   openOrCloseDoor: (coord, status) => {
