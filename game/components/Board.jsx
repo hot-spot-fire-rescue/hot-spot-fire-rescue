@@ -32,25 +32,7 @@ class Board extends React.Component {
 
     const handleWallDamage = (event, wall) => {
       event.stopPropagation()
-      let wallCoord = wall.coord
-      let currentPlayer = players.get(currentPlayerId)
-
-      if (isBoundaryAdjacent(wallCoord, currentPlayer.location) === false) {
-        alert('This wall is too far !')
-        return
-      }
-      if (currentPlayer.ap < 2) {
-        alert('No Action Points available !')
-        return
-      }
-      let newStatus
-      if (wall.status === 0) {
-        newStatus = 1
-      } else if (wall.status === 1) {
-        newStatus = 2
-      }
-      changeWallStatus(wallCoord, newStatus)
-      updateAp(currentPlayerId, currentPlayer.ap - 2)
+      changeWallStatus(wall.coord)
     }
 
     const handleDoorSwitch = (event, door) => {
@@ -69,11 +51,6 @@ class Board extends React.Component {
       let newStatus = (door.status === 0) ? 1 : 0
       openOrCloseDoor(doorCoord, newStatus)
       updateAp(currentPlayerId, currentPlayer.ap - 1)
-    }
-
-    const isBoundaryAdjacent = (boundaryLocation, playerLocation) => {
-      return (boundaryLocation[0] === playerLocation ||
-              boundaryLocation[1] === playerLocation)
     }
 
     const handleEndTurnClick = () => {

@@ -1,5 +1,7 @@
 import {List} from 'immutable'
 
+import {DAMAGE_WALL} from './boundary'
+
 // -- // -- // Actions // -- // -- //
 
 export const CREATE_PLAYER = 'CREATE_PLAYER'
@@ -61,7 +63,8 @@ const isPassable = (boundary) => {
   }
 }
 
-const findApCost = (nextCell) => {
+// TODO: Make this into a general 'find AP cost function'
+const findMoveApCost = (nextCell) => {
   const nextCellStatus = nextCell.status
   if (nextCellStatus === 0) {
     return 1
@@ -77,6 +80,11 @@ const hasEnoughAp = (currentPlayer, cost) => {
   return currentPlayer.ap - cost >= 0
 }
 
+const isBoundaryAdjacent = (boundaryLocation, playerLocation) => {
+  return (boundaryLocation[0] === playerLocation ||
+          boundaryLocation[1] === playerLocation)
+}
+
 // -- // -- // State // -- // -- //
 
 const initial = {
@@ -89,7 +97,8 @@ const initial = {
 const playerReducer = (state = initial, action) => {
   let currentPlayer,
     currentPlayerLocation,
-    nextAp
+    nextAp,
+    apCost
   switch (action.type) {
   case UPDATE_CURRENT_PLAYER:
     return {...state,
@@ -112,7 +121,7 @@ const playerReducer = (state = initial, action) => {
     const nextBoundary = action.nextBoundary
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
-    const apCost = findApCost(nextCell)
+    apCost = findMoveApCost(nextCell)
 
     if (nextCellNum !== currentPlayerLocation &&
         isAdjacent(nextCellNum, currentPlayerLocation) &&
@@ -135,6 +144,38 @@ const playerReducer = (state = initial, action) => {
           location: currentPlayer.location,
           color: currentPlayer.color,
           error: 'This is not a legal move'
+        })
+      }
+    }
+
+  case DAMAGE_WALL:
+    currentPlayer = state.players.get(state.currentId)
+    currentPlayerLocation = currentPlayer.location
+    if (currentPlayer.ap < 2) {
+      return {...state,
+        players: state.players.set(state.currentId, {
+          ap: currentPlayer.ap,
+          location: currentPlayer.location,
+          color: currentPlayer.color,
+          error: `You don't have enough AP`
+        })
+      }
+    } else if (!isBoundaryAdjacent(action.coord, currentPlayerLocation)) {
+      return {...state,
+        players: state.players.set(state.currentId, {
+          ap: currentPlayer.ap,
+          location: currentPlayer.location,
+          color: currentPlayer.color,
+          error: 'The wall is too far'
+        })
+      }
+    } else {
+      return {...state,
+        players: state.players.set(state.currentId, {
+          ap: currentPlayer.ap - 2, // TODO: Import from another file?
+          location: currentPlayer.location,
+          color: currentPlayer.color,
+          error: null
         })
       }
     }
