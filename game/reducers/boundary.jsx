@@ -37,7 +37,7 @@ const initial = Map()
 
 // -- // -- // Helpers // -- // -- //
 
-function sortCoord(coord) {
+export const sortCoord = (coord) => {
   const [first, second] = coord
   return first > second ? [second, first] : [first, second]
 }

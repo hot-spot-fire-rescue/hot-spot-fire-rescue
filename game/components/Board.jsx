@@ -2,11 +2,11 @@
 import React from 'react'
 import {connect} from 'react-redux'
 
-import CellDice from './CellDice'
 import {setupBoard} from '../utils/setup'
-import {switchDoor,
+import {sortCoord,
+        switchDoor,
         damageWall} from '../reducers/boundary'
-import {setPlayer,
+import {movePlayer,
         setNextPlayer,
         setAp} from '../reducers/player'
 
@@ -24,7 +24,7 @@ class Board extends React.Component {
       cells,
       boundaries,
       fetchInitialData,
-      setPlayerLocation,
+      move,
       setNextPlayer,
       updateAp} = this.props
 
@@ -78,51 +78,6 @@ class Board extends React.Component {
 
     }
 
-    const isAdjacent = (next, current) => {
-      const adjCells = [current + 1, current - 1, current - 10, current + 10]
-      return adjCells.includes(next)
-    }
-
-    const isPassable = (next, current) => {
-      const sortedCoords = next < current ? [next, current] : [current, next]
-      const boundaryCoords = `[${sortedCoords[0]}, ${sortedCoords[1]}]`
-      const boundary = boundaries.get(boundaryCoords)
-
-      if (!boundary) {
-        return true
-      } else if (boundary.kind === 'door') {
-        return boundary.status === 1 || boundary.status === 2
-      } else if (boundary.kind === 'wall') {
-        return boundary.status === 2
-      }
-    }
-
-    const findApCost = (next) => {
-      const nextCellStatus = cells.get(next).status
-      if (nextCellStatus === 0) {
-        return 1
-      } else if (nextCellStatus === 1) { // TODO: check if carrying victim
-        return 2
-      }
-    }
-
-    const handleCellClick = (event, cellNum) => {
-      event.stopPropagation()
-      const currentPlayer = players[currentPlayerId]
-      const currentPlayerLocation = currentPlayer.location
-      const apCost = findApCost(cellNum)
-
-      if (cellNum !== currentPlayerLocation &&
-          isAdjacent(cellNum, currentPlayerLocation) &&
-          isPassable(cellNum, currentPlayerLocation) &&
-          currentPlayer.ap - apCost >= 0) {
-        setPlayerLocation(currentPlayerId, cellNum)
-        updateAp(currentPlayerId, currentPlayer.ap - apCost)
-      } else {
-        alert('this is not a legal move :(')
-      }
-    }
-
     const handleEndTurnClick = () => {
       const nextPlayerId = (currentPlayerId === players.length - 1) ? 0 : currentPlayerId + 1
       // if current AP > 4, set to 4
@@ -135,13 +90,21 @@ class Board extends React.Component {
       setNextPlayer(nextPlayerId)
     }
 
-    const remainingAp = players[currentPlayerId] ? players[currentPlayerId].ap : 0
+    const handleOnClick = (event, currentCell) => {
+      event.stopPropagation()
+
+      let sortedCoords = sortCoord([currentCell.cellNum, players.get(currentPlayerId).location])
+      let nextBoundary = boundaries.get(sortedCoords.toString()) || ''
+
+      move(currentPlayerId,
+           cells.get(currentCell.cellNum),
+           nextBoundary)
+    }
+
+    const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
 
     return (
       <div>
-
-        <CellDice/>
-        <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
 
         <button onClick={() => handleEndTurnClick()}>End Turn</button>
         <h5>Player0-blue,  Player1-green,  Player2-red,  Player3-orange </h5>
@@ -153,57 +116,50 @@ class Board extends React.Component {
             const southBoundaryCoord = [cell.cellNum, cell.cellNum + 10].toString()
             const eastBoundary = boundaries.get(eastBoundaryCoord)
             const southBoundary = boundaries.get(southBoundaryCoord)
-            const player = players.find(player => player.location === cell.cellNum)
+            const player = players.find((val) => val.location === cell.cellNum)
 
             return (
               <div key={cell.cellNum}
               className="cell"
-              id={cell.cellNum}
-              onClick={(evt) => handleCellClick(evt, cell.cellNum)}>
+              onClick={(evt) => handleOnClick(evt, cell)}>
                 {
                   player
                   && <div className='player'
-                    id={player.id} style={{backgroundColor: player.color}}/>
+                    style={{backgroundColor: player.color}}/>
                 }
                 {
                   eastBoundary && eastBoundary.kind === 'wall'
                   ? <div className='vertical-wall'
-                    id={eastBoundaryCoord}
                     onClick={(evt) => handleWallSwitch(evt, eastBoundaryCoord, eastBoundary.status)} />
                   : null
                 }
                 {
                   southBoundary && southBoundary.kind === 'wall'
                   ? <div className='horizontal-wall'
-                    id={southBoundaryCoord}
                     onClick={(evt) => handleWallSwitch(evt, southBoundaryCoord)} />
                   : null
                 }
                 {
                   eastBoundary && eastBoundary.kind === 'door' && eastBoundary.status === 0
                   ? <div className='vertical-door-closed'
-                    id={eastBoundaryCoord}
                     onClick={(evt) => handleDoorSwitch(evt, eastBoundaryCoord, eastBoundary.status)} />
                   : null
                 }
                 {
                   southBoundary && southBoundary.kind === 'door' && southBoundary.status === 0
                   ? <div className='horizontal-door-closed'
-                    id={southBoundaryCoord}
                     onClick={(evt) => handleDoorSwitch(evt, southBoundaryCoord, eastBoundary.status)} />
                   : null
                 }
                 {
                   eastBoundary && eastBoundary.kind === 'door' && eastBoundary.status === 1
                   ? <div className='vertical-door-open'
-                    id={eastBoundaryCoord}
                     onClick={(evt) => handleDoorSwitch(evt, eastBoundaryCoord, eastBoundary.status)} />
                   : null
                 }
                 {
                   southBoundary && southBoundary.kind === 'door' && southBoundary.status === 1
                   ? <div className='horizontal-door-open'
-                    id={southBoundaryCoord}
                     onClick={(evt) => handleDoorSwitch(evt, southBoundaryCoord, southBoundary.status)} />
                   : null
                 }
@@ -235,8 +191,8 @@ const mapDispatch = dispatch => ({
   changeWallStatus: (coord, status) => {
     dispatch(damageWall(coord, status))
   },
-  setPlayerLocation: (id, location) => {
-    dispatch(setPlayer(id, location))
+  move: (id, nextCell, nextBoundary) => {
+    dispatch(movePlayer(id, nextCell, nextBoundary))
   },
   setNextPlayer: (id) => {
     dispatch(setNextPlayer(id))
