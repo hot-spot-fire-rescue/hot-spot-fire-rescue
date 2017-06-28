@@ -18,10 +18,9 @@ export const createBoundary = (coord, kind, status) => ({
 })
 
 export const SWITCH_DOOR = 'SWTICH_DOOR'
-export const switchDoor = (coord, status) => ({
+export const switchDoor = (coord) => ({
   type: SWITCH_DOOR,
-  coord,
-  status
+  coord
 })
 
 export const DAMAGE_WALL = 'DAMAGE_WALL'
@@ -56,9 +55,11 @@ const boundaryReducer = (state = initial, action) => {
 
   case SWITCH_DOOR:
     sortedCoord = sortCoord(action.coord)
+    currentStatus = state.get(sortedCoord.toString()).status
+    newStatus = (currentStatus === 0) ? 1 : 0
     return state.set(sortedCoord.toString(), {
       kind: 'door',
-      status: action.status,
+      status: newStatus,
       coord: sortedCoord
     })
 

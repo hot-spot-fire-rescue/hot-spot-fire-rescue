@@ -8,7 +8,8 @@ import {sortCoord,
         damageWall} from '../reducers/boundary'
 import {movePlayer,
         setNextPlayer,
-        setAp} from '../reducers/player'
+        setAp,
+        endTurn} from '../reducers/player'
 
 class Board extends React.Component {
   componentWillMount() {
@@ -28,7 +29,8 @@ class Board extends React.Component {
       changeWallStatus,
       openOrCloseDoor,
       setNextPlayer,
-      updateAp} = this.props
+      updateAp,
+      endTurn} = this.props
 
     const handleWallDamage = (event, wall) => {
       event.stopPropagation()
@@ -37,32 +39,15 @@ class Board extends React.Component {
 
     const handleDoorSwitch = (event, door) => {
       event.stopPropagation()
-      let doorCoord = door.coord
-      let currentPlayer = players.get(currentPlayerId)
-
-      if (isBoundaryAdjacent(doorCoord, currentPlayer.location) === false) {
-        alert('This wall is too far !')
-        return
-      }
-      if (currentPlayer.ap === 0) {
-        alert('No Action Points available !')
-        return
-      }
-      let newStatus = (door.status === 0) ? 1 : 0
-      openOrCloseDoor(doorCoord, newStatus)
-      updateAp(currentPlayerId, currentPlayer.ap - 1)
+      openOrCloseDoor(door.coord)
     }
 
-    const handleEndTurnClick = () => {
-      const nextPlayerId = (currentPlayerId === players.count() - 1)
-                           ? 0 : currentPlayerId + 1
-      const currentPlayer = players.get(currentPlayerId)
-      // add 4 AP to current AP for next turn
-      updateAp(currentPlayerId, currentPlayer.ap + 4)
-      setNextPlayer(nextPlayerId)
+    const handleEndTurnClick = (event) => {
+      event.stopPropagation()
+      endTurn()
     }
 
-    const handleOnClick = (event, currentCell) => {
+    const handleCellClick = (event, currentCell) => {
       event.stopPropagation()
 
       let sortedCoords = sortCoord([currentCell.cellNum, players.get(currentPlayerId).location])
@@ -78,7 +63,7 @@ class Board extends React.Component {
     return (
       <div>
 
-        <button onClick={() => handleEndTurnClick()}>End Turn</button>
+        <button onClick={handleEndTurnClick}>End Turn</button>
         <h5>Player0-blue,  Player1-green,  Player2-red,  Player3-orange </h5>
         <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
 
@@ -93,7 +78,7 @@ class Board extends React.Component {
             return (
               <div key={cell.cellNum}
               className="cell"
-              onClick={(evt) => handleOnClick(evt, cell)}>
+              onClick={(evt) => handleCellClick(evt, cell)}>
                 {
                   player
                   && <div className='player'
@@ -187,11 +172,14 @@ const mapDispatch = dispatch => ({
   fetchInitialData: () => {
     dispatch(setupBoard())
   },
-  openOrCloseDoor: (coord, status) => {
-    dispatch(switchDoor(coord, status))
+  endTurn: () => {
+    dispatch(endTurn())
   },
-  changeWallStatus: (coord, status) => {
-    dispatch(damageWall(coord, status))
+  openOrCloseDoor: (coord) => {
+    dispatch(switchDoor(coord))
+  },
+  changeWallStatus: (coord) => {
+    dispatch(damageWall(coord))
   },
   move: (id, nextCell, nextBoundary) => {
     dispatch(movePlayer(id, nextCell, nextBoundary))

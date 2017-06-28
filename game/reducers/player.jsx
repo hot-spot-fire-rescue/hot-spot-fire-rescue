@@ -1,6 +1,7 @@
 import {List} from 'immutable'
 
-import {DAMAGE_WALL} from './boundary'
+import {DAMAGE_WALL,
+        SWITCH_DOOR} from './boundary'
 
 // -- // -- // Actions // -- // -- //
 
@@ -33,17 +34,22 @@ export const movePlayer = (id, nextCell, nextBoundary) => ({
   nextBoundary
 })
 
-export const SET_NEXT_PLAYER = 'SET_NEXT_PLAYER'
-export const setNextPlayer = (id) => ({
-  type: SET_NEXT_PLAYER,
-  id
-})
+// export const SET_NEXT_PLAYER = 'SET_NEXT_PLAYER'
+// export const setNextPlayer = (id) => ({
+//   type: SET_NEXT_PLAYER,
+//   id
+// })
 
 export const SET_AP = 'SET_AP'
 export const setAp = (id, points) => ({
   type: SET_AP,
   id,
   points
+})
+
+export const END_TURN = 'END_TURN'
+export const endTurn = () => ({
+  type: END_TURN
 })
 
 // -- // -- // Helpers // -- // -- //
@@ -98,7 +104,9 @@ const playerReducer = (state = initial, action) => {
   let currentPlayer,
     currentPlayerLocation,
     nextAp,
-    apCost
+    apCost,
+    nextPlayerId
+
   switch (action.type) {
   case UPDATE_CURRENT_PLAYER:
     return {...state,
@@ -152,6 +160,7 @@ const playerReducer = (state = initial, action) => {
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
     if (currentPlayer.ap < 2) {
+      console.error(`You don't have enough AP`)
       return {...state,
         players: state.players.set(state.currentId, {
           ap: currentPlayer.ap,
@@ -161,6 +170,7 @@ const playerReducer = (state = initial, action) => {
         })
       }
     } else if (!isBoundaryAdjacent(action.coord, currentPlayerLocation)) {
+      console.error(`The wall is too far`)
       return {...state,
         players: state.players.set(state.currentId, {
           ap: currentPlayer.ap,
@@ -173,6 +183,40 @@ const playerReducer = (state = initial, action) => {
       return {...state,
         players: state.players.set(state.currentId, {
           ap: currentPlayer.ap - 2, // TODO: Import from another file?
+          location: currentPlayer.location,
+          color: currentPlayer.color,
+          error: null
+        })
+      }
+    }
+
+  case SWITCH_DOOR:
+    currentPlayer = state.players.get(state.currentId)
+    currentPlayerLocation = currentPlayer.location
+    if (currentPlayer.ap < 1) {
+      console.error(`You don't have enough AP`)
+      return {...state,
+        players: state.players.set(state.currentId, {
+          ap: currentPlayer.ap,
+          location: currentPlayer.location,
+          color: currentPlayer.color,
+          error: `You don't have enough AP`
+        })
+      }
+    } else if (!isBoundaryAdjacent(action.coord, currentPlayerLocation)) {
+      console.error(`The door is too far`)
+      return {...state,
+        players: state.players.set(state.currentId, {
+          ap: currentPlayer.ap,
+          location: currentPlayer.location,
+          color: currentPlayer.color,
+          error: 'The door is too far'
+        })
+      }
+    } else {
+      return {...state,
+        players: state.players.set(state.currentId, {
+          ap: currentPlayer.ap - 1, // TODO: Import from another file?
           location: currentPlayer.location,
           color: currentPlayer.color,
           error: null
@@ -193,9 +237,19 @@ const playerReducer = (state = initial, action) => {
       })
     }
 
-  case SET_NEXT_PLAYER:
+  case END_TURN:
+    currentPlayer = state.players.get(state.currentId)
+    nextPlayerId = (state.currentId === state.players.count() - 1) ? 0 : state.currentId + 1
+    nextAp = (currentPlayer.ap + 4 > 8) ? 8 : currentPlayer.ap + 4
     return {...state,
-      currentId: action.id}
+      players: state.players.set(state.currentId, {
+        ap: nextAp,
+        location: currentPlayer.location,
+        color: currentPlayer.color,
+        error: null
+      }),
+      currentId: nextPlayerId
+    }
   }
 
   return state
