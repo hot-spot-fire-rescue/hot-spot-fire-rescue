@@ -1,12 +1,16 @@
 'use strict'
 import React from 'react'
 import {connect} from 'react-redux'
-import CellDice from './Pieces/CellDice'
-import {switchDoor, switchWall} from './reducers/board'
-import {setupBoard} from './utils/setup'
-import {setPlayer, setNextPlayer, setAp} from './reducers/player'
 
-class Gameboard extends React.Component {
+import CellDice from './CellDice'
+import {setupBoard} from '../utils/setup'
+import {switchDoor,
+        damageWall} from '../reducers/boundary'
+import {setPlayer,
+        setNextPlayer,
+        setAp} from '../reducers/player'
+
+class Board extends React.Component {
   componentWillMount() {
     this.props.fireRef.once('value', (snapshot) => {
       if (!snapshot.exists()) this.props.fetchInitialData()
@@ -60,7 +64,7 @@ class Gameboard extends React.Component {
         return
       }
       let newStatus = (status === 0) ? 1 : 0
-      this.props.openCloseDoor(coord, newStatus)
+      this.props.openOrCloseDoor(coord, newStatus)
 
       newStatus = (status === 0) ? 1 : 0
       this.props.openOrCloseDoor(coord, newStatus)
@@ -145,21 +149,21 @@ class Gameboard extends React.Component {
 
         {
           cells.map(cell => {
-            const eastBoundaryCoord = `[${cell.number}, ${cell.number + 1}]`
-            const southBoundaryCoord = `[${cell.number}, ${cell.number + 10}]`
+            const eastBoundaryCoord = [cell.cellNum, cell.cellNum + 1].toString()
+            const southBoundaryCoord = [cell.cellNum, cell.cellNum + 10].toString()
             const eastBoundary = boundaries.get(eastBoundaryCoord)
             const southBoundary = boundaries.get(southBoundaryCoord)
-            const player = players.find(player => player.location === cell.number)
+            const player = players.find(player => player.location === cell.cellNum)
+
             return (
-              <div key={cell.number}
+              <div key={cell.cellNum}
               className="cell"
-              id={cell.number}
-              onClick={(evt) => handleCellClick(evt, cell.number)}>
+              id={cell.cellNum}
+              onClick={(evt) => handleCellClick(evt, cell.cellNum)}>
                 {
                   player
-                  ? <div className='player'
+                  && <div className='player'
                     id={player.id} style={{backgroundColor: player.color}}/>
-                  : null
                 }
                 {
                   eastBoundary && eastBoundary.kind === 'wall'
@@ -214,9 +218,9 @@ class Gameboard extends React.Component {
 
 // -- // -- // Container // -- // -- //
 
-const mapState = ({board, player}) => ({
-  cells: board.cells,
-  boundaries: board.boundaries,
+const mapState = ({board, boundary, player}) => ({
+  cells: board,
+  boundaries: boundary,
   players: player.players,
   currentPlayerId: player.currentId
 })
@@ -225,11 +229,11 @@ const mapDispatch = dispatch => ({
   fetchInitialData: () => {
     dispatch(setupBoard())
   },
-  openCloseDoor: (coord, status) => {
+  openOrCloseDoor: (coord, status) => {
     dispatch(switchDoor(coord, status))
   },
   changeWallStatus: (coord, status) => {
-    dispatch(switchWall(coord, status))
+    dispatch(damageWall(coord, status))
   },
   setPlayerLocation: (id, location) => {
     dispatch(setPlayer(id, location))
@@ -242,4 +246,4 @@ const mapDispatch = dispatch => ({
   }
 })
 
-export default connect(mapState, mapDispatch)(Gameboard)
+export default connect(mapState, mapDispatch)(Board)
