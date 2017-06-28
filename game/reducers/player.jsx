@@ -34,12 +34,6 @@ export const movePlayer = (id, nextCell, nextBoundary) => ({
   nextBoundary
 })
 
-// export const SET_NEXT_PLAYER = 'SET_NEXT_PLAYER'
-// export const setNextPlayer = (id) => ({
-//   type: SET_NEXT_PLAYER,
-//   id
-// })
-
 export const SET_AP = 'SET_AP'
 export const setAp = (id, points) => ({
   type: SET_AP,
