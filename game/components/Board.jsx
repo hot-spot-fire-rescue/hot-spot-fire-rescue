@@ -10,7 +10,6 @@ import Danger from '../components/Danger'
 import {movePlayer,
         endTurn} from '../reducers/player'
 
-
 class Board extends React.Component {
   constructor(props) {
     super(props)
@@ -46,19 +45,20 @@ class Board extends React.Component {
 
     if (event.target.className === 'cell') {
       const sortedCoords = sortCoord([currentCell.cellNum, this.props.players.get(this.props.currentPlayerId).location])
-    const nextBoundary = this.props.boundaries.get(sortedCoords.toString()) || ''
+      const nextBoundary = this.props.boundaries.get(sortedCoords.toString()) || ''
 
-    this.props.move(this.props.currentPlayerId,
-         this.props.cells.get(currentCell.cellNum),
-         nextBoundary)
+      this.props.move(this.props.currentPlayerId,
+                      this.props.cells.get(currentCell.cellNum),
+                      nextBoundary)
     }
   }
 
   render() {
-    console.log('board re rendering')
+    // console.log('board re rendering')
     const {
       players,
       danger,
+      victims,
       currentPlayerId,
       cells,
       boundaries,
@@ -88,8 +88,9 @@ class Board extends React.Component {
             const status = danger.getIn([cell.cellNum, 'status'])
             const location = danger.getIn([cell.cellNum, 'location'])
             const player = players.find((val) => val.location === cell.cellNum)
+            const poi = victims.find((val) => val.location === cell.cellNum)
             const fire = danger.get(cell.cellNum)
-            
+
             return (
               <div key={cell.cellNum}
               className="cell"
@@ -103,46 +104,44 @@ class Board extends React.Component {
                     style={{backgroundColor: player.color}}/>
                 }
                 {
+                  poi
+                  && <div className='poi'></div>
+                }
+                {
                   eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 0
-                  ? <div className='vertical-wall'
+                  && <div className='vertical-wall'
                     id={eastBoundaryCoord}
                     onClick={(evt) => handleWallDamage(evt, eastBoundary)} />
-                  : null
                 }
                 {
                   eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 1
-                  ? <div className='vertical-wall-damagedOnce'
+                  && <div className='vertical-wall-damagedOnce'
                     id={eastBoundaryCoord}
                     onClick={(evt) => handleWallDamage(evt, eastBoundary)} />
-                  : null
                 }
                 {
                   eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 2
-                  ? <div className='vertical-wall-damagedTwice'
+                  && <div className='vertical-wall-damagedTwice'
                     id={eastBoundaryCoord}
                     onClick={(evt) => handleWallDamage(evt, eastBoundary)} />
-                  : null
                 }
                 {
                   southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 0
-                  ? <div className='horizontal-wall'
+                  && <div className='horizontal-wall'
                     id={southBoundaryCoord}
                     onClick={(evt) => handleWallDamage(evt, southBoundary)} />
-                  : null
                 }
                 {
                   southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 1
-                  ? <div className='horizontal-wall-damagedOnce'
+                  && <div className='horizontal-wall-damagedOnce'
                     id={southBoundaryCoord}
                     onClick={(evt) => handleWallDamage(evt, southBoundary)} />
-                  : null
                 }
                 {
                   southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 2
-                  ? <div className='horizontal-wall-damagedTwice'
+                  && <div className='horizontal-wall-damagedTwice'
                     id={southBoundaryCoord}
                     onClick={(evt) => handleWallDamage(evt, southBoundary)} />
-                  : null
                 }
                 {
                   eastBoundary && eastBoundary.kind === 'door'
@@ -179,10 +178,11 @@ class Board extends React.Component {
 
 // -- // -- // Container // -- // -- //
 
-const mapState = ({board, boundary, player, danger}) => ({
+const mapState = ({board, boundary, player, victim, danger}) => ({
   cells: board,
   boundaries: boundary,
   players: player.players,
+  victims: victim,
   currentPlayerId: player.currentId,
   danger: danger
 })

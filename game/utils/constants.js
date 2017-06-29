@@ -8,3 +8,9 @@ export const AP_COSTS = {
   removeFire: 2,
   fireToSmoke: 1
 }
+
+export const VICTIM_LEGEND = [
+  'man1', 'man2', 'man3', 'man4',
+  'woman1', 'woman2', 'woman3', 'woman4',
+  'dog', 'cat'
+]

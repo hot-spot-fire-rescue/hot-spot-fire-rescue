@@ -107,6 +107,16 @@
   left: 10px;
 }
 
+.poi {
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: lightblue;
+  position: absolute;
+  top: 0px;
+  left: 10px;
+}
+
 .fire {
   width: 10px;
   height: 10px;
