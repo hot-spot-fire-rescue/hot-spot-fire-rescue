@@ -20,7 +20,6 @@ class Danger extends React.Component {
 
   handleClick(event) {
     event.preventDefault()
-    console.log('here~~~~~')
     this.setState({
       open: true,
       anchorE1: event.currentTarget
