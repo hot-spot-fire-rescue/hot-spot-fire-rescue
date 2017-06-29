@@ -1,4 +1,4 @@
-import {List, Map} from 'immutable'
+import {List, fromJS} from 'immutable'
 
 `
 Legend for Danger:
@@ -57,23 +57,23 @@ const initial = List()
 const dangerReducer = (state = initial, action) => {
   switch (action.type) {
     case CREATE_DANGER:
-      return state.set(action.location, {
-          location: action.location,
+      return state.set(action.location, fromJS({
+          location: action.location,  
           kind: action.kind,
           status: action.status
-        })
+        }))
 
     case FIRE_TO_SMOKE:
-      return state.update(action.location, val => Object.assign(val, {kind: action.kind}))
+      return state.setIn([action.location, "kind"], action.kind)
 
     case SMOKE_TO_FIRE:
-      return state.update(action.location, val => Object.assign(val, {kind: action.kind}))
+      return state.setIn([action.location, "kind"], action.kind)
 
     case REMOVE_FIRE:
-      return state.update(action.location, val => Object.assign(val, {status: action.status}))
+      return state.setIn([action.location, "status"], action.status)
 
     case REMOVE_SMOKE:
-      return state.update(action.location, val => Object.assign(val, {status: action.status}))
+      return state.setIn([action.location, "status"], action.status)
   }
 
   return state
