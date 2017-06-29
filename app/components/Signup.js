@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import {Alert, FormControl, FormGroup, ControlLabel, Form, Col, Button} from 'react-bootstrap'
 
-import {fbAuth} from 'APP/fire'
+import firebase from 'APP/fire'
+const fbAuth = firebase.auth()
 
 export default class Signup extends Component {
   constructor() {

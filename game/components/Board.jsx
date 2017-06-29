@@ -56,10 +56,11 @@ class Board extends React.Component {
     console.log('board re rendering')
     const {
       players,
-      danger, 
+      danger,
       currentPlayerId,
       cells,
       boundaries,
+<<<<<<< HEAD
       fetchInitialData,
       move,
       changeWallStatus,
@@ -92,10 +93,18 @@ class Board extends React.Component {
     //       nextBoundary)
     //   }
     // }
+=======
+      fetchInitialData} = this.props
+
+>>>>>>> 65b4fbe02f779260d40d266269c7c81df921bb8d
     const handleCellClick = this.handleCellClick
     const handleDoorSwitch = this.handleDoorSwitch
     const handleWallDamage = this.handleWallDamage
     const handleEndTurnClick = this.handleEndTurnClick
+<<<<<<< HEAD
+=======
+
+>>>>>>> 65b4fbe02f779260d40d266269c7c81df921bb8d
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
 
     return (
@@ -117,7 +126,6 @@ class Board extends React.Component {
             const player = players.find((val) => val.location === cell.cellNum)
             const fire = danger.get(cell.cellNum)
             
-
             return (
               <div key={cell.cellNum}
               className="cell"
