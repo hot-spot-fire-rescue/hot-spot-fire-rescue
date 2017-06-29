@@ -2,6 +2,7 @@ import {List} from 'immutable'
 
 import {DAMAGE_WALL,
         SWITCH_DOOR} from './boundary'
+import {REMOVE_FIRE, REMOVE_SMOKE, FIRE_TO_SMOKE} from './danger'
 import {AP_COSTS} from '../utils/constants'
 
 // -- // -- // Actions // -- // -- //
@@ -163,6 +164,89 @@ const playerReducer = (state = initial, action) => {
         errorMessage = `You can only damage adjacent walls`
       } else if (currentPlayer.ap < AP_COSTS.damageWall) {
         errorMessage = `You don't have enough AP to damage this wall`
+      }
+      console.error(errorMessage)
+      return {...state,
+        players: state.players.set(state.currentId, {
+          ...state.players.get(state.currentId),
+          error: errorMessage
+        })
+      }
+    }
+
+  case REMOVE_FIRE:
+    currentPlayer = state.players.get(state.currentId)
+    currentPlayerLocation = currentPlayer.location
+    if (currentPlayer.ap >= AP_COSTS.removeFire && 
+      action.location === currentPlayerLocation) {
+      return {...state,
+        players: state.players.set(state.currentId, {
+          ...state.players.get(state.currentId),
+          ap: currentPlayer.ap - AP_COSTS.removeFire,
+          error: null
+        })
+      }
+    } else {
+      if (currentPlayer.ap < AP_COSTS.removeFire) {
+        errorMessage = `You don't have enough AP to extinguish fire`
+      } else if (action.location !== currentPlayerLocation) {
+        errorMessage = `You can only extinguish fire in your current cell`
+      }
+      console.error(errorMessage)
+      return {...state,
+        players: state.players.set(state.currentId, {
+          ...state.players.get(state.currentId),
+          error: errorMessage
+        })
+      }
+    }
+
+  case FIRE_TO_SMOKE:
+    currentPlayer = state.players.get(state.currentId)
+    currentPlayerLocation = currentPlayer.location
+    if (currentPlayer.ap >= AP_COSTS.fireToSmoke && 
+      action.location === currentPlayerLocation) {
+      return {...state,
+        players: state.players.set(state.currentId, {
+          ...state.players.get(state.currentId),
+          ap: currentPlayer.ap - AP_COSTS.fireToSmoke,
+          error: null
+        })
+      }
+    } else {
+      if (currentPlayer.ap < AP_COSTS.fireToSmoke) {
+        errorMessage = `You don't have enough AP to change fire to smoke`
+      } else if (action.location !== currentPlayerLocation) {
+        errorMessage = `You can only change fire to smoke in your current cell`
+      } else {
+        console.log('check the current ap and location', currentPlayerLocation, currentPlayer.ap, action.location)
+      }
+      console.error(errorMessage)
+      return {...state,
+        players: state.players.set(state.currentId, {
+          ...state.players.get(state.currentId),
+          error: errorMessage
+        })
+      }
+    }
+
+  case REMOVE_SMOKE:
+    currentPlayer = state.players.get(state.currentId)
+    currentPlayerLocation = currentPlayer.location
+    if (currentPlayer.ap >= AP_COSTS.removeSmoke && 
+      action.location === currentPlayerLocation) {
+      return {...state,
+        players: state.players.set(state.currentId, {
+          ...state.players.get(state.currentId),
+          ap: currentPlayer.ap - AP_COSTS.removeSmoke,
+          error: null
+        })
+      }
+    } else {
+      if (currentPlayer.ap < AP_COSTS.removeSmoke) {
+        errorMessage = `You don't have enough AP to extinguish smoke`
+      } else if (action.location !== currentPlayerLocation) {
+        errorMessage = `You can only extinguish smoke in your current cell`
       }
       console.error(errorMessage)
       return {...state,

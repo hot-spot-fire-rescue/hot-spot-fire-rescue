@@ -67,7 +67,7 @@ class Danger extends React.Component {
           return (
             <div>
               <div className='fire'
-                id={location} style={{backgroundColor: 'grey'}} />
+                id={location} style={{backgroundColor: 'grey'}} onClick={this.handleClick}/>
               <Popover
               open={this.state.open}
               anchorEl={this.state.anchorEl}
