@@ -12,10 +12,44 @@ import {movePlayer,
 
 
 class Board extends React.Component {
+  constructor(props) {
+    super(props)
+    this.handleCellClick = this.handleCellClick.bind(this)
+    this.handleDoorSwitch = this.handleDoorSwitch.bind(this)
+    this.handleWallDamage = this.handleWallDamage.bind(this)
+    this.handleEndTurnClick = this.handleEndTurnClick.bind(this)
+  }
+
   componentWillMount() {
     this.props.fireRef.once('value', (snapshot) => {
       if (!snapshot.exists()) this.props.fetchInitialData()
     })
+  }
+
+  handleWallDamage(event, wall) {
+    event.stopPropagation()
+    this.props.changeWallStatus(wall)
+  }
+
+  handleDoorSwitch(event, door) {
+    event.stopPropagation()
+    this.props.openOrCloseDoor(door.coord)
+  }
+
+  handleEndTurnClick(event) {
+    event.stopPropagation()
+    this.props.endTurn()
+  }
+
+  handleCellClick(event, currentCell) {
+    event.stopPropagation()
+
+    const sortedCoords = sortCoord([currentCell.cellNum, this.props.players.get(this.props.currentPlayerId).location])
+    const nextBoundary = this.props.boundaries.get(sortedCoords.toString()) || ''
+
+    this.props.move(this.props.currentPlayerId,
+         this.props.cells.get(currentCell.cellNum),
+         nextBoundary)
   }
 
   render() {
@@ -26,37 +60,12 @@ class Board extends React.Component {
       currentPlayerId,
       cells,
       boundaries,
-      fetchInitialData,
-      move,
-      changeWallStatus,
-      openOrCloseDoor,
-      endTurn} = this.props
+      fetchInitialData} = this.props
 
-    const handleWallDamage = (event, wall) => {
-      event.stopPropagation()
-      changeWallStatus(wall)
-    }
-
-    const handleDoorSwitch = (event, door) => {
-      event.stopPropagation()
-      openOrCloseDoor(door.coord)
-    }
-
-    const handleEndTurnClick = (event) => {
-      event.stopPropagation()
-      endTurn()
-    }
-
-    const handleCellClick = (event, currentCell) => {
-      event.stopPropagation()
-
-      let sortedCoords = sortCoord([currentCell.cellNum, players.get(currentPlayerId).location])
-      let nextBoundary = boundaries.get(sortedCoords.toString()) || ''
-
-      move(currentPlayerId,
-           cells.get(currentCell.cellNum),
-           nextBoundary)
-    }
+    const handleCellClick = this.handleCellClick
+    const handleDoorSwitch = this.handleDoorSwitch
+    const handleWallDamage = this.handleWallDamage
+    const handleEndTurnClick = this.handleEndTurnClick
 
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
 
