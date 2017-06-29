@@ -7,7 +7,6 @@ import {sortCoord,
         switchDoor,
         damageWall} from '../reducers/boundary'
 import {movePlayer,
-        setAp,
         endTurn} from '../reducers/player'
 
 class Board extends React.Component {
@@ -31,7 +30,7 @@ class Board extends React.Component {
 
     const handleWallDamage = (event, wall) => {
       event.stopPropagation()
-      changeWallStatus(wall.coord)
+      changeWallStatus(wall)
     }
 
     const handleDoorSwitch = (event, door) => {
