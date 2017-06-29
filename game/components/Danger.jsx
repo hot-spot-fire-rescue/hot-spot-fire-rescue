@@ -43,51 +43,49 @@ class Danger extends React.Component {
       removeSmoke,
     } = this.props
   
-  {
-        if (kind === 'fire' && status === 1) {
-          return (
-            <div>
-              <div className='fire'
-                id={location} style={{backgroundColor: 'red'}} onClick={this.handleClick}/>
-              <Popover
-              open={this.state.open}
-              anchorEl={this.state.anchorEl}
-              anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-              targetOrigin={{horizontal: 'left', vertical: 'top'}}
-              onRequestClose={this.handleRequestClose}
-            >
-              <Menu>
-                <MenuItem primaryText="Change To Smoke" onClick={()=> fireToSmoke(location)}/>
-                <MenuItem primaryText="Extinguish Fire" onClick={() => removeFire(location)}/>
-              </Menu>
-            </Popover>
-          </div>
-            )
-        } else if (kind === 'smoke' && status === 1) {
-          return (
-            <div>
-              <div className='fire'
-                id={location} style={{backgroundColor: 'grey'}} onClick={this.handleClick}/>
-              <Popover
-              open={this.state.open}
-              anchorEl={this.state.anchorEl}
-              anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-              targetOrigin={{horizontal: 'left', vertical: 'top'}}
-              onRequestClose={this.handleRequestClose}
-            >
-              <Menu>
-                <MenuItem primaryText="Change To Fire" onClick={()=> smokeToFire(location)}/>
-                <MenuItem primaryText="Extinguish Smoke" onClick={() => removeSmoke(location)}/>
-              </Menu>
-            </Popover>
-          </div>
-        )
-      } else {
+      if (kind === 'fire' && status === 1) {
         return (
           <div>
-          </div>
+            <div className='fire'
+              id={location} style={{backgroundColor: 'red'}} onClick={this.handleClick}/>
+            <Popover
+            open={this.state.open}
+            anchorEl={this.state.anchorEl}
+            anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+            targetOrigin={{horizontal: 'left', vertical: 'top'}}
+            onRequestClose={this.handleRequestClose}
+          >
+            <Menu>
+              <MenuItem primaryText="Change To Smoke" onClick={()=> fireToSmoke(location)}/>
+              <MenuItem primaryText="Extinguish Fire" onClick={() => removeFire(location)}/>
+            </Menu>
+          </Popover>
+        </div>
           )
-      }
+      } else if (kind === 'smoke' && status === 1) {
+        return (
+          <div>
+            <div className='fire'
+              id={location} style={{backgroundColor: 'grey'}} onClick={this.handleClick}/>
+            <Popover
+            open={this.state.open}
+            anchorEl={this.state.anchorEl}
+            anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+            targetOrigin={{horizontal: 'left', vertical: 'top'}}
+            onRequestClose={this.handleRequestClose}
+          >
+            <Menu>
+              <MenuItem primaryText="Change To Fire" onClick={()=> smokeToFire(location)}/>
+              <MenuItem primaryText="Extinguish Smoke" onClick={() => removeSmoke(location)}/>
+            </Menu>
+          </Popover>
+        </div>
+      )
+    } else {
+      return (
+        <div>
+        </div>
+        )
     }
   }
 }
