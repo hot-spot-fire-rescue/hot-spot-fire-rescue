@@ -175,7 +175,6 @@ const mapState = ({board, boundary, player, danger}) => ({
 
 const mapDispatch = dispatch => ({
   fetchInitialData: () => {
-    console.log('I am here')
     dispatch(setupBoard())
   },
   endTurn: () => {
