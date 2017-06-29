@@ -49,13 +49,14 @@ class Board extends React.Component {
 
     const handleCellClick = (event, currentCell) => {
       event.stopPropagation()
+      if (event.target.className === "className") {
+        let sortedCoords = sortCoord([currentCell.cellNum, players.get(currentPlayerId).location])
+        let nextBoundary = boundaries.get(sortedCoords.toString()) || ''
 
-      let sortedCoords = sortCoord([currentCell.cellNum, players.get(currentPlayerId).location])
-      let nextBoundary = boundaries.get(sortedCoords.toString()) || ''
-
-      move(currentPlayerId,
-           cells.get(currentCell.cellNum),
-           nextBoundary)
+        move(currentPlayerId,
+          cells.get(currentCell.cellNum),
+          nextBoundary)
+      }
     }
 
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
