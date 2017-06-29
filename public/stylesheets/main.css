@@ -111,8 +111,8 @@
   width: 10px;
   height: 10px;
   position: absolute;
-  top: 16px;
-  left: 16px;
+  top: 0px;
+  left: 0px;
 }
 
 .smoke {
@@ -120,6 +120,6 @@
   height: 10px;
   background-color: green;
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 0px;
+  left: 0px;
 }
