@@ -157,11 +157,11 @@ const playerReducer = (state = initial, action) => {
         })
       }
     } else {
-      if (action.boundary.status === 2) {
+      if (action.boundary.status === AP_COSTS.damageWall) {
         errorMessage = `The wall is already destroyed`
       } else if (!isBoundaryAdjacent(action.boundary.coord, currentPlayerLocation)) {
         errorMessage = `You can only damage adjacent walls`
-      } else if (currentPlayer.ap < 2) {
+      } else if (currentPlayer.ap < AP_COSTS.damageWall) {
         errorMessage = `You don't have enough AP to damage this wall`
       }
       console.error(errorMessage)

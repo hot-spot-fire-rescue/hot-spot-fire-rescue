@@ -12,10 +12,44 @@ import {movePlayer,
 
 
 class Board extends React.Component {
+  constructor(props) {
+    super(props)
+    this.handleCellClick = this.handleCellClick.bind(this)
+    this.handleDoorSwitch = this.handleDoorSwitch.bind(this)
+    this.handleWallDamage = this.handleWallDamage.bind(this)
+    this.handleEndTurnClick = this.handleEndTurnClick.bind(this)
+  }
+
   componentWillMount() {
     this.props.fireRef.once('value', (snapshot) => {
       if (!snapshot.exists()) this.props.fetchInitialData()
     })
+  }
+
+  handleWallDamage(event, wall) {
+    event.stopPropagation()
+    this.props.changeWallStatus(wall)
+  }
+
+  handleDoorSwitch(event, door) {
+    event.stopPropagation()
+    this.props.openOrCloseDoor(door.coord)
+  }
+
+  handleEndTurnClick(event) {
+    event.stopPropagation()
+    this.props.endTurn()
+  }
+
+  handleCellClick(event, currentCell) {
+    event.stopPropagation()
+
+    const sortedCoords = sortCoord([currentCell.cellNum, this.props.players.get(this.props.currentPlayerId).location])
+    const nextBoundary = this.props.boundaries.get(sortedCoords.toString()) || ''
+
+    this.props.move(this.props.currentPlayerId,
+         this.props.cells.get(currentCell.cellNum),
+         nextBoundary)
   }
 
   render() {
@@ -180,7 +214,6 @@ const mapState = ({board, boundary, player, danger}) => ({
 
 const mapDispatch = dispatch => ({
   fetchInitialData: () => {
-    console.log('I am here')
     dispatch(setupBoard())
   },
   endTurn: () => {
