@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {Alert, FormControl, FormGroup, ControlLabel, Form, Col, Button} from 'react-bootstrap'
-import {fbAuth} from '/Users/ana/aCapstoneStuff/hot-spot-fire-rescue/game/firebase.js'
+
+import {fbAuth} from 'APP/game/firebase.js'
 
 export default class Signup extends Component {
   constructor() {

@@ -1,10 +1,12 @@
 import React from 'react'
+import {PanelGroup, Panel} from 'react-bootstrap'
+import {browserHistory} from 'react-router'
+
 import firebase from 'APP/fire'
 const auth = firebase.auth()
-import {PanelGroup, Panel} from 'react-bootstrap'
-import PlainLogin from '/Users/ana/aCapstoneStuff/hot-spot-fire-rescue/game/PlainLogin.jsx'
+
+import PlainLogin from 'APP/game/PlainLogin'
 import Login from './Login'
-import {browserHistory} from 'react-router'
 
 export const name = user => {
   if (!user) return 'Nobody'

@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import {Alert, FormControl, FormGroup, ControlLabel, Form, Col, Button} from 'react-bootstrap'
-import {fbAuth} from '/Users/ana/aCapstoneStuff/hot-spot-fire-rescue/game/firebase.js'
 import {browserHistory} from 'react-router'
+
+import {fbAuth} from './firebase.js'
 
 export default class PlainLogin extends Component {
   constructor() {
@@ -24,14 +25,14 @@ export default class PlainLogin extends Component {
     )
   }
 
-  handleChange (e) {
+  handleChange(e) {
     this.setState({
       [e.target.name]: e.target.value,
       showInvalidAlert: false,
     })
   }
 
-  handleSubmit (e) {
+  handleSubmit(e) {
     e.preventDefault()
     fbAuth
       .signInWithEmailAndPassword(this.state.email, this.state.password)
@@ -39,13 +40,13 @@ export default class PlainLogin extends Component {
       .then(() => browserHistory.push('/lobby/test'))
       .catch(error => {
         this.setState({
-        showInvalidAlert: true,
+          showInvalidAlert: true,
         })
         console.error(error)
       })
   }
 
-  render () {
+  render() {
     return (
       <div>
         <Form horizontal onSubmit={this.handleSubmit}>
