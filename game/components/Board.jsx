@@ -68,7 +68,7 @@ class Board extends React.Component {
     const handleDoorSwitch = this.handleDoorSwitch
     const handleWallDamage = this.handleWallDamage
     const handleEndTurnClick = this.handleEndTurnClick
-
+    
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
 
     return (
