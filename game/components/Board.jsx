@@ -24,6 +24,7 @@ class Board extends React.Component {
       if (!snapshot.exists()) this.props.fetchInitialData()
     })
   }
+/* In componentDidMount, dispatch a joinGame action. Talk to Witches Brew (or look at their gitHub) to see the patch needed to rework the store. -KHAKLM */
 
   handleWallDamage(event, wall) {
     event.stopPropagation()
@@ -52,7 +53,7 @@ class Board extends React.Component {
                       nextBoundary)
     }
   }
-
+/* Use emoji characters to render the board (for now) -ASHI */
   render() {
     // console.log('board re rendering')
     const {
@@ -68,7 +69,7 @@ class Board extends React.Component {
     const handleDoorSwitch = this.handleDoorSwitch
     const handleWallDamage = this.handleWallDamage
     const handleEndTurnClick = this.handleEndTurnClick
-    
+
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
 
     return (

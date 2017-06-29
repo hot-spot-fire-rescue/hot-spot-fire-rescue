@@ -42,7 +42,7 @@ class Danger extends React.Component {
       removeFire,
       removeSmoke,
     } = this.props
-  
+/* Perhaps you can refactor the if/else statement below. Instead of inline styles, you could possibly use css and classes, such as 'smoke' or 'fire' -KHAKLM */
   {
         if (kind === 'fire' && status === 1) {
           return (

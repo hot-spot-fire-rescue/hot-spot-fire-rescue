@@ -9,7 +9,7 @@ import thunkMiddleware from 'redux-thunk'
 
 import reducer from '../reducers'
 import Board from './Board'
-
+/* Add your chat alerts here, maybe, but make a nice clean chat reducer */
 export default class extends React.Component {
   componentDidMount() {
     this.mountStoreAtRef(this.props.fireRef)

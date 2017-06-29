@@ -6,7 +6,7 @@ import {REMOVE_FIRE, REMOVE_SMOKE, FIRE_TO_SMOKE} from './danger'
 import {AP_COSTS} from '../utils/constants'
 
 // -- // -- // Actions // -- // -- //
-
+/* Create a JOIN GAME action -KHAKLM */
 export const CREATE_PLAYER = 'CREATE_PLAYER'
 export const createPlayer = (id, ap, location, color) => ({
   type: CREATE_PLAYER,
@@ -177,7 +177,7 @@ const playerReducer = (state = initial, action) => {
   case REMOVE_FIRE:
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
-    if (currentPlayer.ap >= AP_COSTS.removeFire && 
+    if (currentPlayer.ap >= AP_COSTS.removeFire &&
       action.location === currentPlayerLocation) {
       return {...state,
         players: state.players.set(state.currentId, {
@@ -204,7 +204,7 @@ const playerReducer = (state = initial, action) => {
   case FIRE_TO_SMOKE:
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
-    if (currentPlayer.ap >= AP_COSTS.fireToSmoke && 
+    if (currentPlayer.ap >= AP_COSTS.fireToSmoke &&
       action.location === currentPlayerLocation) {
       return {...state,
         players: state.players.set(state.currentId, {
@@ -233,7 +233,7 @@ const playerReducer = (state = initial, action) => {
   case REMOVE_SMOKE:
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
-    if (currentPlayer.ap >= AP_COSTS.removeSmoke && 
+    if (currentPlayer.ap >= AP_COSTS.removeSmoke &&
       action.location === currentPlayerLocation) {
       return {...state,
         players: state.players.set(state.currentId, {
