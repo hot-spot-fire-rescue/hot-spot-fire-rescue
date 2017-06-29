@@ -57,7 +57,7 @@ class Danger extends React.Component {
               onRequestClose={this.handleRequestClose}
             >
               <Menu>
-                <MenuItem primaryText="Change To Smoke" />
+                <MenuItem primaryText="Change To Smoke" onClick={()=> fireToSmoke(location)}/>
                 <MenuItem primaryText="Extinguish Fire" onClick={() => removeFire(location)}/>
               </Menu>
             </Popover>
@@ -67,7 +67,7 @@ class Danger extends React.Component {
           return (
             <div>
               <div className='fire'
-                id={location} style={{backgroundColor: 'grey'}} onClick={this.handleClick}/>
+                id={location} style={{backgroundColor: 'grey'}} />
               <Popover
               open={this.state.open}
               anchorEl={this.state.anchorEl}
@@ -76,8 +76,8 @@ class Danger extends React.Component {
               onRequestClose={this.handleRequestClose}
             >
               <Menu>
-                <MenuItem primaryText="Change To Fire" />
-                <MenuItem primaryText="Extinguish Smoke" />
+                <MenuItem primaryText="Change To Fire" onClick={()=> smokeToFire(location)}/>
+                <MenuItem primaryText="Extinguish Smoke" onClick={() => removeSmoke(location)}/>
               </Menu>
             </Popover>
           </div>

@@ -119,16 +119,16 @@ const dangerReducer = (state = initial, action) => {
     //   )
 
     case FIRE_TO_SMOKE:
-      return state.setIn([action.location, 'kind'],action.kind)
+      return state.update(action.location, val => Object.assign(val, {kind: action.kind}))
 
     case SMOKE_TO_FIRE:
-      return state.setIn([action.location, 'kind'],action.kind)
+      return state.update(action.location, val => Object.assign(val, {kind: action.kind}))
 
     case REMOVE_FIRE:
       return state.update(action.location, val => Object.assign(val, {status: action.status}))
 
     case REMOVE_SMOKE:
-      return state.setIn([action.location, 'status'],action.status)
+      return state.update([action.location, val => Object.assign(val, {status: action.status}))
   }
 
   return state
