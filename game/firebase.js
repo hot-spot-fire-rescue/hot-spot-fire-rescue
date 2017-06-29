@@ -1,5 +1,4 @@
 'use strict'
-console.log("GETTING TO FIREBASE.JS")
 // import firebase from 'firebase';
 const config = {
   apiKey: 'AIzaSyDH2LzZ1o__5JwmdJuhw0VqY_CIMTeRQ2Y',
@@ -9,7 +8,6 @@ const config = {
   storageBucket: '',
   messagingSenderId: '1060889978146'
 }
-console.log("THIS IS CONFIG", config)
 
 const firebase = require("firebase")
 require("firebase/auth")
@@ -22,10 +20,11 @@ export const googleProvider = new firebase.auth.GoogleAuthProvider()
 export const facebookProvider = new firebase.auth.FacebookAuthProvider()
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
-    console.log('hahahahahahahha', user.uid)
+    // console.log('uid', user.uid)
   }
 })
-console.log('fbDB', fbDB)
-console.log('fbAuth ID YESSSSS', fbAuth)
-console.log(googleProvider)
-console.log(facebookProvider)
+
+// console.log('fbDB:', fbDB)
+// console.log('fbAuth ID:', fbAuth)
+// console.log(googleProvider)
+// console.log(facebookProvider)
