@@ -1,14 +1,7 @@
 const firebase = require('firebase')
 
 // -- // -- // -- // Firebase Config // -- // -- // -- //
-// const config = {
-//   apiKey: 'AIzaSyBzz-Wq2dzMgM7E8cdSYnYoX5fbVUT-XQo',
-//   authDomain: 'firebones-6bc2a.firebaseapp.com',
-//   databaseURL: 'https://firebones-6bc2a.firebaseio.com',
-//   projectId: 'firebones-6bc2a',
-//   storageBucket: 'firebones-6bc2a.appspot.com',
-//   messagingSenderId: '1030378391678'
-// }
+
 const config = {
   apiKey: 'AIzaSyDH2LzZ1o__5JwmdJuhw0VqY_CIMTeRQ2Y',
   authDomain: 'hot-spot-fire-rescue-7ae18.firebaseapp.com',
@@ -17,6 +10,7 @@ const config = {
   storageBucket: '',
   messagingSenderId: '1060889978146'
 }
+
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
 // Initialize the app, but make sure to do it only once.

@@ -5,7 +5,7 @@ import {browserHistory} from 'react-router'
 import firebase from 'APP/fire'
 const auth = firebase.auth()
 
-import PlainLogin from 'APP/game/PlainLogin'
+import PlainLogin from 'APP/app/components/PlainLogin'
 import Login from './Login'
 
 export const name = user => {

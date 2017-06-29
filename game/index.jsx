@@ -3,7 +3,7 @@ import React from 'react'
 import {Route, IndexRedirect, IndexRoute, Link} from 'react-router'
 import {PanelGroup, Panel} from 'react-bootstrap'
 
-import Signup from 'APP/game/Signup'
+import Signup from 'APP/app/components/Signup'
 import Lobby from './components/Lobby'
 import GamePageWrapper from './GamePageWrapper'
 
