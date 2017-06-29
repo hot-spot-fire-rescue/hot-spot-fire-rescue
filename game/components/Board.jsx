@@ -66,33 +66,36 @@ class Board extends React.Component {
       openOrCloseDoor,
       endTurn} = this.props
 
-    const handleWallDamage = (event, wall) => {
-      event.stopPropagation()
-      changeWallStatus(wall)
-    }
+    // const handleWallDamage = (event, wall) => {
+    //   event.stopPropagation()
+    //   changeWallStatus(wall)
+    // }
 
-    const handleDoorSwitch = (event, door) => {
-      event.stopPropagation()
-      openOrCloseDoor(door.coord)
-    }
+    // const handleDoorSwitch = (event, door) => {
+    //   event.stopPropagation()
+    //   openOrCloseDoor(door.coord)
+    // }
 
-    const handleEndTurnClick = (event) => {
-      event.stopPropagation()
-      endTurn()
-    }
+    // const handleEndTurnClick = (event) => {
+    //   event.stopPropagation()
+    //   endTurn()
+    // }
 
-    const handleCellClick = (event, currentCell) => {
-      event.stopPropagation()
-      if (event.target.className === "className") {
-        let sortedCoords = sortCoord([currentCell.cellNum, players.get(currentPlayerId).location])
-        let nextBoundary = boundaries.get(sortedCoords.toString()) || ''
+    // const handleCellClick = (event, currentCell) => {
+    //   event.stopPropagation()
+    //   if (event.target.className === "className") {
+    //     let sortedCoords = sortCoord([currentCell.cellNum, players.get(currentPlayerId).location])
+    //     let nextBoundary = boundaries.get(sortedCoords.toString()) || ''
 
-        move(currentPlayerId,
-          cells.get(currentCell.cellNum),
-          nextBoundary)
-      }
-    }
-
+    //     move(currentPlayerId,
+    //       cells.get(currentCell.cellNum),
+    //       nextBoundary)
+    //   }
+    // }
+    const handleCellClick = this.handleCellClick
+    const handleDoorSwitch = this.handleDoorSwitch
+    const handleWallDamage = this.handleWallDamage
+    const handleEndTurnClick = this.handleEndTurnClick
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
 
     return (
