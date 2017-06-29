@@ -2,7 +2,7 @@ const firebase = require('firebase')
 
 // -- // -- // -- // Firebase Config // -- // -- // -- //
 
-const config = {
+export const config = {
   apiKey: 'AIzaSyDH2LzZ1o__5JwmdJuhw0VqY_CIMTeRQ2Y',
   authDomain: 'hot-spot-fire-rescue-7ae18.firebaseapp.com',
   databaseURL: 'https://hot-spot-fire-rescue-7ae18.firebaseio.com',
