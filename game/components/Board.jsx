@@ -62,51 +62,13 @@ class Board extends React.Component {
       currentPlayerId,
       cells,
       boundaries,
-<<<<<<< HEAD
-      fetchInitialData,
-      move,
-      changeWallStatus,
-      openOrCloseDoor,
-      endTurn} = this.props
-
-    // const handleWallDamage = (event, wall) => {
-    //   event.stopPropagation()
-    //   changeWallStatus(wall)
-    // }
-
-    // const handleDoorSwitch = (event, door) => {
-    //   event.stopPropagation()
-    //   openOrCloseDoor(door.coord)
-    // }
-
-    // const handleEndTurnClick = (event) => {
-    //   event.stopPropagation()
-    //   endTurn()
-    // }
-
-    // const handleCellClick = (event, currentCell) => {
-    //   event.stopPropagation()
-    //   if (event.target.className === "className") {
-    //     let sortedCoords = sortCoord([currentCell.cellNum, players.get(currentPlayerId).location])
-    //     let nextBoundary = boundaries.get(sortedCoords.toString()) || ''
-
-    //     move(currentPlayerId,
-    //       cells.get(currentCell.cellNum),
-    //       nextBoundary)
-    //   }
-    // }
-=======
       fetchInitialData} = this.props
 
->>>>>>> 65b4fbe02f779260d40d266269c7c81df921bb8d
     const handleCellClick = this.handleCellClick
     const handleDoorSwitch = this.handleDoorSwitch
     const handleWallDamage = this.handleWallDamage
     const handleEndTurnClick = this.handleEndTurnClick
-<<<<<<< HEAD
-=======
-
->>>>>>> 65b4fbe02f779260d40d266269c7c81df921bb8d
+    
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
 
     return (

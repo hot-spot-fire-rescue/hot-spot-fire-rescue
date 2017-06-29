@@ -5,5 +5,6 @@ export const AP_COSTS = {
   closeOrOpenDoor: 1,
   damageWall: 2,
   removeSmoke: 1,
-  removeFire: 2
+  removeFire: 2,
+  changeFireToSmoke: 1
 }
