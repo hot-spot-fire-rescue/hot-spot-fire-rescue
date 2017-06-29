@@ -203,7 +203,7 @@ const playerReducer = (state = initial, action) => {
   case END_TURN:
     currentPlayer = state.players.get(state.currentId)
     nextPlayerId = (state.currentId === state.players.count() - 1) ? 0 : state.currentId + 1
-    // can't store more than 4 AP for next turn
+    // This insures you can't store more than 4 AP for next turn
     nextAp = (currentPlayer.ap + 4 > 8) ? 8 : currentPlayer.ap + 4
     return {...state,
       players: state.players.set(state.currentId, {
