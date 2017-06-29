@@ -2,7 +2,8 @@ import React, {Component} from 'react'
 import {Alert, FormControl, FormGroup, ControlLabel, Form, Col, Button} from 'react-bootstrap'
 import {browserHistory} from 'react-router'
 
-import {fbAuth} from 'APP/fire/'
+import firebase from 'APP/fire'
+const fbAuth = firebase.auth()
 
 export default class PlainLogin extends Component {
   constructor() {
