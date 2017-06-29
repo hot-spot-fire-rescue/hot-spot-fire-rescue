@@ -3,14 +3,14 @@ import {List, fromJS} from 'immutable'
 `
 Legend for Danger:
 fire: 0 = removed, 1 = exist
-smoke: 0 = removed, 1 = exist 
+smoke: 0 = removed, 1 = exist
 `
 
 // -- // -- // Actions // -- // -- //
 
 export const CREATE_DANGER = 'CREATE_DANGER'
 export const createDanger = (location, kind, status) => {
-    return ({
+  return ({
     type: CREATE_DANGER,
     location,
     kind,
@@ -48,6 +48,7 @@ export const removeSmoke = (location) => ({
   kind: 'smoke',
   status: 0
 })
+
 // -- // -- // State // -- // -- //
 
 const initial = List()
@@ -56,24 +57,24 @@ const initial = List()
 
 const dangerReducer = (state = initial, action) => {
   switch (action.type) {
-    case CREATE_DANGER:
-      return state.set(action.location, fromJS({
-          location: action.location,  
-          kind: action.kind,
-          status: action.status
-        }))
+  case CREATE_DANGER:
+    return state.set(action.location, fromJS({
+      location: action.location,
+      kind: action.kind,
+      status: action.status
+    }))
 
-    case FIRE_TO_SMOKE:
-      return state.setIn([action.location, "kind"], action.kind)
+  case FIRE_TO_SMOKE:
+    return state.setIn([action.location, 'kind'], action.kind)
 
-    case SMOKE_TO_FIRE:
-      return state.setIn([action.location, "kind"], action.kind)
+  case SMOKE_TO_FIRE:
+    return state.setIn([action.location, 'kind'], action.kind)
 
-    case REMOVE_FIRE:
-      return state.setIn([action.location, "status"], action.status)
+  case REMOVE_FIRE:
+    return state.setIn([action.location, 'status'], action.status)
 
-    case REMOVE_SMOKE:
-      return state.setIn([action.location, "status"], action.status)
+  case REMOVE_SMOKE:
+    return state.setIn([action.location, 'status'], action.status)
   }
 
   return state
