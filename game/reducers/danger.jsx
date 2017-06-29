@@ -10,7 +10,6 @@ smoke: 0 = removed, 1 = exist
 
 export const CREATE_DANGER = 'CREATE_DANGER'
 export const createDanger = (location, kind, status) => {
-  console.log("THIS IS THE CREATEDANGERFUNC BEING ACCESSED")
     return ({
     type: CREATE_DANGER,
     location,
