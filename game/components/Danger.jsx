@@ -11,6 +11,7 @@ class Danger extends React.Component {
   constructor(props) {
     super(props)
     this.state={
+      anchorE1: null,
       open: false
     }
     this.handleClick = this.handleClick.bind(this)
@@ -82,6 +83,11 @@ class Danger extends React.Component {
             </Popover>
           </div>
         )
+      } else {
+        return (
+          <div>
+          </div>
+          )
       }
     }
   }

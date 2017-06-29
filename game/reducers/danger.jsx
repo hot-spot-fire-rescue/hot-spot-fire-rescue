@@ -17,13 +17,6 @@ export const createDanger = (location, kind, status) => {
     kind,
     status})
 }
-// export const CREATE_SMOKE = 'CREATE_SMOKE'
-// export const createSmoke = (location) => ({
-//   type: CREATE_SMOKE,
-//   location,
-//   kind: 'smoke',
-//   status: 1
-// })
 
 export const FIRE_TO_SMOKE = 'FIRE_TO_SMOKE'
 export const fireToSmoke = (location) => ({
@@ -71,53 +64,6 @@ const dangerReducer = (state = initial, action) => {
           status: action.status
         })
 
-    // case CREATE_SMOKE:
-    //   return state.set(action.location, {
-    //       location: action.location,
-    //       kind: action.kind,
-    //       status: action.status
-    //     })
-
-    // case FIRE_TO_SMOKE:
-    //   return (
-    //     danger.map(danger => {
-    //       if (danger.location === action.location) {
-    //         danger.kind = action.kind
-    //       }
-    //       return danger
-    //     })
-    //   )
-
-    // case SMOKE_TO_FIRE:
-    //   return (
-    //     danger.map(danger => {
-    //       if (danger.location === action.location) {
-    //         danger.kind = action.kind
-    //       }
-    //       return danger
-    //     })
-    //   )
-
-    // case REMOVE_FIRE:
-    //   return (
-    //     danger.map(danger => {
-    //       if (danger.location === action.location) {
-    //         danger.status = action.status
-    //       }
-    //       return danger
-    //     })
-    //   )
-
-    //   case REMOVE_SMOKE:
-    //   return (
-    //     danger.map(danger => {
-    //       if (danger.location === action.location) {
-    //         danger.status = action.status
-    //       }
-    //       return danger
-    //     })
-    //   )
-
     case FIRE_TO_SMOKE:
       return state.update(action.location, val => Object.assign(val, {kind: action.kind}))
 
@@ -128,7 +74,7 @@ const dangerReducer = (state = initial, action) => {
       return state.update(action.location, val => Object.assign(val, {status: action.status}))
 
     case REMOVE_SMOKE:
-      return state.update([action.location, val => Object.assign(val, {status: action.status}))
+      return state.update(action.location, val => Object.assign(val, {status: action.status}))
   }
 
   return state
