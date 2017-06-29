@@ -107,6 +107,14 @@
   left: 10px;
 }
 
+.fire {
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  top: 16px;
+  left: 16px;
+}
+
 .smoke {
   width: 10px;
   height: 10px;

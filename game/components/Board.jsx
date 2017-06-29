@@ -6,8 +6,10 @@ import {setupBoard} from '../utils/setup'
 import {sortCoord,
         switchDoor,
         damageWall} from '../reducers/boundary'
+import Danger from '../components/Danger'
 import {movePlayer,
         endTurn} from '../reducers/player'
+
 
 class Board extends React.Component {
   componentWillMount() {
@@ -17,8 +19,10 @@ class Board extends React.Component {
   }
 
   render() {
+    console.log('board re rendering')
     const {
       players,
+      danger, 
       currentPlayerId,
       cells,
       boundaries,
@@ -69,12 +73,16 @@ class Board extends React.Component {
             const southBoundaryCoord = [cell.cellNum, cell.cellNum + 10].toString()
             const eastBoundary = boundaries.get(eastBoundaryCoord)
             const southBoundary = boundaries.get(southBoundaryCoord)
+            const fire = danger.get(cell.cellNum)
             const player = players.find((val) => val.location === cell.cellNum)
 
             return (
               <div key={cell.cellNum}
               className="cell"
               onClick={(evt) => handleCellClick(evt, cell)}>
+                {
+                  fire && <Danger location={fire.location} kind={fire.kind} status={fire.status} />
+                }
                 {
                   player
                   && <div className='player'
@@ -157,11 +165,12 @@ class Board extends React.Component {
 
 // -- // -- // Container // -- // -- //
 
-const mapState = ({board, boundary, player}) => ({
+const mapState = ({board, boundary, player, danger}) => ({
   cells: board,
   boundaries: boundary,
   players: player.players,
-  currentPlayerId: player.currentId
+  currentPlayerId: player.currentId,
+  danger: danger
 })
 
 const mapDispatch = dispatch => ({

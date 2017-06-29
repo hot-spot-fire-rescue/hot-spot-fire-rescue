@@ -2,7 +2,7 @@
 import React from 'react'
 import {Router, Route, IndexRedirect, browserHistory} from 'react-router'
 import {render} from 'react-dom'
-
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import WhoAmI from './components/WhoAmI'
 import NotFound from './components/NotFound'
 
@@ -39,17 +39,21 @@ auth.onAuthStateChanged(user => user || auth.signInAnonymously())
 
 // Our root App component just renders a little frame with a nav
 // and whatever children the router gave us.
-const App = ({children}) =>
-  <div>
-    <nav>
-      {/* WhoAmI takes a firebase auth API and renders either a
-          greeting and a logout button, or sign in buttons, depending
-          on if anyone's logged in */}
-      <WhoAmI auth={auth}/>
-    </nav>
-    {/* Render our children (whatever the router gives us) */}
-    {children}
-  </div>
+const App = ({children}) =>(
+  <MuiThemeProvider>
+    <div>
+      <nav>
+        {/* WhoAmI takes a firebase auth API and renders either a
+            greeting and a logout button, or sign in buttons, depending
+            on if anyone's logged in */}
+        <WhoAmI auth={auth}/>
+      </nav>
+      {/* Render our children (whatever the router gives us) */}
+      {children}
+    </div>
+  </MuiThemeProvider>
+)
+  
 
 render(
   <Router history={browserHistory}>
