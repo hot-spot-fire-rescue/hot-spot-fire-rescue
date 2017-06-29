@@ -63,7 +63,6 @@
     "pretty-error": "^2.0.2",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.0",
-    "react-dice-complete": "^1.0.2",
     "react-dom": "^15.6.1",
     "react-redux": "^4.4.5",
     "react-router": "^3.0.0",
