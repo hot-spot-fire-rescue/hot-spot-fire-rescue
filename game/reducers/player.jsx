@@ -2,6 +2,7 @@ import {List} from 'immutable'
 
 import {DAMAGE_WALL,
         SWITCH_DOOR} from './boundary'
+import {AP_COSTS} from '../utils/constants'
 
 // -- // -- // Actions // -- // -- //
 
@@ -14,17 +15,11 @@ export const createPlayer = (id, ap, location, color) => ({
   color
 })
 
-export const RECEIVE_PLAYERS = 'RECEIVE_PLAYERS'
-export const receivePlayers = players => ({
-  type: RECEIVE_PLAYERS,
-  players
-})
-
-export const UPDATE_CURRENT_PLAYER = 'UPDATE_CURRENT_PLAYER'
-export const updateCurrentPlayer = player => ({
-  type: UPDATE_CURRENT_PLAYER,
-  player
-})
+// export const RECEIVE_PLAYERS = 'RECEIVE_PLAYERS'
+// export const receivePlayers = players => ({
+//   type: RECEIVE_PLAYERS,
+//   players
+// })
 
 export const MOVE_PLAYER = 'MOVE_PLAYER'
 export const movePlayer = (id, nextCell, nextBoundary) => ({
@@ -32,13 +27,6 @@ export const movePlayer = (id, nextCell, nextBoundary) => ({
   id,
   nextCell,
   nextBoundary
-})
-
-export const SET_AP = 'SET_AP'
-export const setAp = (id, points) => ({
-  type: SET_AP,
-  id,
-  points
 })
 
 export const END_TURN = 'END_TURN'
@@ -63,16 +51,16 @@ const isPassable = (boundary) => {
   }
 }
 
-// TODO: Make this into a general 'find AP cost function'
+// TODO: Make this into a general 'find AP cost function'?
 const findMoveApCost = (nextCell) => {
   const nextCellStatus = nextCell.status
   if (nextCellStatus === 0) {
-    return 1
-  // TODO: check if carrying victim
+    return AP_COSTS.moveToEmptyCell
   } else if (nextCellStatus === 1) {
-    return 2
+    return AP_COSTS.moveToFireCell
+  // TODO: check if carrying victim
   } else {
-    console.log('Error in findApCost')
+    console.error('Error in findApCost()')
   }
 }
 
@@ -99,14 +87,10 @@ const playerReducer = (state = initial, action) => {
     currentPlayerLocation,
     nextAp,
     apCost,
-    nextPlayerId
+    nextPlayerId,
+    errorMessage
 
   switch (action.type) {
-  case UPDATE_CURRENT_PLAYER:
-    return {...state,
-      currentId: action.player
-    }
-
   case CREATE_PLAYER:
     return {...state,
       players: state.players.push({
@@ -131,21 +115,30 @@ const playerReducer = (state = initial, action) => {
         hasEnoughAp(currentPlayer, apCost)) {
       return {...state,
         players: state.players.set(action.id, {
+          ...state.players.get(action.id),
           ap: currentPlayer.ap - apCost,
           location: nextCellNum,
-          color: currentPlayer.color,
           error: null
         })
       }
+    // TODO: return error if trying to carry victim through fire
     } else {
-      // Send this error to the error message component
-      console.error('This is not a legal move')
+      if (nextCellNum === currentPlayerLocation) {
+        errorMessage = `You are already at this location`
+      } else if (!isAdjacent(nextCellNum, currentPlayerLocation)) {
+        errorMessage = `You can only move to adjacent locations`
+      } else if (!isPassable(nextBoundary) && nextBoundary.kind === 'door') {
+        errorMessage = `You have to open the door first`
+      } else if (!isPassable(nextBoundary) && nextBoundary.kind === 'wall') {
+        errorMessage = `You can't pass through this intact wall`
+      } else if (!hasEnoughAp(currentPlayer, apCost)) {
+        errorMessage = `You don't have enough AP to move here`
+      }
+      console.error(errorMessage)
       return {...state,
         players: state.players.set(action.id, {
-          ap: currentPlayer.ap,
-          location: currentPlayer.location,
-          color: currentPlayer.color,
-          error: 'This is not a legal move'
+          ...state.players.get(action.id),
+          error: errorMessage
         })
       }
     }
@@ -153,33 +146,29 @@ const playerReducer = (state = initial, action) => {
   case DAMAGE_WALL:
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
-    if (currentPlayer.ap < 2) {
-      console.error(`You don't have enough AP`)
+    if (currentPlayer.ap >= AP_COSTS.damageWall &&
+        isBoundaryAdjacent(action.boundary.coord, currentPlayerLocation) &&
+        action.boundary.status !== 2) {
       return {...state,
         players: state.players.set(state.currentId, {
-          ap: currentPlayer.ap,
-          location: currentPlayer.location,
-          color: currentPlayer.color,
-          error: `You don't have enough AP`
-        })
-      }
-    } else if (!isBoundaryAdjacent(action.coord, currentPlayerLocation)) {
-      console.error(`The wall is too far`)
-      return {...state,
-        players: state.players.set(state.currentId, {
-          ap: currentPlayer.ap,
-          location: currentPlayer.location,
-          color: currentPlayer.color,
-          error: 'The wall is too far'
+          ...state.players.get(state.currentId),
+          ap: currentPlayer.ap - AP_COSTS.damageWall,
+          error: null
         })
       }
     } else {
+      if (action.boundary.status === 2) {
+        errorMessage = `The wall is already destroyed`
+      } else if (!isBoundaryAdjacent(action.boundary.coord, currentPlayerLocation)) {
+        errorMessage = `You can only damage adjacent walls`
+      } else if (currentPlayer.ap < 2) {
+        errorMessage = `You don't have enough AP to damage this wall`
+      }
+      console.error(errorMessage)
       return {...state,
         players: state.players.set(state.currentId, {
-          ap: currentPlayer.ap - 2, // TODO: Import from another file?
-          location: currentPlayer.location,
-          color: currentPlayer.color,
-          error: null
+          ...state.players.get(state.currentId),
+          error: errorMessage
         })
       }
     }
@@ -187,59 +176,39 @@ const playerReducer = (state = initial, action) => {
   case SWITCH_DOOR:
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
-    if (currentPlayer.ap < 1) {
-      console.error(`You don't have enough AP`)
+    if (currentPlayer.ap >= AP_COSTS.closeOrOpenDoor &&
+        isBoundaryAdjacent(action.coord, currentPlayerLocation)) {
       return {...state,
         players: state.players.set(state.currentId, {
-          ap: currentPlayer.ap,
-          location: currentPlayer.location,
-          color: currentPlayer.color,
-          error: `You don't have enough AP`
-        })
-      }
-    } else if (!isBoundaryAdjacent(action.coord, currentPlayerLocation)) {
-      console.error(`The door is too far`)
-      return {...state,
-        players: state.players.set(state.currentId, {
-          ap: currentPlayer.ap,
-          location: currentPlayer.location,
-          color: currentPlayer.color,
-          error: 'The door is too far'
-        })
-      }
-    } else {
-      return {...state,
-        players: state.players.set(state.currentId, {
-          ap: currentPlayer.ap - 1, // TODO: Import from another file?
-          location: currentPlayer.location,
-          color: currentPlayer.color,
+          ...state.players.get(state.currentId),
+          ap: currentPlayer.ap - AP_COSTS.closeOrOpenDoor,
           error: null
         })
       }
-    }
-
-  case SET_AP:
-    currentPlayer = state.players.get(state.currentId)
-    currentPlayerLocation = currentPlayer.location
-    nextAp = (action.points > 8) ? 8 : action.points
-    return {...state,
-      players: state.players.set(action.id, {
-        ap: nextAp,
-        location: currentPlayer.location,
-        color: currentPlayer.color,
-        error: null
-      })
+    } else {
+      if (!isBoundaryAdjacent(action.coord, currentPlayerLocation)) {
+        errorMessage = `You can only open or close adjacent doors`
+      } else if (currentPlayer.ap < AP_COSTS.closeOrOpenDoor) {
+        errorMessage = `You don't have enough AP to open or close this door`
+      }
+      console.error(errorMessage)
+      return {...state,
+        players: state.players.set(state.currentId, {
+          ...state.players.get(state.currentId),
+          error: errorMessage
+        })
+      }
     }
 
   case END_TURN:
     currentPlayer = state.players.get(state.currentId)
     nextPlayerId = (state.currentId === state.players.count() - 1) ? 0 : state.currentId + 1
+    // can't store more than 4 AP for next turn
     nextAp = (currentPlayer.ap + 4 > 8) ? 8 : currentPlayer.ap + 4
     return {...state,
       players: state.players.set(state.currentId, {
+        ...state.players.get(state.currentId),
         ap: nextAp,
-        location: currentPlayer.location,
-        color: currentPlayer.color,
         error: null
       }),
       currentId: nextPlayerId
