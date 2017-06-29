@@ -1,17 +1,5 @@
 'use strict'
-// import firebase from 'firebase';
-const config = {
-  apiKey: 'AIzaSyDH2LzZ1o__5JwmdJuhw0VqY_CIMTeRQ2Y',
-  authDomain: 'hot-spot-fire-rescue-7ae18.firebaseapp.com',
-  databaseURL: 'https://hot-spot-fire-rescue-7ae18.firebaseio.com',
-  projectId: 'hot-spot-fire-rescue-7ae18',
-  storageBucket: '',
-  messagingSenderId: '1060889978146'
-}
-
-const firebase = require("firebase")
-require("firebase/auth")
-require("firebase/database")
+const firebase = require('APP/fire/index')
 export const fbDB = firebase.database()
 export const fbAuth = firebase.auth()
 
