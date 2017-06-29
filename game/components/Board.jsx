@@ -71,8 +71,6 @@ class Board extends React.Component {
     
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
 
-    console.log(victims.find((val) => val.location === 24))
-
     return (
       <div>
 
