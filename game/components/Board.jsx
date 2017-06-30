@@ -58,17 +58,13 @@ class Board extends React.Component {
 
   handleEndTurnClick(event) {
     event.stopPropagation()
-
     const isValid = (num) => {
       if (num % 10 === 0 || num % 10 === 9 || num >= 70|| num <= 10) {
         return false
       }
       return true
     }
-    const hadSmoke = (num) => {
-      const currentCellstate = this.state.danger.get(num)
-      console.log(currentCellstate, 'currentCellstate')
-    }
+
     let locationToAddSmoke = 0
     while (!isValid(locationToAddSmoke)) {
       locationToAddSmoke = Math.floor(Math.random() * 48) + 1
@@ -91,11 +87,9 @@ class Board extends React.Component {
 
   removeUserCallback(event) {
     event.stopPropagation()
-    // console.log(event.target.id)
     const targetIndex= this.state.arrayUsers.indexOf(event.target.id)
     this.state.arrayUsers.splice(targetIndex, 1)
     delete this.state.players[targetIndex]['uid']
-    // console.log(this.state.players[targetIndex])
     this.setState({arrayUsers: this.state.arrayUsers})
   }
 
@@ -105,7 +99,6 @@ class Board extends React.Component {
         this.state.players[i].uid = this.state.currentUserId
         loadPlayers[i].uid = this.state.currentUserId
         this.setState({players: this.state.players})
-        // console.log('DO WE HAVE THIS.PROPS????', this.props)
         updatePlayer(this.state.players[i].id, this.state.currentUserId)
         break
       }
@@ -113,8 +106,6 @@ class Board extends React.Component {
   }
 
   render() {
-    // console.log('board re rendering')
-    console.log(loadPlayers)
     const {
       players,
       danger,

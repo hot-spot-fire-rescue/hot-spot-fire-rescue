@@ -62,29 +62,43 @@ export const endTurn = (location) => ({
 })
 
 // -- // -- // Helper // -- // -- //
-
-
-// export const addRandomSmoke = () => {
-
-//   return (dispatch) => {
-//     console.log('hello')
-//     const isValid = (num) => {
-//       if (num % 10 === 0 || num % 10 === 9 || num >= 70) {
-//         return false
-//       }
-//       return true
-//     }
-
-//     let locationToAddSmoke = 0
-//     while (!isValid(locationToAddSmoke)) {
-//       locationToAddSmoke = Math.floor(Math.random() * 48) + 1
-//     }
-
-//     console.log('locationToAddSmoke', locationToAddSmoke)
-
-//     dispatch(createDanger(locationToAddSmoke, 'smoke', 1))
-//   }
+// const sortCoord = (coord) => {
+//   const [first, second] = coord
+//   return first > second ? [second, first] : [first, second]
 // }
+
+// const isInsideBuilding = (location) => {
+//   if (num % 10 === 0 || num % 10 === 9 || num >= 70|| num <= 10) {
+//     return false
+//   }
+//   return true
+// }
+
+// const checkStatus = (location) => {
+//   const targetCellKind = danger.getIn([location, 'kind'])
+//   const targetCellStatus = danger.getIn([location, 'status'])
+//   if (targetCellKind === 'smoke' && targetCellStatus === 1){
+//     return 'fire'
+//   } else if (target) {
+
+//   }
+
+// const checkAdjacent = (location, boundary) => {
+//     const adjCells =[]
+//     const adjToCheck = [location -1, location + 1, location - 10, location + 10]
+//     for (var i = 0; i < adjToCheck.length ; i++){
+//       var sortedCoord = sortCoord(adjTocheck[i], location)
+//       if (isInsideBuilding(adjToCheck[i]) && boundary.get(sortedCoord.toString()) !== undefined) {
+//           adjCells.push(adjToCheck[i])
+//       }
+//     }
+//   return adjCells
+// }
+
+// const kindToRender = (location) => {
+
+// }
+
 // -- // -- // State // -- // -- //
 
 const initial = List()
