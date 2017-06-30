@@ -49,6 +49,17 @@ export const removeSmoke = (location) => ({
   status: 0
 })
 
+export const END_TURN = 'END_TURN'
+export const endTurn = (location) => ({
+  type: END_TURN,
+  location
+})
+
+// export const END_TURN = 'END_TURN'
+// export const endTurn = () => ({
+//   type: END_TURN
+// })
+
 // -- // -- // State // -- // -- //
 
 const initial = List()
@@ -75,6 +86,13 @@ const dangerReducer = (state = initial, action) => {
 
   case REMOVE_SMOKE:
     return state.setIn([action.location, 'status'], action.status)
+
+  case END_TURN:
+    return state.set([action.location, {
+      location: action.location,
+      kind: 'smoke',
+      status: 1
+    }])
   }
 
   return state

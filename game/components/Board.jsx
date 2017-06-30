@@ -9,6 +9,7 @@ import {sortCoord,
 import Danger from '../components/Danger'
 import {movePlayer,
         endTurn} from '../reducers/player'
+import reducer from '../reducers/'
 
 class Board extends React.Component {
   constructor(props) {
@@ -37,7 +38,8 @@ class Board extends React.Component {
 
   handleEndTurnClick(event) {
     event.stopPropagation()
-    this.props.endTurn()
+    const locationToAddSmoke = Math.floor(Math.random() * 48) + 1
+    this.props.endTurn(locationToAddSmoke)
   }
 
   handleCellClick(event, currentCell) {
@@ -68,7 +70,7 @@ class Board extends React.Component {
     const handleDoorSwitch = this.handleDoorSwitch
     const handleWallDamage = this.handleWallDamage
     const handleEndTurnClick = this.handleEndTurnClick
-    
+
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
 
     return (

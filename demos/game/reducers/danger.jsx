@@ -1,10 +1,10 @@
 'use strict'
-import {combineReducers} from 'redux'
+import { combineReducers } from 'redux'
 
 `
 Legend for Danger:
 fire: 0 = removed, 1 = exist
-smoke: 0 = removed, 1 = exist 
+smoke: 0 = removed, 1 = exist
 `
 
 // -- // -- // Actions // -- // -- //
@@ -113,7 +113,7 @@ const dangerReducer = (danger = [], action) => {
         })
       )
 
-      case REMOVE_SMOKE:
+    case REMOVE_SMOKE:
       return (
         danger.map(danger => {
           if (danger.location === action.location) {
