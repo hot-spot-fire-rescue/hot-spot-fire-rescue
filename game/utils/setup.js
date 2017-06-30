@@ -1,8 +1,10 @@
 import {createCell} from '../reducers/board'
 import {createBoundary} from '../reducers/boundary'
-import {createPlayer, updateCurrentPlayer} from '../reducers/player'
+import {createPlayer, updatePlayer} from '../reducers/player'
 import {createDanger} from '../reducers/danger'
 import {createPoi} from '../reducers/victim'
+import firebase from 'APP/fire'
+import {loadPlayers, sendPlayersToFirebase} from '../components/promises'
 
 `
 Legend for Cells:
@@ -65,6 +67,10 @@ const initialPoi = [
   [4, 52],
   [8, 58]
 ]
+
+initialPlayers.forEach(info => {
+  sendPlayersToFirebase(info[0], 4, info[1], info[2])
+})
 
 export const setupBoard = () => dispatch => {
   for (let idx = 0; idx < 80; idx++) {

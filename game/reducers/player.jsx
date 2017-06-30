@@ -13,7 +13,14 @@ export const createPlayer = (id, ap, location, color) => ({
   id,
   ap,
   location,
-  color
+  color,
+})
+
+export const UPDATE_PLAYER='UPDATE_PLAYER'
+export const updatePlayer= (id, uid) => ({
+  type: UPDATE_PLAYER,
+  id,
+  uid
 })
 
 // export const RECEIVE_PLAYERS = 'RECEIVE_PLAYERS'
@@ -98,7 +105,16 @@ const playerReducer = (state = initial, action) => {
         ap: action.ap,
         location: action.location,
         color: action.color,
+        uid: null,
         error: null
+      })
+    }
+
+  case UPDATE_PLAYER:
+    return {...state,
+      players: state.players.set(action.id, {
+        ...state.players.get(action.id),
+        uid: action.uid
       })
     }
 
