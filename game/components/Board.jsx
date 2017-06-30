@@ -29,8 +29,11 @@ class Board extends React.Component {
     this.handleWallDamage = this.handleWallDamage.bind(this)
     this.handleEndTurnClick = this.handleEndTurnClick.bind(this)
     this.handlePoiClick = this.handlePoiClick.bind(this)
-    this.removeUserCallback=this.removeUserCallback.bind(this)
-    this.playerJoin=this.playerJoin.bind(this)
+    this.rescuedVictimCount = this.rescuedVictimCount.bind(this)
+    this.lostVictimCount = this.lostVictimCount.bind(this)
+    this.didGameEnd = this.didGameEnd.bind(this)
+    this.removeUserCallback =this.removeUserCallback.bind(this)
+    this.playerJoin = this.playerJoin.bind(this)
   }
 
   componentWillMount() {
@@ -79,12 +82,38 @@ class Board extends React.Component {
     this.props.pickUpOrDropVictim(victim, this.props.currentPlayerId)
   }
 
+  damageCount() {
+    // TODO
+  }
+
+  rescuedVictimCount() {
+    const rescued = this.props.victims.countBy(victim => victim.status)
+    return rescued.get(2) || 0
+  }
+
+  lostVictimCount() {
+    const lost = this.props.victims.countBy(victim => victim.status)
+    return lost.get(3) || 0
+  }
+
+  didGameEnd() {
+    if (this.damageCount() > 23) {
+      // Building collapsed!
+    }
+    if (this.lostVictimCount() > 4) {
+      // Defeat - 4 victims were lost
+    }
+    if (this.rescuedVictimCount > 6) {
+      // Victory - 7 victims were rescued!
+    }
+  }
+
   removeUserCallback(event) {
     event.stopPropagation()
     console.log(event.target.id)
     const targetIndex= this.state.arrayUsers.indexOf(event.target.id)
     this.state.arrayUsers.splice(targetIndex, 1)
-    delete this.state.players[targetIndex]['uid'] // ??
+    delete this.state.players[targetIndex]['uid']
     console.log(this.state.players[targetIndex])
     this.setState({arrayUsers: this.state.arrayUsers})
   }
@@ -115,6 +144,8 @@ class Board extends React.Component {
     let handleWallDamage = this.handleWallDamage
     let handleEndTurnClick = this.handleEndTurnClick
     let handlePoiClick = this.handlePoiClick
+    let rescuedVictimCount = this.rescuedVictimCount
+    let lostVictimCount = this.lostVictimCount
     let condition = this.state.players[currentPlayerId].uid !== this.state.currentUserId
 
     // don't put console logs in render
@@ -124,6 +155,7 @@ class Board extends React.Component {
       handleWallDamage = () => (console.log('It is not your turn yet.  Have patience, padawan'))
       handleEndTurnClick = () => (console.log('It is not your turn yet.  Have patience, padawan'))
     }
+
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
 
     return (
@@ -133,6 +165,8 @@ class Board extends React.Component {
         <button disabled={condition} onClick={handleEndTurnClick}>End Turn</button>
         <h6>Player0-blue, Player1-green, Player2-purple, Player3-orange </h6>
         <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
+        <h5>Number of saved victims: {rescuedVictimCount()}</h5>
+        <h5>Number of lost victims: {lostVictimCount()}</h5>
 
         {
           cells.map(cell => {

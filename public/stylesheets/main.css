@@ -119,6 +119,7 @@
 
 .victim-carried {
   background-color: lightgreen;
+  top: 5px;
 }
 
 .victim-uncarried {
