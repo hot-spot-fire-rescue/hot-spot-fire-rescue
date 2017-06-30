@@ -30,3 +30,12 @@ export const sendBoardToFirebase = (id) => {
     loadBoards.push(snapshot.val())
   })
 }
+
+export const loadCurrentUserName=''
+export const loadCurrentUserId=''
+
+firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    
+  }
+})

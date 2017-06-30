@@ -13,7 +13,14 @@ export const createPlayer = (id, ap, location, color) => ({
   id,
   ap,
   location,
-  color
+  color,
+})
+
+export const UPDATE_PLAYER='UPDATE_PLAYER'
+export const updatePlayer= (id, uid) => ({
+  type: UPDATE_PLAYER,
+  id,
+  uid
 })
 
 // export const RECEIVE_PLAYERS = 'RECEIVE_PLAYERS'
@@ -98,7 +105,16 @@ const playerReducer = (state = initial, action) => {
         ap: action.ap,
         location: action.location,
         color: action.color,
+        uid: null,
         error: null
+      })
+    }
+
+  case UPDATE_PLAYER:
+    return {...state,
+      players: state.players.set(action.id, {
+        ...state.players.get(action.id),
+        uid: action.uid
       })
     }
 
@@ -148,7 +164,7 @@ const playerReducer = (state = initial, action) => {
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
     const nextFireBoundary = action.nextBoundary
-    if (currentPlayer.ap >= AP_COSTS.removeFire && 
+    if (currentPlayer.ap >= AP_COSTS.removeFire &&
       (isAdjacent(action.location, currentPlayerLocation) || (action.location === currentPlayerLocation)) &&
       isPassable(nextFireBoundary) ) {
       return {...state,
@@ -181,7 +197,7 @@ const playerReducer = (state = initial, action) => {
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
     const nextFireToSmokeBoundary = action.nextBoundary
-    if (currentPlayer.ap >= AP_COSTS.fireToSmoke && 
+    if (currentPlayer.ap >= AP_COSTS.fireToSmoke &&
      (isAdjacent(action.location, currentPlayerLocation) || (action.location === currentPlayerLocation)) &&
       isPassable(nextFireToSmokeBoundary) )  {
       return {...state,
@@ -214,7 +230,7 @@ const playerReducer = (state = initial, action) => {
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
     const nextSmokeBoundary = action.nextBoundary
-    if (currentPlayer.ap >= AP_COSTS.removeSmoke && 
+    if (currentPlayer.ap >= AP_COSTS.removeSmoke &&
       (isAdjacent(action.location, currentPlayerLocation) || (action.location === currentPlayerLocation)) &&
       isPassable(nextSmokeBoundary) ) {
       return {...state,
