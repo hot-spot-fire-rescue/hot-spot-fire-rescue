@@ -93,11 +93,13 @@ const playerReducer = (state = initial, action) => {
 
   switch (action.type) {
   case CREATE_PLAYER:
+  console.log(state.players.get(0))
     return {...state,
       players: state.players.push({
         ap: action.ap,
         location: action.location,
         color: action.color,
+        uid: '',
         error: null
       })
     }

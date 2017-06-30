@@ -31,10 +31,10 @@ export class Chatroom extends React.Component {
     event.target.text.value = null
   }
 
-  render(){
-    const messages = this.props.messages
-    return (
+//   render(){
+//     const messages = this.props.messages
+//     return (
       
-      )
-  }
-}
+//       )
+//   }
+// }
