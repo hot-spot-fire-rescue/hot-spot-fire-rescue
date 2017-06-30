@@ -117,6 +117,15 @@
   left: 10px;
 }
 
+.victim-carried {
+  background-color: lightgreen;
+  top: 5px;
+}
+
+.victim-uncarried {
+  background-color: lightcoral;
+}
+
 .fire {
   width: 10px;
   height: 10px;
