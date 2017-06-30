@@ -38,9 +38,10 @@ export const movePlayer = (id, nextCell, nextBoundary) => ({
 })
 
 export const END_TURN = 'END_TURN'
-export const endTurn = (location) => ({
+export const endTurn = (location, boundaries) => ({
   type: END_TURN,
-  location
+  location,
+  boundaries
 })
 
 // -- // -- // Helpers // -- // -- //
@@ -200,7 +201,7 @@ const playerReducer = (state = initial, action) => {
     const nextFireToSmokeBoundary = action.nextBoundary
     if (currentPlayer.ap >= AP_COSTS.fireToSmoke &&
      (isAdjacent(action.location, currentPlayerLocation) || (action.location === currentPlayerLocation)) &&
-      isPassable(nextFireToSmokeBoundary) )  {
+      isPassable(nextFireToSmokeBoundary)) {
       return {...state,
         players: state.players.set(state.currentId, {
           ...state.players.get(state.currentId),

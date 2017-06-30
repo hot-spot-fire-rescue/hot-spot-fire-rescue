@@ -64,12 +64,13 @@ class Board extends React.Component {
       }
       return true
     }
-
     let locationToAddSmoke = 0
     while (!isValid(locationToAddSmoke)) {
-      locationToAddSmoke = Math.floor(Math.random() * 48) + 1
+      locationToAddSmoke = Math.floor(Math.random() * 79) + 1
     }
-    this.props.endTurn(locationToAddSmoke)
+    const boundariesObj = this.props.boundaries.toObject()
+    console.log('boundariesObj', boundariesObj)
+    this.props.endTurn(locationToAddSmoke, boundariesObj)
   }
 
   handleCellClick(event, currentCell) {
@@ -249,8 +250,8 @@ const mapDispatch = dispatch => ({
   fetchInitialData: () => {
     dispatch(setupBoard())
   },
-  endTurn: (location) => {
-    dispatch(endTurn(location))
+  endTurn: (location, boundaries) => {
+    dispatch(endTurn(location, boundaries))
   },
   openOrCloseDoor: (coord) => {
     dispatch(switchDoor(coord))

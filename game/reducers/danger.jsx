@@ -54,11 +54,10 @@ export const removeSmoke = (location, nextBoundary) => ({
   nextBoundary
 })
 
-export const endTurn = (location) => ({
+export const endTurn = (location, boundaries) => ({
   type: END_TURN,
   location,
-  kind: 'smoke',
-  status: 1
+  boundaries
 })
 
 // -- // -- // Helper // -- // -- //
@@ -67,15 +66,16 @@ const sortCoord = (coord) => {
   return first > second ? [second, first] : [first, second]
 }
 
-const isInsideBuilding = (location) => {
-  if (location % 10 === 0 || location % 10 === 9 || location >= 70|| location <= 10) {
-    return false
-  }
-  return true
-}
+// const isInsideBuilding = (location) => {
+//   if (location % 10 === 0 || location % 10 === 9 || location >= 70|| location <= 10) {
+//     return false
+//   }
+//   return true
+// }
 
 const checkStatus = (location) => {
   const targetCellKind = this.state.danger.getIn([location, 'kind'])
+
   const targetCellStatus = this.state.danger.getIn([location, 'status'])
   if (targetCellKind === 'smoke' && targetCellStatus === 1) {
     return 'smoke'
@@ -85,17 +85,18 @@ const checkStatus = (location) => {
 }
 
 
-// const checkAdjacent = (location, boundary) => {
-//     const adjCells =[]
-//     const adjToCheck = [location -1, location + 1, location - 10, location + 10]
-//     for (var i = 0; i < adjToCheck.length ; i++){
-//       var sortedCoord = sortCoord(adjTocheck[i], location)
-//       if (isInsideBuilding(adjToCheck[i]) && boundary.get(sortedCoord.toString()) !== undefined) {
-//           adjCells.push(adjToCheck[i])
-//       }
+// const getNewStatus = (location, boundaries) => {
+//   const adjCells =[]
+//   const adjToCheck = [location -1, location + 1, location - 10, location + 10]
+//   for (var i = 0; i < adjToCheck.length; i++) {
+//     var sortedCoord = sortCoord(adjToCheck[i], location)
+//     if (isInsideBuilding(adjToCheck[i]) && boundaries.get(sortedCoord.toString()) !== undefined && checkStatus(adjToCheck[i]) === 'smoke') {
+//       return 'fire'
 //     }
-//   return adjCells
+//   }
 // }
+
+
 
 // -- // -- // State // -- // -- //
 
@@ -125,11 +126,29 @@ const dangerReducer = (state = initial, action) => {
     return state.setIn([action.location, 'status'], action.status)
 
   case END_TURN:
-    return state.set(action.location, fromJS({
-      location: action.location,
-      kind: 'smoke',
-      status: 1
-    }))
+    const targetCellKind = state.getIn([action.location, 'kind'])
+    const targetCellStatus = state.getIn([action.location, 'status'])
+
+    if (targetCellKind === 'smoke' && targetCellStatus === 1) {
+      return state.set(action.location, fromJS({
+        location: action.location,
+        kind: 'fire',
+        status: 1
+      }))
+    } else if (targetCellKind === 'fire' && targetCellStatus === 1) {
+
+      //check if north is a intact wall, damage it, if it's already damanaged , it will be destroyed
+      //if north is empty cell , just add fire to the cell
+      //if north is closed door, just destory the door
+      //if north is fire, check the next cell next to north ( while loop ), if goes outside of the building , then stops the loop
+
+    } else {
+      return state.set(action.location, fromJS({
+        location: action.location,
+        kind: 'smoke',
+        status: 1
+      }))
+    }
   }
 
   return state
