@@ -1,6 +1,6 @@
 import {createCell} from '../reducers/board'
 import {createBoundary} from '../reducers/boundary'
-import {createPlayer, updateCurrentPlayer} from '../reducers/player'
+import {createPlayer, updatePlayer} from '../reducers/player'
 import {createDanger} from '../reducers/danger'
 import {createPoi} from '../reducers/victim'
 import firebase from 'APP/fire'

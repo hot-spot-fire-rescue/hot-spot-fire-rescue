@@ -13,7 +13,14 @@ export const createPlayer = (id, ap, location, color) => ({
   id,
   ap,
   location,
-  color
+  color,
+})
+
+export const UPDATE_PLAYER='UPDATE_PLAYER'
+export const updatePlayer= (id, uid) => ({
+  type: UPDATE_PLAYER,
+  id,
+  uid
 })
 
 // export const RECEIVE_PLAYERS = 'RECEIVE_PLAYERS'
@@ -107,7 +114,16 @@ const playerReducer = (state = initial, action) => {
         location: action.location,
         color: action.color,
         carriedVictim: null,
+        uid: null,
         error: null
+      })
+    }
+
+  case UPDATE_PLAYER:
+    return {...state,
+      players: state.players.set(action.id, {
+        ...state.players.get(action.id),
+        uid: action.uid
       })
     }
 
@@ -229,7 +245,7 @@ const playerReducer = (state = initial, action) => {
 
     if (currentPlayer.ap >= AP_COSTS.removeSmoke &&
       (isAdjacent(action.location, currentPlayerLocation) || (action.location === currentPlayerLocation)) &&
-      isPassable(nextSmokeBoundary) ) {
+      isPassable(nextSmokeBoundary)) {
       return {...state,
         players: state.players.set(state.currentId, {
           ...state.players.get(state.currentId),
