@@ -70,10 +70,9 @@ const victimReducer = (state = initial, action) => {
         poi.location === action.nextCell.cellNum
       ))
       if (isPlayerMovingIntoFalseAlarm) {
-        console.info(`This was a false alarm!`) // TODO: move into message box
+        console.info(`This was a false alarm!`) // TODO: move into message box since this is logged even when player throws an error
         return state.delete(poiIndex)
       } else {
-        // not a false alarm
         console.info(`You found a victim!`)
         return state.set(poiIndex, {
           ...nextCellPoi,
