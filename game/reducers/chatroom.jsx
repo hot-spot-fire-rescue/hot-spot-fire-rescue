@@ -1,10 +1,15 @@
 import firebase from 'APP/fire'
+import {List, fromJS} from 'immutable'
+
+// -- // -- // Actions // -- // -- //
 
 const LOAD_MESSAGES = 'LOAD_MESSAGES'
 export const loadMessages = messages => ({
   type: LOAD_MESSAGES,
   messages
 })
+
+// -- // -- // Reducer // -- // -- //
 
 export default function reducer (messages = {}, action) {
   switch (action.type) {
