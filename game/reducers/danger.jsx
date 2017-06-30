@@ -56,14 +56,35 @@ export const removeSmoke = (location, nextBoundary) => ({
 export const END_TURN = 'END_TURN'
 export const endTurn = (location) => ({
   type: END_TURN,
-  location
+  location,
+  kind: 'smoke',
+  status: 1
 })
 
-// export const END_TURN = 'END_TURN'
-// export const endTurn = () => ({
-//   type: END_TURN
-// })
+// -- // -- // Helper // -- // -- //
 
+
+// export const addRandomSmoke = () => {
+
+//   return (dispatch) => {
+//     console.log('hello')
+//     const isValid = (num) => {
+//       if (num % 10 === 0 || num % 10 === 9 || num >= 70) {
+//         return false
+//       }
+//       return true
+//     }
+
+//     let locationToAddSmoke = 0
+//     while (!isValid(locationToAddSmoke)) {
+//       locationToAddSmoke = Math.floor(Math.random() * 48) + 1
+//     }
+
+//     console.log('locationToAddSmoke', locationToAddSmoke)
+
+//     dispatch(createDanger(locationToAddSmoke, 'smoke', 1))
+//   }
+// }
 // -- // -- // State // -- // -- //
 
 const initial = List()
@@ -92,11 +113,11 @@ const dangerReducer = (state = initial, action) => {
     return state.setIn([action.location, 'status'], action.status)
 
   case END_TURN:
-    return state.set([action.location, {
+    return state.set(action.location, fromJS({
       location: action.location,
       kind: 'smoke',
       status: 1
-    }])
+    }))
   }
 
   return state

@@ -2,7 +2,7 @@ import {List} from 'immutable'
 
 import {DAMAGE_WALL,
         SWITCH_DOOR} from './boundary'
-import {REMOVE_FIRE, REMOVE_SMOKE, FIRE_TO_SMOKE} from './danger'
+import {REMOVE_FIRE, REMOVE_SMOKE, FIRE_TO_SMOKE, END_TURN} from './danger'
 import {AP_COSTS} from '../utils/constants'
 
 // -- // -- // Actions // -- // -- //
@@ -148,7 +148,7 @@ const playerReducer = (state = initial, action) => {
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
     const nextFireBoundary = action.nextBoundary
-    if (currentPlayer.ap >= AP_COSTS.removeFire && 
+    if (currentPlayer.ap >= AP_COSTS.removeFire &&
       (isAdjacent(action.location, currentPlayerLocation) || (action.location === currentPlayerLocation)) &&
       isPassable(nextFireBoundary) ) {
       return {...state,
@@ -181,7 +181,7 @@ const playerReducer = (state = initial, action) => {
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
     const nextFireToSmokeBoundary = action.nextBoundary
-    if (currentPlayer.ap >= AP_COSTS.fireToSmoke && 
+    if (currentPlayer.ap >= AP_COSTS.fireToSmoke &&
      (isAdjacent(action.location, currentPlayerLocation) || (action.location === currentPlayerLocation)) &&
       isPassable(nextFireToSmokeBoundary) )  {
       return {...state,
@@ -214,7 +214,7 @@ const playerReducer = (state = initial, action) => {
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
     const nextSmokeBoundary = action.nextBoundary
-    if (currentPlayer.ap >= AP_COSTS.removeSmoke && 
+    if (currentPlayer.ap >= AP_COSTS.removeSmoke &&
       (isAdjacent(action.location, currentPlayerLocation) || (action.location === currentPlayerLocation)) &&
       isPassable(nextSmokeBoundary) ) {
       return {...state,

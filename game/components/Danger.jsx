@@ -49,27 +49,27 @@ class Danger extends React.Component {
 
     const sortedCoords = sortCoord([location, players.get(this.props.currentPlayerId).location])
     const nextBoundary = boundaries.get(sortedCoords.toString()) || ''
-    
-  
-      if (kind === 'fire' && status === 1) {
-        return (
-          <div>
-            <div className='fire'
-              id={location} style={{backgroundColor: 'red'}} onClick={this.handleClick}/>
-            <Popover
-            open={this.state.open}
-            anchorEl={this.state.anchorEl}
-            anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-            targetOrigin={{horizontal: 'left', vertical: 'top'}}
-            onRequestClose={this.handleRequestClose}
-          >
-            <Menu>
-              <MenuItem primaryText="Change To Smoke" onClick={()=> fireToSmoke(location, nextBoundary)}/>
-              <MenuItem primaryText="Extinguish Fire" onClick={() => removeFire(location, nextBoundary)}/>
-            </Menu>
-          </Popover>
-        </div>
-          )
+
+
+    if (kind === 'fire' && status === 1) {
+      return (
+        <div>
+          <div className='fire'
+            id={location} style={{backgroundColor: 'red'}} onClick={this.handleClick}/>
+          <Popover
+          open={this.state.open}
+          anchorEl={this.state.anchorEl}
+          anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+          targetOrigin={{horizontal: 'left', vertical: 'top'}}
+          onRequestClose={this.handleRequestClose}
+        >
+          <Menu>
+            <MenuItem primaryText="Change To Smoke" onClick={()=> fireToSmoke(location, nextBoundary)}/>
+            <MenuItem primaryText="Extinguish Fire" onClick={() => removeFire(location, nextBoundary)}/>
+          </Menu>
+        </Popover>
+      </div>
+      )
       } else if (kind === 'smoke' && status === 1) {
         return (
           <div>
@@ -88,16 +88,15 @@ class Danger extends React.Component {
             </Menu>
           </Popover>
         </div>
-      )
-    } else {
-      return (
+        )
+      } else {
+        return (
         <div>
         </div>
         )
-    }
+      }
   }
 }
-
 
 // -- // -- // Container // -- // -- //
 

@@ -9,6 +9,7 @@ import {sortCoord,
 import Danger from '../components/Danger'
 import {movePlayer,
         endTurn} from '../reducers/player'
+import {createDanger, addRandomSmoke} from '../reducers/danger'
 import reducer from '../reducers/'
 
 class Board extends React.Component {
@@ -38,7 +39,21 @@ class Board extends React.Component {
 
   handleEndTurnClick(event) {
     event.stopPropagation()
-    const locationToAddSmoke = Math.floor(Math.random() * 48) + 1
+
+    const isValid = (num) => {
+      if (num % 10 === 0 || num % 10 === 9 || num >= 70|| num <= 10) {
+        return false
+      }
+      return true
+    }
+    const hadSmoke = (num) => {
+      const currentCellstate = this.state.danger.get(num)
+      console.log(currentCellstate, 'currentCellstate')
+    }
+    let locationToAddSmoke = 0
+    while (!isValid(locationToAddSmoke)) {
+      locationToAddSmoke = Math.floor(Math.random() * 48) + 1
+    }
     this.props.endTurn(locationToAddSmoke)
   }
 
@@ -193,8 +208,8 @@ const mapDispatch = dispatch => ({
   fetchInitialData: () => {
     dispatch(setupBoard())
   },
-  endTurn: () => {
-    dispatch(endTurn())
+  endTurn: (location) => {
+    dispatch(endTurn(location))
   },
   openOrCloseDoor: (coord) => {
     dispatch(switchDoor(coord))
@@ -204,6 +219,9 @@ const mapDispatch = dispatch => ({
   },
   move: (id, nextCell, nextBoundary) => {
     dispatch(movePlayer(id, nextCell, nextBoundary))
+  },
+  createSmoke: (location, kind, status) => {
+    dispatch(createDanger(location, kind, status))
   }
 })
 
