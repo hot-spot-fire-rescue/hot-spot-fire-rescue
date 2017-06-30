@@ -2,6 +2,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {fireToSmoke, smokeToFire, removeFire, removeSmoke} from '../reducers/danger'
+import {sortCoord} from '../reducers/boundary'
 import Popover from 'material-ui/Popover'
 import Menu from 'material-ui/Menu'
 import MenuItem from 'material-ui/MenuItem'
@@ -34,6 +35,9 @@ class Danger extends React.Component {
 
   render() {
     const {
+      boundaries,
+      currentPlayerId,
+      players,
       kind,
       location,
       status,
@@ -42,52 +46,54 @@ class Danger extends React.Component {
       removeFire,
       removeSmoke,
     } = this.props
+
+    const sortedCoords = sortCoord([location, players.get(this.props.currentPlayerId).location])
+    const nextBoundary = boundaries.get(sortedCoords.toString()) || ''
+    
   
-  {
-        if (kind === 'fire' && status === 1) {
-          return (
-            <div>
-              <div className='fire'
-                id={location} style={{backgroundColor: 'red'}} onClick={this.handleClick}/>
-              <Popover
-              open={this.state.open}
-              anchorEl={this.state.anchorEl}
-              anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-              targetOrigin={{horizontal: 'left', vertical: 'top'}}
-              onRequestClose={this.handleRequestClose}
-            >
-              <Menu>
-                <MenuItem primaryText="Change To Smoke" onClick={()=> fireToSmoke(location)}/>
-                <MenuItem primaryText="Extinguish Fire" onClick={() => removeFire(location)}/>
-              </Menu>
-            </Popover>
-          </div>
-            )
-        } else if (kind === 'smoke' && status === 1) {
-          return (
-            <div>
-              <div className='fire'
-                id={location} style={{backgroundColor: 'grey'}} onClick={this.handleClick}/>
-              <Popover
-              open={this.state.open}
-              anchorEl={this.state.anchorEl}
-              anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-              targetOrigin={{horizontal: 'left', vertical: 'top'}}
-              onRequestClose={this.handleRequestClose}
-            >
-              <Menu>
-                <MenuItem primaryText="Change To Fire" onClick={()=> smokeToFire(location)}/>
-                <MenuItem primaryText="Extinguish Smoke" onClick={() => removeSmoke(location)}/>
-              </Menu>
-            </Popover>
-          </div>
-        )
-      } else {
+      if (kind === 'fire' && status === 1) {
         return (
           <div>
-          </div>
+            <div className='fire'
+              id={location} style={{backgroundColor: 'red'}} onClick={this.handleClick}/>
+            <Popover
+            open={this.state.open}
+            anchorEl={this.state.anchorEl}
+            anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+            targetOrigin={{horizontal: 'left', vertical: 'top'}}
+            onRequestClose={this.handleRequestClose}
+          >
+            <Menu>
+              <MenuItem primaryText="Change To Smoke" onClick={()=> fireToSmoke(location, nextBoundary)}/>
+              <MenuItem primaryText="Extinguish Fire" onClick={() => removeFire(location, nextBoundary)}/>
+            </Menu>
+          </Popover>
+        </div>
           )
-      }
+      } else if (kind === 'smoke' && status === 1) {
+        return (
+          <div>
+            <div className='fire'
+              id={location} style={{backgroundColor: 'grey'}} onClick={this.handleClick}/>
+            <Popover
+            open={this.state.open}
+            anchorEl={this.state.anchorEl}
+            anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+            targetOrigin={{horizontal: 'left', vertical: 'top'}}
+            onRequestClose={this.handleRequestClose}
+          >
+            <Menu>
+              <MenuItem primaryText="Change To Fire" onClick={()=> smokeToFire(location, nextBoundary)}/>
+              <MenuItem primaryText="Extinguish Smoke" onClick={() => removeSmoke(location, nextBoundary)}/>
+            </Menu>
+          </Popover>
+        </div>
+      )
+    } else {
+      return (
+        <div>
+        </div>
+        )
     }
   }
 }
@@ -96,23 +102,26 @@ class Danger extends React.Component {
 // -- // -- // Container // -- // -- //
 
 const mapStateToProps = (state, ownProps) => ({
+  boundaries: state.boundary,
+  currentPlayerId: state.player.currentId,
+  players: state.player.players,
   location: ownProps.location,
   kind: ownProps.kind,
   status: ownProps.status
 })
 
 const mapDispatchToProps = dispatch => ({
-  fireToSmoke: (location) => {
-    dispatch(fireToSmoke(location))
+  fireToSmoke: (location, nextBoundary) => {
+    dispatch(fireToSmoke(location, nextBoundary))
   },
-  smokeToFire: (location) => {
-    dispatch(smokeToFire(location))
+  smokeToFire: (location, nextBoundary) => {
+    dispatch(smokeToFire(location, nextBoundary))
   },
-  removeFire: (location) => {
-    dispatch(removeFire(location))
+  removeFire: (location, nextBoundary) => {
+    dispatch(removeFire(location, nextBoundary))
   },
-  removeSmoke: (location) => {
-    dispatch(removeSmoke(location))
+  removeSmoke: (location, nextBoundary) => {
+    dispatch(removeSmoke(location, nextBoundary))
   }
 })
 

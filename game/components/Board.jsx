@@ -57,7 +57,7 @@ class Board extends React.Component {
 
   handlePoiClick(event, victim) {
     event.stopPropagation()
-    pickUpOrDropVictim(victim)
+    this.props.pickUpOrDropVictim(victim)
   }
 
   render() {
@@ -83,7 +83,7 @@ class Board extends React.Component {
       <div>
 
         <button onClick={handleEndTurnClick}>End Turn</button>
-        <h5>Player0-blue,  Player1-green,  Player2-red,  Player3-orange </h5>
+        <h6>Player0-blue, Player1-green, Player2-purple, Player3-orange </h6>
         <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
 
         {
@@ -113,8 +113,12 @@ class Board extends React.Component {
                     style={{backgroundColor: player.color}}/>
                 }
                 {
-                  poi
-                  && <div className='poi'
+                  poi && poi.status === 0
+                  && <div className='poi'>?</div>
+                }
+                {
+                  poi && poi.status === 1
+                  && <div className={`poi victim-${poi.type}`}
                     onClick={(evt) => handlePoiClick(evt, poi)}/>
                 }
                 {
