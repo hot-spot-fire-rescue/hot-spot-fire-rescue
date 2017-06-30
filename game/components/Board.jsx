@@ -8,7 +8,7 @@ import {sortCoord,
         damageWall} from '../reducers/boundary'
 import Danger from '../components/Danger'
 import {movePlayer,
-        endTurn} from '../reducers/player'
+        endTurn, updatePlayer} from '../reducers/player'
 import firebase from 'APP/fire'
 import {loadPlayers} from './promises'
 const fbAuth = firebase.auth()
@@ -71,19 +71,22 @@ class Board extends React.Component {
 
   removeUserCallback(event) {
     event.stopPropagation()
-    console.log(event.target.id)
+    // console.log(event.target.id)
     const targetIndex= this.state.arrayUsers.indexOf(event.target.id)
     this.state.arrayUsers.splice(targetIndex, 1)
     delete this.state.players[targetIndex]['uid']
-    console.log(this.state.players[targetIndex])
+    // console.log(this.state.players[targetIndex])
     this.setState({arrayUsers: this.state.arrayUsers})
   }
 
   playerJoin(event) {
     for (var i = 0; i < this.state.players.length; i++) {
       if (!this.state.players[i].hasOwnProperty('uid')) {
-        this.state.players[i].uid=this.state.currentUserId
+        this.state.players[i].uid = this.state.currentUserId
+        loadPlayers[i].uid = this.state.currentUserId
         this.setState({players: this.state.players})
+        // console.log('DO WE HAVE THIS.PROPS????', this.props)
+        updatePlayer(this.state.players[i].id, this.state.currentUserId)
         break
       }
     }
@@ -91,6 +94,7 @@ class Board extends React.Component {
 
   render() {
     // console.log('board re rendering')
+    console.log(loadPlayers)
     const {
       players,
       danger,
@@ -245,6 +249,9 @@ const mapDispatch = dispatch => ({
   },
   move: (id, nextCell, nextBoundary) => {
     dispatch(movePlayer(id, nextCell, nextBoundary))
+  },
+  updatePlayer: (id, uid) => {
+    dispatch(updatePlayer(id, uid))
   }
 })
 
