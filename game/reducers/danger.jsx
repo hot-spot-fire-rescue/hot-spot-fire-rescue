@@ -62,26 +62,28 @@ export const endTurn = (location) => ({
 })
 
 // -- // -- // Helper // -- // -- //
-// const sortCoord = (coord) => {
-//   const [first, second] = coord
-//   return first > second ? [second, first] : [first, second]
-// }
+const sortCoord = (coord) => {
+  const [first, second] = coord
+  return first > second ? [second, first] : [first, second]
+}
 
-// const isInsideBuilding = (location) => {
-//   if (num % 10 === 0 || num % 10 === 9 || num >= 70|| num <= 10) {
-//     return false
-//   }
-//   return true
-// }
+const isInsideBuilding = (location) => {
+  if (location % 10 === 0 || location % 10 === 9 || location >= 70|| location <= 10) {
+    return false
+  }
+  return true
+}
 
-// const checkStatus = (location) => {
-//   const targetCellKind = danger.getIn([location, 'kind'])
-//   const targetCellStatus = danger.getIn([location, 'status'])
-//   if (targetCellKind === 'smoke' && targetCellStatus === 1){
-//     return 'fire'
-//   } else if (target) {
+const checkStatus = (location) => {
+  const targetCellKind = this.state.danger.getIn([location, 'kind'])
+  const targetCellStatus = this.state.danger.getIn([location, 'status'])
+  if (targetCellKind === 'smoke' && targetCellStatus === 1) {
+    return 'smoke'
+  } else if (targetCellKind === 'fire' && targetCellStatus === 1) {
+    return 'fire'
+  }
+}
 
-//   }
 
 // const checkAdjacent = (location, boundary) => {
 //     const adjCells =[]
@@ -93,10 +95,6 @@ export const endTurn = (location) => ({
 //       }
 //     }
 //   return adjCells
-// }
-
-// const kindToRender = (location) => {
-
 // }
 
 // -- // -- // State // -- // -- //

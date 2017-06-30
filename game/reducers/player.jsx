@@ -38,8 +38,9 @@ export const movePlayer = (id, nextCell, nextBoundary) => ({
 })
 
 export const END_TURN = 'END_TURN'
-export const endTurn = () => ({
-  type: END_TURN
+export const endTurn = (location) => ({
+  type: END_TURN,
+  location
 })
 
 // -- // -- // Helpers // -- // -- //
