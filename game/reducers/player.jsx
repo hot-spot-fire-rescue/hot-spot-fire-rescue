@@ -36,9 +36,10 @@ export const endTurn = () => ({
 })
 
 export const PICK_UP_OR_DROP_VICTIM = 'PICK_UP_OR_DROP_VICTIM'
-export const pickUpOrDropVictim = (victim) => ({
+export const pickUpOrDropVictim = (victim, playerId) => ({
   type: PICK_UP_OR_DROP_VICTIM,
-  victim
+  victim,
+  playerId
 })
 
 // -- // -- // Helpers // -- // -- //
@@ -331,10 +332,8 @@ const playerReducer = (state = initial, action) => {
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
     victim = action.victim
-    // check if victim is on same space as current player
-    // check if victim is already revealed not to be a false alarm
-    // check if victim is not being carried by anyone
-    // check if current player is carrying any victims
+
+    // pick up victim
     if (victim.location === currentPlayer.location &&
         victim.status === 1 &&
         !victim.carriedBy &&

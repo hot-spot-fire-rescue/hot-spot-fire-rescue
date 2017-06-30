@@ -38,6 +38,11 @@ export const createPoi = (id, location) => ({
 
 // -- // -- // Helpers // -- // -- //
 
+const isOutsideWalls = (location) => {
+  return location < 10 || location > 69 || location % 10 === 0 ||
+         (location + '').slice(-1) === '9'
+}
+
 // -- // -- // State // -- // -- //
 
 const initial = List()
@@ -47,7 +52,8 @@ const initial = List()
 const victimReducer = (state = initial, action) => {
   let nextCellPoi,
     isPlayerMovingIntoFalseAlarm,
-    poiIndex
+    poiIndex,
+    currentVictim
 
   switch (action.type) {
   case CREATE_POI:
@@ -65,29 +71,53 @@ const victimReducer = (state = initial, action) => {
     isPlayerMovingIntoFalseAlarm = nextCellPoi
       ? nextCellPoi.type === 'falseAlarm'
       : false
-    if (nextCellPoi) {
-      poiIndex = state.findIndex(poi => (
-        poi.location === action.nextCell.cellNum
-      ))
-      if (isPlayerMovingIntoFalseAlarm) {
-        console.info(`This was a false alarm!`) // TODO: move into message box since this is logged even when player throws an error
-        return state.delete(poiIndex)
-      } else {
-        console.info(`You found a victim!`)
-        return state.set(poiIndex, {
-          ...nextCellPoi,
-          status: 1
-        })
-      }
+    poiIndex = state.findIndex(poi => (
+      poi.location === action.nextCell.cellNum
+    ))
+
+    if (isPlayerMovingIntoFalseAlarm) {
+      console.info(`You did not find any victims at this POI`) // TODO: move into message box since this is logged even when player throws an error
+      state = state.delete(poiIndex)
+    } else if (nextCellPoi && nextCellPoi.status === 0) {
+      console.info(`You found a victim!`)
+      state = state.set(poiIndex, {
+        ...nextCellPoi,
+        status: 1
+      })
+    }
+
+    if (true) {
+      break
     } else {
       break
     }
 
-  // case PICK_UP_OR_DROP_VICTIM:
-  // check for false alarm => remove POI
-  // check if victim was picked up
-  // check if victim was dropped => remove POI if dropped outside walls
-  //   return
+  case PICK_UP_OR_DROP_VICTIM:
+    currentVictim = action.victim
+    poiIndex = state.findIndex(poi => (
+      poi.location === currentVictim.location
+    ))
+    if (!currentVictim.carriedBy) {
+      return state.set(poiIndex, {
+        ...currentVictim,
+        carriedBy: action.playerId
+      })
+    } else {
+      // saved if dropped outside walls
+      if (isOutsideWalls(currentVictim.location)) {
+        console.info(`You saved a victim!`)
+        return state.set(poiIndex, {
+          ...currentVictim,
+          status: 2,
+          carriedBy: null
+        })
+      } else {
+        return state.set(poiIndex, {
+          ...currentVictim,
+          carriedBy: null
+        })
+      }
+    }
   }
 
   return state

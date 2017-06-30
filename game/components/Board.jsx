@@ -11,14 +11,26 @@ import {movePlayer,
         endTurn,
         pickUpOrDropVictim} from '../reducers/player'
 
+import firebase from 'APP/fire'
+import {loadPlayers} from './promises'
+const fbAuth = firebase.auth()
+const fbDB=firebase.database()
+
 class Board extends React.Component {
   constructor(props) {
     super(props)
+    this.state= {
+      players: loadPlayers, // Change name
+      currentUserId: '',
+      arrayUsers: []
+    }
     this.handleCellClick = this.handleCellClick.bind(this)
     this.handleDoorSwitch = this.handleDoorSwitch.bind(this)
     this.handleWallDamage = this.handleWallDamage.bind(this)
     this.handleEndTurnClick = this.handleEndTurnClick.bind(this)
     this.handlePoiClick = this.handlePoiClick.bind(this)
+    this.removeUserCallback=this.removeUserCallback.bind(this)
+    this.playerJoin=this.playerJoin.bind(this)
   }
 
   componentWillMount() {
@@ -26,7 +38,13 @@ class Board extends React.Component {
       if (!snapshot.exists()) this.props.fetchInitialData()
     })
   }
-
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.setState({currentUserId: user.uid})
+      }
+    })
+  }
   handleWallDamage(event, wall) {
     event.stopPropagation()
     this.props.changeWallStatus(wall)
@@ -60,6 +78,26 @@ class Board extends React.Component {
     this.props.pickUpOrDropVictim(victim)
   }
 
+  removeUserCallback(event) {
+    event.stopPropagation()
+    console.log(event.target.id)
+    const targetIndex= this.state.arrayUsers.indexOf(event.target.id)
+    this.state.arrayUsers.splice(targetIndex, 1)
+    delete this.state.players[targetIndex]['uid'] // ??
+    console.log(this.state.players[targetIndex])
+    this.setState({arrayUsers: this.state.arrayUsers})
+  }
+
+  playerJoin(event) {
+    for (var i = 0; i < this.state.players.length; i++) {
+      if (!this.state.players[i].hasOwnProperty('uid')) {
+        this.state.players[i].uid=this.state.currentUserId
+        this.setState({players: this.state.players})
+        break
+      }
+    }
+  }
+
   render() {
     // console.log('board re rendering')
     const {
@@ -71,18 +109,27 @@ class Board extends React.Component {
       boundaries,
       fetchInitialData} = this.props
 
-    const handleCellClick = this.handleCellClick
-    const handleDoorSwitch = this.handleDoorSwitch
-    const handleWallDamage = this.handleWallDamage
-    const handleEndTurnClick = this.handleEndTurnClick
-    const handlePoiClick = this.handlePoiClick
+    let handleCellClick = this.handleCellClick
+    let handleDoorSwitch = this.handleDoorSwitch
+    let handleWallDamage = this.handleWallDamage
+    let handleEndTurnClick = this.handleEndTurnClick
+    let handlePoiClick = this.handlePoiClick
+    let condition = this.state.players[currentPlayerId].uid !== this.state.currentUserId
 
+    // don't put console logs in render
+    if (condition) {
+      handleCellClick = () => (console.log('It is not your turn yet.  Have patience, padawan'))
+      handleDoorSwitch = () => (console.log('It is not your turn yet.  Have patience, padawan'))
+      handleWallDamage = () => (console.log('It is not your turn yet.  Have patience, padawan'))
+      handleEndTurnClick = () => (console.log('It is not your turn yet.  Have patience, padawan'))
+    }
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
 
     return (
       <div>
-
-        <button onClick={handleEndTurnClick}>End Turn</button>
+        <br></br>
+        <button id={this.state.currentUserId} onClick={this.playerJoin}> Join</button>
+        <button disabled={condition} onClick={handleEndTurnClick}>End Turn</button>
         <h6>Player0-blue, Player1-green, Player2-purple, Player3-orange </h6>
         <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
 
