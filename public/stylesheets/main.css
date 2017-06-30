@@ -117,12 +117,12 @@
   left: 10px;
 }
 
-.victim-woman1 {
-  background-color: lightgray;
+.victim-carried {
+  background-color: lightgreen;
 }
 
-.victim-dog {
-  background-color: lightgreen;
+.victim-uncarried {
+  background-color: lightcoral;
 }
 
 .fire {

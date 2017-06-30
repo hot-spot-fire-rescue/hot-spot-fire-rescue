@@ -73,9 +73,10 @@ class Board extends React.Component {
     }
   }
 
-  handlePoiClick(event, victim) {
+  handlePoiClick(event, victim, player) {
     event.stopPropagation()
-    this.props.pickUpOrDropVictim(victim)
+    console.log('ID', this.props.currentPlayerId)
+    this.props.pickUpOrDropVictim(victim, this.props.currentPlayerId)
   }
 
   removeUserCallback(event) {
@@ -164,9 +165,14 @@ class Board extends React.Component {
                   && <div className='poi'>?</div>
                 }
                 {
-                  poi && poi.status === 1
-                  && <div className={`poi victim-${poi.type}`}
-                    onClick={(evt) => handlePoiClick(evt, poi)}/>
+                  poi && poi.status === 1 && !poi.carriedBy
+                  && <div className={`poi victim-uncarried`}
+                    onClick={(evt) => handlePoiClick(evt, poi, player)}/>
+                }
+                {
+                  poi && poi.status === 1 && poi.carriedBy
+                  && <div className={`poi victim-carried`}
+                    onClick={(evt) => handlePoiClick(evt, poi, player)}/>
                 }
                 {
                   eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 0
@@ -264,8 +270,8 @@ const mapDispatch = dispatch => ({
   move: (id, nextCell, nextBoundary) => {
     dispatch(movePlayer(id, nextCell, nextBoundary))
   },
-  pickUpOrDropVictim: (victim) => {
-    dispatch(pickUpOrDropVictim(victim))
+  pickUpOrDropVictim: (victim, playerId) => {
+    dispatch(pickUpOrDropVictim(victim, playerId))
   }
 })
 
