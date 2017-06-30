@@ -30,11 +30,12 @@ export const updatePlayer= (id, uid) => ({
 // })
 
 export const MOVE_PLAYER = 'MOVE_PLAYER'
-export const movePlayer = (id, nextCell, nextBoundary) => ({
+export const movePlayer = (id, nextCell, nextBoundary, nextDangerKind) => ({
   type: MOVE_PLAYER,
   id,
   nextCell,
-  nextBoundary
+  nextBoundary,
+  nextDangerKind
 })
 
 export const END_TURN = 'END_TURN'
@@ -66,16 +67,14 @@ const isPassable = (boundary) => {
   }
 }
 
-const findMoveApCost = (nextCell, player) => {
+const findMoveApCost = (player, nextCell, nextDanger) => {
   const nextCellStatus = nextCell.status
-  if (nextCellStatus === 0) {
-    return AP_COSTS.moveToEmptyCell
-  } else if (nextCellStatus === 1) {
-    return AP_COSTS.moveToFireCell
-  } else if (player.carriedVictimId) {
+  if (player.carriedVictim) {
     return AP_COSTS.moveWithVictim
+  } else if (nextDanger === 'fire') {
+    return AP_COSTS.moveToFireCell
   } else {
-    console.error('Error in findApCost()')
+    return AP_COSTS.moveToEmptyCell
   }
 }
 
@@ -129,17 +128,18 @@ const playerReducer = (state = initial, action) => {
 
   case MOVE_PLAYER:
     const nextCell = action.nextCell
+    const nextDangerKind = action.nextDangerKind
     const nextCellNum = nextCell.cellNum
     const nextBoundary = action.nextBoundary
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
-    apCost = findMoveApCost(nextCell, currentPlayer)
+    apCost = findMoveApCost(currentPlayer, nextCell, nextDangerKind)
 
     if (nextCellNum !== currentPlayerLocation &&
         isAdjacent(nextCellNum, currentPlayerLocation) &&
-        // check if next cell is not on fire
         isPassable(nextBoundary) &&
-        hasEnoughAp(currentPlayer, apCost)) {
+        hasEnoughAp(currentPlayer, apCost) &&
+        !(nextDangerKind === 'fire' && currentPlayer.carriedVictim)) {
       return {...state,
         players: state.players.set(action.id, {
           ...state.players.get(action.id),
@@ -148,12 +148,11 @@ const playerReducer = (state = initial, action) => {
           error: null
         })
       }
-    // TODO: return error if trying to carry victim through fire
     } else {
       if (nextCellNum === currentPlayerLocation) {
         errorMessage = `You are already at this location`
-      // } else if (nextCell.currentPlayer.carriedVictimId) {
-        // check if next cell is on fire
+      } else if (nextDangerKind === 'fire' && currentPlayer.carriedVictim) {
+        errorMessage = `You can't carry victims through fire`
       } else if (!isAdjacent(nextCellNum, currentPlayerLocation)) {
         errorMessage = `You can only move to adjacent locations`
       } else if (!isPassable(nextBoundary) && nextBoundary.kind === 'door') {

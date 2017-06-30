@@ -64,16 +64,20 @@ class Board extends React.Component {
     this.props.endTurn()
   }
 
-  handleCellClick(event, currentCell) {
+  handleCellClick(event, cell) {
     event.stopPropagation()
 
     if (event.target.className === 'cell') {
-      const sortedCoords = sortCoord([currentCell.cellNum, this.props.players.get(this.props.currentPlayerId).location])
-      const nextBoundary = this.props.boundaries.get(sortedCoords.toString()) || ''
+      const sortedCoords = sortCoord([cell.cellNum,
+        this.props.players.get(this.props.currentPlayerId).location])
+      const nextCell = this.props.cells.get(cell.cellNum)
+      const nextBoundary = this.props.boundaries.get(sortedCoords.toString(), '')
+      const nextCellDangerKind = this.props.danger.getIn([cell.cellNum, 'kind'], '')
 
       this.props.move(this.props.currentPlayerId,
-                      this.props.cells.get(currentCell.cellNum),
-                      nextBoundary)
+                      nextCell,
+                      nextBoundary,
+                      nextCellDangerKind)
     }
   }
 
@@ -305,8 +309,8 @@ const mapDispatch = dispatch => ({
   changeWallStatus: (coord) => {
     dispatch(damageWall(coord))
   },
-  move: (id, nextCell, nextBoundary) => {
-    dispatch(movePlayer(id, nextCell, nextBoundary))
+  move: (id, nextCell, nextBoundary, nextDanger) => {
+    dispatch(movePlayer(id, nextCell, nextBoundary, nextDanger))
   },
   pickUpOrDropVictim: (victim, playerId) => {
     dispatch(pickUpOrDropVictim(victim, playerId))

@@ -99,10 +99,19 @@ const victimReducer = (state = initial, action) => {
       currentlyCarriedVictimIdx = state.findIndex(victim => (
         victim.carriedBy === action.id
       ))
-      return state.set(currentlyCarriedVictimIdx, {
-        ...currentlyCarriedVictim,
-        location: nextLocation
-      })
+      if (isOutsideWalls(nextLocation)) {
+        console.info(`You saved a victim!`)
+        return state.set(currentlyCarriedVictimIdx, {
+          ...currentlyCarriedVictim,
+          status: 2,
+          carriedBy: null
+        })
+      } else {
+        return state.set(currentlyCarriedVictimIdx, {
+          ...currentlyCarriedVictim,
+          location: nextLocation
+        })
+      }
     } else {
       return state
     }
@@ -112,26 +121,18 @@ const victimReducer = (state = initial, action) => {
     victimIndex = state.findIndex(poi => (
       poi.location === currentVictim.location
     ))
+    // pick up victim
     if (!currentVictim.carriedBy) {
       return state.set(victimIndex, {
         ...currentVictim,
         carriedBy: action.playerId
       })
+    // drop victim
     } else {
-      // saved if dropped outside walls
-      if (isOutsideWalls(currentVictim.location)) {
-        console.info(`You saved a victim!`)
-        return state.set(victimIndex, {
-          ...currentVictim,
-          status: 2,
-          carriedBy: null
-        })
-      } else {
-        return state.set(victimIndex, {
-          ...currentVictim,
-          carriedBy: null
-        })
-      }
+      return state.set(victimIndex, {
+        ...currentVictim,
+        carriedBy: null
+      })
     }
   }
 
