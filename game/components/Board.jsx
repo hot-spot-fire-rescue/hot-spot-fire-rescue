@@ -75,7 +75,7 @@ class Board extends React.Component {
       <div>
 
         <button onClick={handleEndTurnClick}>End Turn</button>
-        <h5>Player0-blue,  Player1-green,  Player2-red,  Player3-orange </h5>
+        <h6>Player0-blue, Player1-green, Player2-purple, Player3-orange </h6>
         <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
 
         {

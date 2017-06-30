@@ -18,35 +18,39 @@ export const createDanger = (location, kind, status) => {
 }
 
 export const FIRE_TO_SMOKE = 'FIRE_TO_SMOKE'
-export const fireToSmoke = (location) => ({
+export const fireToSmoke = (location, nextBoundary) => ({
   type: FIRE_TO_SMOKE,
   location,
   kind: 'smoke',
-  status: 1
+  status: 1,
+  nextBoundary
 })
 
 export const SMOKE_TO_FIRE = 'SMOKE_TO_FIRE'
-export const smokeToFire = (location) => ({
+export const smokeToFire = (location, nextBoundary) => ({
   type: SMOKE_TO_FIRE,
   location,
   kind: 'fire',
-  status: 1
+  status: 1,
+  nextBoundary
 })
 
 export const REMOVE_FIRE = 'REMOVE_FIRE'
-export const removeFire = (location) => ({
+export const removeFire = (location, nextBoundary) => ({
   type: REMOVE_FIRE,
   location,
   kind: 'fire',
-  status: 0
+  status: 0,
+  nextBoundary
 })
 
 export const REMOVE_SMOKE = 'REMOVE_SMOKE'
-export const removeSmoke = (location) => ({
+export const removeSmoke = (location, nextBoundary) => ({
   type: REMOVE_SMOKE,
   location,
   kind: 'smoke',
-  status: 0
+  status: 0,
+  nextBoundary
 })
 
 // -- // -- // State // -- // -- //
