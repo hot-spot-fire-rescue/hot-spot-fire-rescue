@@ -35,6 +35,28 @@ export const endTurn = () => ({
   type: END_TURN
 })
 
+// CHECK FOR FALSE ALARMS?
+
+export const PICK_UP_OR_DROP_VICTIM = 'PICK_UP_OR_DROP_VICTIM'
+export const pickUpOrDropVictim = (victim) => ({
+  type: PICK_UP_OR_DROP_VICTIM,
+  victim
+})
+
+// export const PICK_UP_VICTIM = 'PICK_UP_VICTIM'
+// export const pickUpVictim = (playerId, victimId) => ({
+//   type: PICK_UP_VICTIM,
+//   playerId,
+//   victimId
+// })
+
+// export const DROP_VICTIM = 'DROP_VICTIM'
+// export const dropVictim = (playerId, victimId) => ({
+//   type: DROP_VICTIM,
+//   playerId,
+//   victimId
+// })
+
 // -- // -- // Helpers // -- // -- //
 
 const isAdjacent = (next, current) => {
@@ -52,14 +74,14 @@ const isPassable = (boundary) => {
   }
 }
 
-// TODO: Make this into a general 'find AP cost function'?
-const findMoveApCost = (nextCell) => {
+const findMoveApCost = (nextCell, player) => {
   const nextCellStatus = nextCell.status
   if (nextCellStatus === 0) {
     return AP_COSTS.moveToEmptyCell
   } else if (nextCellStatus === 1) {
     return AP_COSTS.moveToFireCell
-  // TODO: check if carrying victim
+  } else if (player.carriedVictimId) {
+    return AP_COSTS.moveWithVictim
   } else {
     console.error('Error in findApCost()')
   }
@@ -98,6 +120,7 @@ const playerReducer = (state = initial, action) => {
         ap: action.ap,
         location: action.location,
         color: action.color,
+        carriedVictimId: null,
         error: null
       })
     }
@@ -108,10 +131,11 @@ const playerReducer = (state = initial, action) => {
     const nextBoundary = action.nextBoundary
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
-    apCost = findMoveApCost(nextCell)
+    apCost = findMoveApCost(nextCell, currentPlayer)
 
     if (nextCellNum !== currentPlayerLocation &&
         isAdjacent(nextCellNum, currentPlayerLocation) &&
+        // check if next cell is not on fire
         isPassable(nextBoundary) &&
         hasEnoughAp(currentPlayer, apCost)) {
       return {...state,
@@ -126,6 +150,8 @@ const playerReducer = (state = initial, action) => {
     } else {
       if (nextCellNum === currentPlayerLocation) {
         errorMessage = `You are already at this location`
+      // } else if (nextCell.currentPlayer.carriedVictimId) {
+        // check if next cell is on fire
       } else if (!isAdjacent(nextCellNum, currentPlayerLocation)) {
         errorMessage = `You can only move to adjacent locations`
       } else if (!isPassable(nextBoundary) && nextBoundary.kind === 'door') {
@@ -152,7 +178,7 @@ const playerReducer = (state = initial, action) => {
         action.boundary.status !== 2) {
       return {...state,
         players: state.players.set(state.currentId, {
-          ...state.players.get(state.currentId),
+          ...currentPlayer,
           ap: currentPlayer.ap - AP_COSTS.damageWall,
           error: null
         })
@@ -168,7 +194,7 @@ const playerReducer = (state = initial, action) => {
       console.error(errorMessage)
       return {...state,
         players: state.players.set(state.currentId, {
-          ...state.players.get(state.currentId),
+          ...currentPlayer,
           error: errorMessage
         })
       }
@@ -177,11 +203,11 @@ const playerReducer = (state = initial, action) => {
   case REMOVE_FIRE:
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
-    if (currentPlayer.ap >= AP_COSTS.removeFire && 
+    if (currentPlayer.ap >= AP_COSTS.removeFire &&
       action.location === currentPlayerLocation) {
       return {...state,
         players: state.players.set(state.currentId, {
-          ...state.players.get(state.currentId),
+          ...currentPlayer,
           ap: currentPlayer.ap - AP_COSTS.removeFire,
           error: null
         })
@@ -195,7 +221,7 @@ const playerReducer = (state = initial, action) => {
       console.error(errorMessage)
       return {...state,
         players: state.players.set(state.currentId, {
-          ...state.players.get(state.currentId),
+          ...currentPlayer,
           error: errorMessage
         })
       }
@@ -204,11 +230,11 @@ const playerReducer = (state = initial, action) => {
   case FIRE_TO_SMOKE:
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
-    if (currentPlayer.ap >= AP_COSTS.fireToSmoke && 
+    if (currentPlayer.ap >= AP_COSTS.fireToSmoke &&
       action.location === currentPlayerLocation) {
       return {...state,
         players: state.players.set(state.currentId, {
-          ...state.players.get(state.currentId),
+          ...currentPlayer,
           ap: currentPlayer.ap - AP_COSTS.fireToSmoke,
           error: null
         })
@@ -224,7 +250,7 @@ const playerReducer = (state = initial, action) => {
       console.error(errorMessage)
       return {...state,
         players: state.players.set(state.currentId, {
-          ...state.players.get(state.currentId),
+          ...currentPlayer,
           error: errorMessage
         })
       }
@@ -233,11 +259,11 @@ const playerReducer = (state = initial, action) => {
   case REMOVE_SMOKE:
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
-    if (currentPlayer.ap >= AP_COSTS.removeSmoke && 
+    if (currentPlayer.ap >= AP_COSTS.removeSmoke &&
       action.location === currentPlayerLocation) {
       return {...state,
         players: state.players.set(state.currentId, {
-          ...state.players.get(state.currentId),
+          ...currentPlayer,
           ap: currentPlayer.ap - AP_COSTS.removeSmoke,
           error: null
         })
@@ -251,7 +277,7 @@ const playerReducer = (state = initial, action) => {
       console.error(errorMessage)
       return {...state,
         players: state.players.set(state.currentId, {
-          ...state.players.get(state.currentId),
+          ...currentPlayer,
           error: errorMessage
         })
       }
@@ -264,7 +290,7 @@ const playerReducer = (state = initial, action) => {
         isBoundaryAdjacent(action.coord, currentPlayerLocation)) {
       return {...state,
         players: state.players.set(state.currentId, {
-          ...state.players.get(state.currentId),
+          ...currentPlayer,
           ap: currentPlayer.ap - AP_COSTS.closeOrOpenDoor,
           error: null
         })
@@ -278,7 +304,7 @@ const playerReducer = (state = initial, action) => {
       console.error(errorMessage)
       return {...state,
         players: state.players.set(state.currentId, {
-          ...state.players.get(state.currentId),
+          ...currentPlayer,
           error: errorMessage
         })
       }
@@ -291,8 +317,24 @@ const playerReducer = (state = initial, action) => {
     nextAp = (currentPlayer.ap + 4 > 8) ? 8 : currentPlayer.ap + 4
     return {...state,
       players: state.players.set(state.currentId, {
-        ...state.players.get(state.currentId),
+        ...currentPlayer,
         ap: nextAp,
+        error: null
+      }),
+      currentId: nextPlayerId
+    }
+
+  case PICK_UP_OR_DROP_VICTIM:
+    currentPlayer = state.players.get(state.currentId)
+    // check if false alarm => send message
+    // check if victim is on same space as current player
+    // check if victim is not being carried by anyone
+    // check if current player is carrying any victims
+    // if (action.victim.status )
+    return {...state,
+      players: state.players.set(state.currentId, {
+        ...currentPlayer,
+        // carriedVictimId: action.victim.id,
         error: null
       }),
       currentId: nextPlayerId

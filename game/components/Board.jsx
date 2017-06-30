@@ -8,7 +8,8 @@ import {sortCoord,
         damageWall} from '../reducers/boundary'
 import Danger from '../components/Danger'
 import {movePlayer,
-        endTurn} from '../reducers/player'
+        endTurn,
+        pickUpOrDropVictim} from '../reducers/player'
 
 class Board extends React.Component {
   constructor(props) {
@@ -17,6 +18,7 @@ class Board extends React.Component {
     this.handleDoorSwitch = this.handleDoorSwitch.bind(this)
     this.handleWallDamage = this.handleWallDamage.bind(this)
     this.handleEndTurnClick = this.handleEndTurnClick.bind(this)
+    this.handlePoiClick = this.handlePoiClick.bind(this)
   }
 
   componentWillMount() {
@@ -53,6 +55,11 @@ class Board extends React.Component {
     }
   }
 
+  handlePoiClick(event, victim) {
+    event.stopPropagation()
+    pickUpOrDropVictim(victim)
+  }
+
   render() {
     // console.log('board re rendering')
     const {
@@ -68,7 +75,8 @@ class Board extends React.Component {
     const handleDoorSwitch = this.handleDoorSwitch
     const handleWallDamage = this.handleWallDamage
     const handleEndTurnClick = this.handleEndTurnClick
-    
+    const handlePoiClick = this.handlePoiClick
+
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
 
     return (
@@ -96,7 +104,8 @@ class Board extends React.Component {
               className="cell"
               onClick={(evt) => handleCellClick(evt, cell)}>
                 {
-                  fire && <Danger location={location} kind={kind} status={status} />
+                  fire
+                  && <Danger location={location} kind={kind} status={status} />
                 }
                 {
                   player
@@ -105,7 +114,8 @@ class Board extends React.Component {
                 }
                 {
                   poi
-                  && <div className='poi'></div>
+                  && <div className='poi'
+                    onClick={(evt) => handlePoiClick(evt, poi)}/>
                 }
                 {
                   eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 0
@@ -202,6 +212,9 @@ const mapDispatch = dispatch => ({
   },
   move: (id, nextCell, nextBoundary) => {
     dispatch(movePlayer(id, nextCell, nextBoundary))
+  },
+  pickUpOrDropVictim: (victim) => {
+    dispatch(pickUpOrDropVictim(victim))
   }
 })
 

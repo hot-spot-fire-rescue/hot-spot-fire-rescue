@@ -1,35 +1,25 @@
 import {combineReducers} from 'redux'
-import playerReducer from './player'
-import boardReducer from './board'
-import boundaryReducer from './boundary'
-import dangerReducer from './danger'
-import victimReducer from './victim'
+
+const reducer = combineReducers({
+  player: require('./player').default,
+  board: require('./board').default,
+  boundary: require('./boundary').default,
+  danger: require('./danger').default,
+  victim: require('./victim').default,
+})
 
 // This is a custom combineReducers function that first passes
 // the action to the players reducer only. Then it passes actions to the board
 // and boundary reducers only if the current player does not have an error.
 export default function(state = {}, action) {
-  const nextPlayerState = playerReducer(state.player, action)
-  const nextBoardState = boardReducer(state.board, action)
-  const nextBoundaryState = boundaryReducer(state.boundary, action)
-  const nextDangerState = dangerReducer(state.danger, action)
-  const nextVictimState = victimReducer(state.victim, action)
+  const next = reducer(state, action)
 
-  if (!nextPlayerState.players.get(nextPlayerState.currentId, {}).error) {
-    return {
-      player: nextPlayerState,
-      board: nextBoardState,
-      boundary: nextBoundaryState,
-      danger: nextDangerState,
-      victim: nextVictimState
-    }
+  if (!next.player.players.get(next.player.currentId, {}).error) {
+    return next
   } else {
     return {
-      player: nextPlayerState,
-      board: state.board,
-      boundary: state.boundary,
-      danger: state.danger,
-      victim: state.victim
+      ...next,
+      player: next.player
     }
   }
 }
