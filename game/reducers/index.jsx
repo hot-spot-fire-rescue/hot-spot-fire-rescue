@@ -18,7 +18,7 @@ export default function(state = {}, action) {
     return next
   } else {
     return {
-      ...next,
+      ...state,
       player: next.player
     }
   }

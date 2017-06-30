@@ -177,6 +177,8 @@ const playerReducer = (state = initial, action) => {
         errorMessage = `You can only damage adjacent walls`
       } else if (currentPlayer.ap < AP_COSTS.damageWall) {
         errorMessage = `You don't have enough AP to damage this wall`
+      } else {
+        console.error('Error in playerReducer DAMAGE_WALL')
       }
       console.error(errorMessage)
       return {...state,
