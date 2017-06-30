@@ -43,20 +43,6 @@ export const pickUpOrDropVictim = (victim) => ({
   victim
 })
 
-// export const PICK_UP_VICTIM = 'PICK_UP_VICTIM'
-// export const pickUpVictim = (playerId, victimId) => ({
-//   type: PICK_UP_VICTIM,
-//   playerId,
-//   victimId
-// })
-
-// export const DROP_VICTIM = 'DROP_VICTIM'
-// export const dropVictim = (playerId, victimId) => ({
-//   type: DROP_VICTIM,
-//   playerId,
-//   victimId
-// })
-
 // -- // -- // Helpers // -- // -- //
 
 const isAdjacent = (next, current) => {
@@ -111,7 +97,8 @@ const playerReducer = (state = initial, action) => {
     nextAp,
     apCost,
     nextPlayerId,
-    errorMessage
+    errorMessage,
+    victim
 
   switch (action.type) {
   case CREATE_PLAYER:
@@ -120,7 +107,7 @@ const playerReducer = (state = initial, action) => {
         ap: action.ap,
         location: action.location,
         color: action.color,
-        carriedVictimId: null,
+        carriedVictim: null,
         error: null
       })
     }
@@ -326,18 +313,56 @@ const playerReducer = (state = initial, action) => {
 
   case PICK_UP_OR_DROP_VICTIM:
     currentPlayer = state.players.get(state.currentId)
+    currentPlayerLocation = currentPlayer.location
+    victim = action.victim
     // check if false alarm => send message
     // check if victim is on same space as current player
+    // check if victim is already revealed not to be a false alarm
     // check if victim is not being carried by anyone
     // check if current player is carrying any victims
-    // if (action.victim.status )
-    return {...state,
-      players: state.players.set(state.currentId, {
-        ...currentPlayer,
-        // carriedVictimId: action.victim.id,
-        error: null
-      }),
-      currentId: nextPlayerId
+    if (victim.type !== 'falseAlarm' &&
+        victim.location === currentPlayer.location &&
+        victim.status === 1 &&
+        !victim.carriedBy &&
+        !currentPlayer.carriedVictim) {
+      return {...state,
+        players: state.players.set(state.currentId, {
+          ...currentPlayer,
+          carriedVictim: victim.type,
+          error: null
+        })
+      }
+    // drop victim
+    } else if (victim.location === currentPlayer.location &&
+               victim.status === 1 &&
+               victim.carriedBy === state.currentId &&
+               victim.type === currentPlayer.carriedVictim) {
+      return {...state,
+        players: state.players.set(state.currentId, {
+          ...currentPlayer,
+          carriedVictim: null,
+          error: null
+        })
+      }
+    } else {
+      if (victim.type === 'falseAlarm') {
+        errorMessage = `This was a false alarm!`
+      } else if (victim.status === 0) {
+        errorMessage = `You need to reveal this POI first`
+      } else if (victim.location !== currentPlayer.location) {
+        errorMessage = `You can only pick up a victim in your current cell`
+      } else if (victim.carriedBy && victim.carriedBy !== state.currentId) {
+        errorMessage = `This victim is already being carried by another firefighter`
+      } else if (victim.type !== currentPlayer.carriedVictim) {
+        errorMessage = `You can only carry one victim at a time`
+      }
+      console.error(errorMessage)
+      return {...state,
+        players: state.players.set(state.currentId, {
+          ...currentPlayer,
+          error: errorMessage
+        })
+      }
     }
   }
 

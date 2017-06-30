@@ -61,7 +61,7 @@ const initialFire = [
 ]
 
 const initialPoi = [
-  [0, 24], // id, location
+  [11, 24], // id, location
   [4, 52],
   [8, 58]
 ]

@@ -1,5 +1,7 @@
 import {List} from 'immutable'
 
+import {MOVE_PLAYER,
+        PICK_UP_OR_DROP_VICTIM} from './player'
 import {VICTIM_LEGEND} from '../utils/constants'
 
 `
@@ -51,6 +53,12 @@ const victimReducer = (state = initial, action) => {
       type: VICTIM_LEGEND[action.id],
       carriedBy: null
     })
+
+  // case MOVE_PLAYER:
+  //   return
+
+  // case PICK_UP_OR_DROP_VICTIM:
+  //   return
   }
 
   return state
