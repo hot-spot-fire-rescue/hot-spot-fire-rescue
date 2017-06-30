@@ -1,4 +1,5 @@
 import {List, fromJS} from 'immutable'
+import {END_TURN} from './player'
 
 `
 Legend for Danger:
@@ -53,7 +54,6 @@ export const removeSmoke = (location, nextBoundary) => ({
   nextBoundary
 })
 
-export const END_TURN = 'END_TURN'
 export const endTurn = (location) => ({
   type: END_TURN,
   location,

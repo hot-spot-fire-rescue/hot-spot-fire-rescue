@@ -2,7 +2,7 @@ import {List} from 'immutable'
 
 import {DAMAGE_WALL,
         SWITCH_DOOR} from './boundary'
-import {REMOVE_FIRE, REMOVE_SMOKE, FIRE_TO_SMOKE, END_TURN} from './danger'
+import {REMOVE_FIRE, REMOVE_SMOKE, FIRE_TO_SMOKE} from './danger'
 import {AP_COSTS} from '../utils/constants'
 
 // -- // -- // Actions // -- // -- //
