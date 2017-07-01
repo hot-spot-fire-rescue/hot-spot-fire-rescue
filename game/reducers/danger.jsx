@@ -1,5 +1,6 @@
-import {List, fromJS} from 'immutable'
-import {END_TURN, isPassable} from './player'
+import { List, fromJS } from 'immutable'
+import { END_TURN, isPassable } from './player'
+import {REMOVE_FIRE, REMOVE_SMOKE, FIRE_TO_SMOKE} from './danger'
 
 `
 Legend for Danger:
@@ -15,10 +16,10 @@ export const createDanger = (location, kind, status) => {
     type: CREATE_DANGER,
     location,
     kind,
-    status})
+    status
+  })
 }
 
-export const FIRE_TO_SMOKE = 'FIRE_TO_SMOKE'
 export const fireToSmoke = (location, nextBoundary) => ({
   type: FIRE_TO_SMOKE,
   location,
@@ -36,7 +37,6 @@ export const smokeToFire = (location, nextBoundary) => ({
   nextBoundary
 })
 
-export const REMOVE_FIRE = 'REMOVE_FIRE'
 export const removeFire = (location, nextBoundary) => ({
   type: REMOVE_FIRE,
   location,
@@ -45,7 +45,7 @@ export const removeFire = (location, nextBoundary) => ({
   nextBoundary
 })
 
-export const REMOVE_SMOKE = 'REMOVE_SMOKE'
+
 export const removeSmoke = (location, nextBoundary) => ({
   type: REMOVE_SMOKE,
   location,
@@ -60,6 +60,13 @@ export const endTurn = (location, boundaries) => ({
   boundaries
 })
 
+export const EXPLODE = 'EXPLODE'
+export const explode = (location, boundaries) => ({
+  type: EXPLODE,
+  location,
+  boundaries
+})
+
 
 // -- // -- // State // -- // -- //
 
@@ -68,29 +75,41 @@ const initial = List()
 
 // -- // -- // Helper // -- // -- //
 const sortCoord = (location, adjLocation) => {
-  const [location, adjLocation] = coord
   return location < adjLocation ? ([location, adjLocation]).toString() : ([adjLocation, location]).toString()
 }
 
-// const isInsideBuilding = (location) => {
-//   if (location % 10 === 0 || location % 10 === 9 || location >= 70|| location <= 10) {
-//     return false
-//   }
-//   return true
-// }
+//  helper function - to check the type of boundary
+export const openBoundray = (location, adjLocation, boundaries) => {
+  const boundaryFound = boundaries[sortCoord(location, adjLocation)]
+  if (boundaryFound === undefined) {
+    return true
+  } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 0) {
+    return false
+  } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 1) {
+    return true
+  } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 2) {
+    return true
+  } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 0) {
+    return false
+  } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 1) {
+    return false
+  } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 2) {
+    return true
+  }
+}
 
-
-
-// const getNewStatus = (location, boundaries) => {
-//   const adjCells =[]
-//   const adjToCheck = [location -1, location + 1, location - 10, location + 10]
-//   for (var i = 0; i < adjToCheck.length; i++) {
-//     var sortedCoord = sortCoord(adjToCheck[i], location)
-//     if (isInsideBuilding(adjToCheck[i]) && boundaries.get(sortedCoord.toString()) !== undefined && checkStatus(adjToCheck[i]) === 'smoke') {
-//       return 'fire'
-//     }
-//   }
-// }
+// helper function used to calculate the next adjacent cell
+const nextAdj = (i, currentLoc) => {
+  if (i === 0) {
+    return () => currentLoc - 10
+  } else if (i === 1) {
+    return () => currentLoc + 10
+  } else if (i === 2) {
+    return () => currentLoc + 1
+  } else if (i === 3) {
+    return () => currentLoc - 1
+  }
+}
 
 // -- // -- // Reducer // -- // -- //
 
@@ -116,7 +135,6 @@ const dangerReducer = (state = initial, action) => {
     return state.setIn([action.location, 'status'], action.status)
 
   case END_TURN:
-
     const checkCellDangerStatus = (location) => {
       const targetCellKind = state.getIn([location, 'kind'])
       const targetCellStatus = state.getIn([location, 'status'])
@@ -127,67 +145,65 @@ const dangerReducer = (state = initial, action) => {
       }
       return undefined
     }
+    if (checkCellDangerStatus(action.location) === 'smoke') {
+      return state.set(action.location, fromJS({
+        location: action.location,
+        kind: 'fire',
+        status: 1
+      }))
+    } else {
+      return state.set(action.location, fromJS({
+        location: action.location,
+        kind: 'smoke',
+        status: 1
+      }))
+    }
 
-    const hasBoundary = (location, adjLocation, boundaries) => {
-      const boundaryFound = boundaries[sortCoord(location, sortedLocation)]
-      if (boundaryFound === undefined){
-        return false
-      } else if (boundaryFound[kind] === 'door' && boundaryFound[status] !== 0) {
-        return 'opened door'
-      } else if (boundaryFound[kind] === 'door' && boundaryFound[status] === 0 ) {
-        return 'intact door'
-      } else if (boundaryFound[kind] === 'wall' && boundaryFound[status] === 0 ) {
-        return 'intact wall'
-      } else if (boundaryFound[kind] === 'wall' && boundaryFound[status] === 1 ) {
-        return 'damaged wall'
-      } else if (boundaryFound[kind] === 'wall' && boundaryFound[status] === 2 ) {
-        return 'destroyed wall'
-      }
+  case EXPLODE:
+    const adjacentCells = [action.location - 10, action.location + 10, action.location + 1, action.location - 1]
 
+    for (var i = 0; i < adjacentCells.length; i++) {
+      const adjBoundary = openBoundray(action.location, adjacentCells[i], action.boundaries)
+      const adjCellKind = state.getIn([adjacentCells[i], 'kind'])
+      const adjCellStatus = state.getIn([adjacentCells[i], 'status'])
 
-      if (checkCellDangerStatus(action.location) === 'smoke') {
-        return state.set(action.location, fromJS({
-          location: action.location,
-          kind: 'fire',
-          status: 1
-        })
-      } else if (checkCellDangerStatus(action.location) === 'fire') {
-      /////// check North first
-
-      // if no door/ door opened/ door destroyed && north cell is empty, add fire to adj cell
-      if (checkCellDangerStatus(action.location - 10) === undefined && hasBoundary() === undefined) {
-        return state.set(action.location, fromJS({
-          location: action.location - 10,
+      // no adjacent boundary and empty adjacent space - add a fire to adj
+      if (adjBoundary === true && adjCellKind === undefined) {
+        console.log('explosion happened, fire caused in the empty space', adjacentCells[i])
+        return state.set(adjacentCells[i], fromJS({
+          location: adjacentCells[i],
           kind: 'fire',
           status: 1
         }))
-      } else if (checkCellDangerStatus(action.location - 10) === undefined && hasBoundary(action.location, action.location - 10, action.boundary) === 'opened door') {
-        return state.set(action.location, fromJS({
-          location: action.location - 10,
+
+      // has smoke in adjacent cell, turn the smoke into fire
+      } else if (adjBoundary === true && adjCellKind === 'smoke' && adjCellStatus === 1) {
+        console.log('explosion happened, turned smoke into fire', adjacentCells[i])
+        return state.set(adjacentCells[i], fromJS({
+          location: adjacentCells[i],
           kind: 'fire',
           status: 1
-        })
-      }
+        }))
 
-      // if door is closed, destroy the door
-      } else if ( ) {
+      // fire pass through fire space, and spread into one more empty space
+      } else if (adjBoundary === true && adjCellKind === 'fire' && adjCellStatus === 1) {
 
-      // check if north is a intact wall, damage it, if it's already damanaged , it will be destroyed
-      } else if ( ) {
-
-      //
-      } else if ( ) {
-
-      // if north is fire, check the next cell next to north ( while loop ), if goes outside of the building , then stops the loop
-
-      } else {
-        return state.set(action.location, fromJS({
-          location: action.location,
-          kind: 'smoke',
+        let currentLoc = adjacentCells[i]
+        let adjToCheckSpread = nextAdj(i, currentLoc)
+        while (openBoundray(currentLoc, adjToCheckSpread, action.boundaries) === true && state.getIn([adjToCheckSpread, 'kind']) === 'fire' && state.getIn([adjToCheckSpread, 'status'] === 1)) {
+          currentLoc = adjToCheckSpread
+          adjToCheckSpread = adjToCheckSpread - 10
+        }
+        console.log('explosion happened, fire is spreading')
+        return state.set(adjToCheckSpread, fromJS({
+          location: adjacentCells[i],
+          kind: 'fire',
           status: 1
         }))
       }
+    }
   }
+
   return state
 }
 

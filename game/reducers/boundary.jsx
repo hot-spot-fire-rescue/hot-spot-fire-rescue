@@ -1,4 +1,5 @@
 import {Map} from 'immutable'
+import {EXPLODE} from './danger'
 
 `
 Legend for Boundaries:
@@ -29,11 +30,37 @@ export const damageWall = (boundary) => ({
   boundary
 })
 
+export const explode = (location, boundaries) => ({
+  type: EXPLODE,
+  location,
+  boundaries
+})
+
 // -- // -- // Helpers // -- // -- //
 
 export const sortCoord = (coord) => {
   const [first, second] = coord
   return first > second ? [second, first] : [first, second]
+}
+
+//  helper function - to check the type of boundary
+export const boundaryType = (location, adjLocation, boundaries) => {
+  const boundaryFound = boundaries[sortCoord(location, adjLocation)]
+  if (boundaryFound === undefined) {
+    return undefined
+  } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 0) {
+    return 'closed door'
+  } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 1) {
+    return 'opened door'
+  } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 2) {
+    return 'destroyed door'
+  } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 0) {
+    return 'intact wall'
+  } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 1) {
+    return 'damaged wall'
+  } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 2) {
+    return 'destroyed wall'
+  }
 }
 
 // -- // -- //  State  // -- // -- //
@@ -74,6 +101,38 @@ const boundaryReducer = (state = initial, action) => {
       ...state.get(sortedCoord.toString()),
       status: newStatus
     })
+
+  case EXPLODE:
+    const adjacentCells = [action.location - 10, action.location + 10, action.location + 1, action.location - 1]
+    for (var i = 0; i < adjacentCells.length; i++) {
+      const adjBoundary = boundaryType(action.location, adjacentCells[i], action.boundaries)
+      const adjCellKind = state.getIn([adjacentCells[i], 'kind'])
+      const adjCellStatus = state.getIn([adjacentCells[i], 'status'])
+
+      // adjBoundary is intact door
+      if (adjBoundary === 'closed door' || adjBoundary === 'opened door') {
+        console.log('explosion happened, door was destroyed', adjacentCells[i])
+        sortedCoord = sortCoord([action.location, adjacentCells[i]])
+        return state.set(sortedCoord.toString(), {
+          ...state.get(sortedCoord.toString()),
+          status: 2
+        })
+      } else if (adjBoundary === 'intact wall') {
+        console.log('explosion happened, intact wall was damaged', adjacentCells[i])
+        sortedCoord = sortCoord([action.location, adjacentCells[i]])
+        return state.set(sortedCoord.toString(), {
+          ...state.get(sortedCoord.toString()),
+          status: 1
+        })
+      } else if (adjBoundary === 'damaged wall') {
+        console.log('explosion happened, damaged wall was destroyed', adjacentCells[i])
+        sortedCoord = sortCoord([action.location, adjacentCells[i]])
+        return state.set(sortedCoord.toString(), {
+          ...state.get(sortedCoord.toString()),
+          status: 2
+        })
+      }
+    }
   }
 
   return state
