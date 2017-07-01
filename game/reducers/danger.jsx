@@ -1,5 +1,5 @@
 import {List, fromJS} from 'immutable'
-import {END_TURN} from './player'
+import {END_TURN, isPassable} from './player'
 
 `
 Legend for Danger:
@@ -60,10 +60,16 @@ export const endTurn = (location, boundaries) => ({
   boundaries
 })
 
+
+// -- // -- // State // -- // -- //
+
+const initial = List()
+
+
 // -- // -- // Helper // -- // -- //
-const sortCoord = (coord) => {
-  const [first, second] = coord
-  return first > second ? [second, first] : [first, second]
+const sortCoord = (location, adjLocation) => {
+  const [location, adjLocation] = coord
+  return location < adjLocation ? ([location, adjLocation]).toString() : ([adjLocation, location]).toString()
 }
 
 // const isInsideBuilding = (location) => {
@@ -73,16 +79,6 @@ const sortCoord = (coord) => {
 //   return true
 // }
 
-const checkStatus = (location) => {
-  const targetCellKind = this.state.danger.getIn([location, 'kind'])
-
-  const targetCellStatus = this.state.danger.getIn([location, 'status'])
-  if (targetCellKind === 'smoke' && targetCellStatus === 1) {
-    return 'smoke'
-  } else if (targetCellKind === 'fire' && targetCellStatus === 1) {
-    return 'fire'
-  }
-}
 
 
 // const getNewStatus = (location, boundaries) => {
@@ -95,12 +91,6 @@ const checkStatus = (location) => {
 //     }
 //   }
 // }
-
-
-
-// -- // -- // State // -- // -- //
-
-const initial = List()
 
 // -- // -- // Reducer // -- // -- //
 
@@ -126,31 +116,78 @@ const dangerReducer = (state = initial, action) => {
     return state.setIn([action.location, 'status'], action.status)
 
   case END_TURN:
-    const targetCellKind = state.getIn([action.location, 'kind'])
-    const targetCellStatus = state.getIn([action.location, 'status'])
 
-    if (targetCellKind === 'smoke' && targetCellStatus === 1) {
-      return state.set(action.location, fromJS({
-        location: action.location,
-        kind: 'fire',
-        status: 1
-      }))
-    } else if (targetCellKind === 'fire' && targetCellStatus === 1) {
-
-      //check if north is a intact wall, damage it, if it's already damanaged , it will be destroyed
-      //if north is empty cell , just add fire to the cell
-      //if north is closed door, just destory the door
-      //if north is fire, check the next cell next to north ( while loop ), if goes outside of the building , then stops the loop
-
-    } else {
-      return state.set(action.location, fromJS({
-        location: action.location,
-        kind: 'smoke',
-        status: 1
-      }))
+    const checkCellDangerStatus = (location) => {
+      const targetCellKind = state.getIn([location, 'kind'])
+      const targetCellStatus = state.getIn([location, 'status'])
+      if (targetCellKind === 'smoke' && targetCellStatus === 1) {
+        return 'smoke'
+      } else if (targetCellKind === 'fire' && targetCellStatus === 1) {
+        return 'fire'
+      }
+      return undefined
     }
-  }
 
+    const hasBoundary = (location, adjLocation, boundaries) => {
+      const boundaryFound = boundaries[sortCoord(location, sortedLocation)]
+      if (boundaryFound === undefined){
+        return false
+      } else if (boundaryFound[kind] === 'door' && boundaryFound[status] !== 0) {
+        return 'opened door'
+      } else if (boundaryFound[kind] === 'door' && boundaryFound[status] === 0 ) {
+        return 'intact door'
+      } else if (boundaryFound[kind] === 'wall' && boundaryFound[status] === 0 ) {
+        return 'intact wall'
+      } else if (boundaryFound[kind] === 'wall' && boundaryFound[status] === 1 ) {
+        return 'damaged wall'
+      } else if (boundaryFound[kind] === 'wall' && boundaryFound[status] === 2 ) {
+        return 'destroyed wall'
+      }
+
+
+      if (checkCellDangerStatus(action.location) === 'smoke') {
+        return state.set(action.location, fromJS({
+          location: action.location,
+          kind: 'fire',
+          status: 1
+        })
+      } else if (checkCellDangerStatus(action.location) === 'fire') {
+      /////// check North first
+
+      // if no door/ door opened/ door destroyed && north cell is empty, add fire to adj cell
+      if (checkCellDangerStatus(action.location - 10) === undefined && hasBoundary() === undefined) {
+        return state.set(action.location, fromJS({
+          location: action.location - 10,
+          kind: 'fire',
+          status: 1
+        }))
+      } else if (checkCellDangerStatus(action.location - 10) === undefined && hasBoundary(action.location, action.location - 10, action.boundary) === 'opened door') {
+        return state.set(action.location, fromJS({
+          location: action.location - 10,
+          kind: 'fire',
+          status: 1
+        })
+      }
+
+      // if door is closed, destroy the door
+      } else if ( ) {
+
+      // check if north is a intact wall, damage it, if it's already damanaged , it will be destroyed
+      } else if ( ) {
+
+      //
+      } else if ( ) {
+
+      // if north is fire, check the next cell next to north ( while loop ), if goes outside of the building , then stops the loop
+
+      } else {
+        return state.set(action.location, fromJS({
+          location: action.location,
+          kind: 'smoke',
+          status: 1
+        }))
+      }
+  }
   return state
 }
 

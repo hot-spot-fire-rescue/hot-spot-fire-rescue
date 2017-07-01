@@ -59,7 +59,7 @@ const isAdjacent = (next, current) => {
   return adjCells.includes(next)
 }
 
-const isPassable = (boundary) => {
+export const isPassable = (boundary) => {
   if (!boundary) {
     return true
   } else if (boundary.kind === 'door') {
