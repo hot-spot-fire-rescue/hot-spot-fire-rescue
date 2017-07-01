@@ -1,26 +1,33 @@
 'use strict'
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
-import {setupBoard} from '../utils/setup'
-import {sortCoord,
-        switchDoor,
-        damageWall} from '../reducers/boundary'
+import { setupBoard } from '../utils/setup'
+import {
+  sortCoord,
+  switchDoor,
+  damageWall
+} from '../reducers/boundary'
 import Danger from '../components/Danger'
-import {movePlayer,
-        endTurn,
-        updatePlayer,
-        pickUpOrDropVictim} from '../reducers/player'
+import {
+  movePlayer,
+  endTurn,
+  updatePlayer,
+  pickUpOrDropVictim
+} from '../reducers/player'
+
+import { createDanger, addRandomSmoke, explode } from '../reducers/danger'
+import reducer from '../reducers/'
 
 import firebase from 'APP/fire'
-import {loadPlayers} from './promises'
+import { loadPlayers } from './promises'
 const fbAuth = firebase.auth()
-const fbDB=firebase.database()
+const fbDB = firebase.database()
 
 class Board extends React.Component {
   constructor(props) {
     super(props)
-    this.state= {
+    this.state = {
       players: loadPlayers, // Change name
       currentUserId: '',
       arrayUsers: []
@@ -33,7 +40,7 @@ class Board extends React.Component {
     this.rescuedVictimCount = this.rescuedVictimCount.bind(this)
     this.lostVictimCount = this.lostVictimCount.bind(this)
     this.didGameEnd = this.didGameEnd.bind(this)
-    this.removeUserCallback =this.removeUserCallback.bind(this)
+    this.removeUserCallback = this.removeUserCallback.bind(this)
     this.playerJoin = this.playerJoin.bind(this)
   }
 
@@ -45,7 +52,7 @@ class Board extends React.Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.setState({currentUserId: user.uid})
+        this.setState({ currentUserId: user.uid })
       }
     })
   }
@@ -61,7 +68,42 @@ class Board extends React.Component {
 
   handleEndTurnClick(event) {
     event.stopPropagation()
-    this.props.endTurn()
+    const isValid = (num) => {
+      if (num % 10 === 0 || num % 10 === 9 || num >= 70 || num <= 10) {
+        return false
+      }
+      return true
+    }
+    let locationToAddSmoke = 0
+    while (!isValid(locationToAddSmoke)) {
+      locationToAddSmoke = Math.floor(Math.random() * 79) + 1
+      // locationToAddSmoke = 14
+
+    }
+
+    const boundariesObj = this.props.boundaries.toObject()
+
+    // helper function - to check the danger status of a cell
+    const cellDangerStatus = (location) => {
+      const targetCellKind = this.props.danger.getIn([location, 'kind'])
+      const targetCellStatus = this.props.danger.getIn([location, 'status'])
+      if (targetCellKind === 'fire' && targetCellStatus === 1) {
+        return 'fire'
+      } else if (targetCellKind === 'smoke' && targetCellStatus === 1) {
+        return 'smoke'
+      }
+      return undefined
+    }
+
+    let actionCellDangerStatus = cellDangerStatus(locationToAddSmoke)
+    actionCellDangerStatus = (actionCellDangerStatus === undefined) ? 'no status' : actionCellDangerStatus
+
+    // if current cell is not fire, dispatch endTurn to add smoke
+    if (cellDangerStatus(locationToAddSmoke) !== 'fire') {
+      this.props.endTurn(locationToAddSmoke, boundariesObj)
+    }
+    // always check if it will cause explosion
+    this.props.explode(actionCellDangerStatus, locationToAddSmoke, boundariesObj)
   }
 
   handleCellClick(event, cell) {
@@ -75,9 +117,9 @@ class Board extends React.Component {
       const nextCellDangerKind = this.props.danger.getIn([cell.cellNum, 'kind'], '')
 
       this.props.move(this.props.currentPlayerId,
-                      nextCell,
-                      nextBoundary,
-                      nextCellDangerKind)
+        nextCell,
+        nextBoundary,
+        nextCellDangerKind)
     }
   }
 
@@ -114,12 +156,10 @@ class Board extends React.Component {
 
   removeUserCallback(event) {
     event.stopPropagation()
-    // console.log(event.target.id)
-    const targetIndex= this.state.arrayUsers.indexOf(event.target.id)
+    const targetIndex = this.state.arrayUsers.indexOf(event.target.id)
     this.state.arrayUsers.splice(targetIndex, 1)
     delete this.state.players[targetIndex]['uid']
-    // console.log(this.state.players[targetIndex])
-    this.setState({arrayUsers: this.state.arrayUsers})
+    this.setState({ arrayUsers: this.state.arrayUsers })
   }
 
   playerJoin(event) {
@@ -127,8 +167,7 @@ class Board extends React.Component {
       if (!this.state.players[i].hasOwnProperty('uid')) {
         this.state.players[i].uid = this.state.currentUserId
         loadPlayers[i].uid = this.state.currentUserId
-        this.setState({players: this.state.players})
-        // console.log('DO WE HAVE THIS.PROPS????', this.props)
+        this.setState({ players: this.state.players })
         updatePlayer(this.state.players[i].id, this.state.currentUserId)
         break
       }
@@ -136,8 +175,6 @@ class Board extends React.Component {
   }
 
   render() {
-    // console.log('board re rendering')
-    // console.log(loadPlayers)
     const {
       players,
       danger,
@@ -145,7 +182,7 @@ class Board extends React.Component {
       currentPlayerId,
       cells,
       boundaries,
-      fetchInitialData} = this.props
+      fetchInitialData } = this.props
 
     let handleCellClick = this.handleCellClick
     let handleDoorSwitch = this.handleDoorSwitch
@@ -191,8 +228,8 @@ class Board extends React.Component {
 
             return (
               <div key={cell.cellNum}
-              className="cell"
-              onClick={(evt) => handleCellClick(evt, cell)}>
+                className="cell"
+                onClick={(evt) => handleCellClick(evt, cell)}>
                 {
                   fire
                   && <Danger location={location} kind={kind} status={status} />
@@ -200,7 +237,7 @@ class Board extends React.Component {
                 {
                   player
                   && <div className='player'
-                    style={{backgroundColor: player.color}}/>
+                    style={{ backgroundColor: player.color }} />
                 }
                 {
                   poi && poi.status === 0
@@ -209,12 +246,12 @@ class Board extends React.Component {
                 {
                   poi && poi.status === 1 && !poi.carriedBy
                   && <div className={`poi victim-uncarried`}
-                    onClick={(evt) => handlePoiClick(evt, poi, player)}/>
+                    onClick={(evt) => handlePoiClick(evt, poi, player)} />
                 }
                 {
                   poi && poi.status === 1 && poi.carriedBy
                   && <div className={`poi victim-carried`}
-                    onClick={(evt) => handlePoiClick(evt, poi, player)}/>
+                    onClick={(evt) => handlePoiClick(evt, poi, player)} />
                 }
                 {
                   eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 0
@@ -287,7 +324,7 @@ class Board extends React.Component {
 
 // -- // -- // Container // -- // -- //
 
-const mapState = ({board, boundary, player, victim, danger}) => ({
+const mapState = ({ board, boundary, player, victim, danger }) => ({
   cells: board,
   boundaries: boundary,
   players: player.players,
@@ -300,8 +337,8 @@ const mapDispatch = dispatch => ({
   fetchInitialData: () => {
     dispatch(setupBoard())
   },
-  endTurn: () => {
-    dispatch(endTurn())
+  endTurn: (location, boundaries) => {
+    dispatch(endTurn(location, boundaries))
   },
   openOrCloseDoor: (coord) => {
     dispatch(switchDoor(coord))
@@ -317,6 +354,9 @@ const mapDispatch = dispatch => ({
   },
   updatePlayer: (id, uid) => {
     dispatch(updatePlayer(id, uid))
+  },
+  explode: (actionCellDangerStatus, explosionLocation, boundariesObj) => {
+    dispatch(explode(actionCellDangerStatus, explosionLocation, boundariesObj))
   }
 })
 
