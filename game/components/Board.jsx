@@ -121,7 +121,7 @@ class Board extends React.Component {
 
     // add new POI only if < 3 are on board
     const poiStatusCount = this.props.victims.countBy(poi => poi.status)
-    if ((poiStatusCount.get(0, 0) + poiStatusCount.get(1, 0)) < 10) {
+    if ((poiStatusCount.get(0, 0) + poiStatusCount.get(1, 0)) < 3) {
       let locationToAddPoi = 0
       const hasPoiOrCharacter = (location) => (
         Boolean(this.props.players.find(player => player.location === location) ||
