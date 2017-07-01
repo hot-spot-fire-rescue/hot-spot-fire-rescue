@@ -55,6 +55,12 @@ export const removeSmoke = (location, nextBoundary) => ({
   nextBoundary
 })
 
+export const REMOVE_DANGER = 'REMOVE_DANGER'
+export const removeDanger = (location) => ({
+  type: REMOVE_DANGER,
+  location
+})
+
 export const endTurn = (location, boundaries) => ({
   type: END_TURN,
   location,
@@ -135,6 +141,13 @@ const dangerReducer = (state = initial, action) => {
 
   case REMOVE_SMOKE:
     return state.setIn([action.location, 'status'], action.status)
+
+  case REMOVE_DANGER:
+    if (state.getIn([action.location, 'status']) === 1) {
+      return state.setIn([action.location, 'status'], 0)
+    } else {
+      return state
+    }
 
   case END_TURN:
     const checkCellDangerStatus = (location) => {
