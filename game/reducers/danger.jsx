@@ -1,6 +1,5 @@
 import { List, fromJS } from 'immutable'
 import { END_TURN, isPassable } from './player'
-import {REMOVE_FIRE, REMOVE_SMOKE, FIRE_TO_SMOKE} from './danger'
 
 `
 Legend for Danger:
@@ -20,6 +19,7 @@ export const createDanger = (location, kind, status) => {
   })
 }
 
+export const FIRE_TO_SMOKE = 'FIRE_TO_SMOKE'
 export const fireToSmoke = (location, nextBoundary) => ({
   type: FIRE_TO_SMOKE,
   location,
@@ -37,6 +37,7 @@ export const smokeToFire = (location, nextBoundary) => ({
   nextBoundary
 })
 
+export const REMOVE_FIRE = 'REMOVE_FIRE'
 export const removeFire = (location, nextBoundary) => ({
   type: REMOVE_FIRE,
   location,
@@ -45,7 +46,7 @@ export const removeFire = (location, nextBoundary) => ({
   nextBoundary
 })
 
-
+export const REMOVE_SMOKE = 'REMOVE_SMOKE'
 export const removeSmoke = (location, nextBoundary) => ({
   type: REMOVE_SMOKE,
   location,
