@@ -8,7 +8,6 @@ import {sortCoord,
         damageWall} from '../reducers/boundary'
 import Danger from '../components/Danger'
 import {movePlayer,
-<<<<<<< HEAD
        endTurn,
        updatePlayer,
       pickUpOrDropVictim} from '../reducers/player'
@@ -149,11 +148,6 @@ class Board extends React.Component {
   }
 
   render() {
-<<<<<<< HEAD
-=======
-    // console.log('board re rendering')
-    // console.log(loadPlayers)
->>>>>>> master
     const {
       players,
       danger,
