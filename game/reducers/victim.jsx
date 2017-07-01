@@ -1,7 +1,9 @@
 import {List} from 'immutable'
 
-import {MOVE_PLAYER,
-        PICK_UP_OR_DROP_VICTIM} from './player'
+import {
+  MOVE_PLAYER,
+  PICK_UP_OR_DROP_VICTIM,
+  CHECK_FOR_FIRE_DAMAGE} from './player'
 import {VICTIM_LEGEND} from '../utils/constants'
 
 `
@@ -171,6 +173,31 @@ const victimReducer = (state = initial, action) => {
         })
       }
     }
+
+  case CHECK_FOR_FIRE_DAMAGE:
+    state.poi.forEach((poi, idx) => {
+      if (action.fireLocations[poi.location]) {
+        if (poi.type !== 'falseAlarm') {
+          console.info(`A victim was lost due to the explosion`)
+          state = {...state,
+            poi: state.poi.set(idx, {
+              ...state.poi.get(idx),
+              status: 3,
+              carriedBy: null
+            })
+          }
+        } else {
+          console.info(`A POI was revealed to be a false alarm by the explosion`)
+          state = {...state,
+            poi: state.poi.set(idx, {
+              ...state.poi.get(idx),
+              status: 1
+            })
+          }
+        }
+      }
+    })
+    return state
   }
 
   return state

@@ -13,7 +13,8 @@ import {
   movePlayer,
   endTurn,
   updatePlayer,
-  pickUpOrDropVictim
+  pickUpOrDropVictim,
+  checkForFireDamage
 } from '../reducers/player'
 import {
   addNextPoi
@@ -108,9 +109,19 @@ class Board extends React.Component {
     // always check if it will cause explosion
     this.props.explode(actionCellDangerStatus, locationToAddSmoke, boundariesObj)
 
+    // check for fire on POIs and characters
+    const fireLocations = this.props.danger.map(danger => {
+      if (danger && danger.get('kind') === 'fire' && danger.get('status') === 1) {
+        return true
+      } else {
+        return false
+      }
+    })
+    this.props.checkFireDamage(fireLocations.toArray())
+
     // add new POI only if < 3 are on board
     const poiStatusCount = this.props.victims.countBy(poi => poi.status)
-    if ((poiStatusCount.get(0, 0) + poiStatusCount.get(1, 0)) < 3) {
+    if ((poiStatusCount.get(0, 0) + poiStatusCount.get(1, 0)) < 10) {
       let locationToAddPoi = 0
       const hasPoiOrCharacter = (location) => (
         Boolean(this.props.players.find(player => player.location === location) ||
@@ -382,6 +393,9 @@ const mapDispatch = dispatch => ({
   },
   removeDanger: (location) => {
     dispatch(removeDanger(location))
+  },
+  checkFireDamage: (fireLocations) => {
+    dispatch(checkForFireDamage(fireLocations))
   }
 })
 
