@@ -61,8 +61,9 @@ export const endTurn = (location, boundaries) => ({
 })
 
 export const EXPLODE = 'EXPLODE'
-export const explode = (location, boundaries) => ({
+export const explode = (actionCellDangerStatus, location, boundaries) => ({
   type: EXPLODE,
+  actionCellDangerStatus,
   location,
   boundaries
 })
@@ -79,7 +80,7 @@ const sortCoord = (location, adjLocation) => {
 }
 
 //  helper function - to check the type of boundary
-export const openBoundray = (location, adjLocation, boundaries) => {
+export const openBoundary = (location, adjLocation, boundaries) => {
   const boundaryFound = boundaries[sortCoord(location, adjLocation)]
   if (boundaryFound === undefined) {
     return true
@@ -160,10 +161,11 @@ const dangerReducer = (state = initial, action) => {
     }
 
   case EXPLODE:
+    console.log('explosion cause more dangers')
     const adjacentCells = [action.location - 10, action.location + 10, action.location + 1, action.location - 1]
 
     for (var i = 0; i < adjacentCells.length; i++) {
-      const adjBoundary = openBoundray(action.location, adjacentCells[i], action.boundaries)
+      const adjBoundary = openBoundary(action.location, adjacentCells[i], action.boundaries)
       const adjCellKind = state.getIn([adjacentCells[i], 'kind'])
       const adjCellStatus = state.getIn([adjacentCells[i], 'status'])
 
@@ -190,7 +192,7 @@ const dangerReducer = (state = initial, action) => {
 
         let currentLoc = adjacentCells[i]
         let adjToCheckSpread = nextAdj(i, currentLoc)
-        while (openBoundray(currentLoc, adjToCheckSpread, action.boundaries) === true && state.getIn([adjToCheckSpread, 'kind']) === 'fire' && state.getIn([adjToCheckSpread, 'status'] === 1)) {
+        while (openBoundary(currentLoc, adjToCheckSpread, action.boundaries) === true && state.getIn([adjToCheckSpread, 'kind']) === 'fire' && state.getIn([adjToCheckSpread, 'status'] === 1)) {
           currentLoc = adjToCheckSpread
           adjToCheckSpread = adjToCheckSpread - 10
         }

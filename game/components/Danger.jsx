@@ -8,7 +8,6 @@ import Menu from 'material-ui/Menu'
 import MenuItem from 'material-ui/MenuItem'
 
 class Danger extends React.Component {
-
   constructor(props) {
     super(props)
     this.state={

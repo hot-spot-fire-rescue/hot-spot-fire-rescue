@@ -76,8 +76,11 @@ class Board extends React.Component {
     }
     let locationToAddSmoke = 0
     while (!isValid(locationToAddSmoke)) {
-      locationToAddSmoke = Math.floor(Math.random() * 79) + 1
+      // locationToAddSmoke = Math.floor(Math.random() * 79) + 1
+      locationToAddSmoke = 43
+
     }
+
     const boundariesObj = this.props.boundaries.toObject()
 
     // helper function - to check the danger status of a cell
@@ -92,15 +95,15 @@ class Board extends React.Component {
       return undefined
     }
 
-    // if it's not explosion, dispatch endTurn to add smoke
+    let actionCellDangerStatus = cellDangerStatus(locationToAddSmoke)
+    actionCellDangerStatus = (actionCellDangerStatus === undefined) ? 'no status' : actionCellDangerStatus
+
+    // if current cell is not fire, dispatch endTurn to add smoke
     if (cellDangerStatus(locationToAddSmoke) !== 'fire') {
       this.props.endTurn(locationToAddSmoke, boundariesObj)
     }
-
-    // if it's exploded, handle explosion according to different cases
-    if (cellDangerStatus(locationToAddSmoke) === 'fire') {
-      this.props.explode(locationToAddSmoke, boundariesObj)
-    }
+    // always check if it will cause explosion
+    this.props.explode(actionCellDangerStatus, locationToAddSmoke, boundariesObj)
   }
 
   handleCellClick(event, cell) {
@@ -108,7 +111,7 @@ class Board extends React.Component {
 
     if (event.target.className === 'cell') {
       const sortedCoords = sortCoord([cell.cellNum,
-      this.props.players.get(this.props.currentPlayerId).location])
+        this.props.players.get(this.props.currentPlayerId).location])
       const nextCell = this.props.cells.get(cell.cellNum)
       const nextBoundary = this.props.boundaries.get(sortedCoords.toString(), '')
       const nextCellDangerKind = this.props.danger.getIn([cell.cellNum, 'kind'], '')
@@ -352,8 +355,8 @@ const mapDispatch = dispatch => ({
   updatePlayer: (id, uid) => {
     dispatch(updatePlayer(id, uid))
   },
-  explode: (explosionLocation, boundariesObj) => {
-    dispatch(explode(explosionLocation, boundariesObj))
+  explode: (actionCellDangerStatus, explosionLocation, boundariesObj) => {
+    dispatch(explode(actionCellDangerStatus, explosionLocation, boundariesObj))
   }
 })
 
