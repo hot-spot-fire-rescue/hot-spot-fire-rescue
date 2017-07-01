@@ -15,7 +15,9 @@ import {
   updatePlayer,
   pickUpOrDropVictim
 } from '../reducers/player'
-
+import {
+  addNextPoi
+} from '../reducers/victim'
 import { createDanger, addRandomSmoke, explode } from '../reducers/danger'
 import reducer from '../reducers/'
 
@@ -69,16 +71,13 @@ class Board extends React.Component {
   handleEndTurnClick(event) {
     event.stopPropagation()
     const isValid = (num) => {
-      if (num % 10 === 0 || num % 10 === 9 || num >= 70 || num <= 10) {
-        return false
-      }
-      return true
+      return !(num % 10 === 0 || num % 10 === 9 || num >= 70 || num <= 10)
     }
+
     let locationToAddSmoke = 0
     while (!isValid(locationToAddSmoke)) {
       locationToAddSmoke = Math.floor(Math.random() * 79) + 1
       // locationToAddSmoke = 14
-
     }
 
     const boundariesObj = this.props.boundaries.toObject()
@@ -104,6 +103,24 @@ class Board extends React.Component {
     }
     // always check if it will cause explosion
     this.props.explode(actionCellDangerStatus, locationToAddSmoke, boundariesObj)
+
+    // add new POI if < 3 on board
+    const poiStatusCount = this.props.victims.countBy(poi => poi.status)
+    if ((poiStatusCount.get(0, 0) + poiStatusCount.get(1, 0)) < 3) {
+      let locationToAddPoi = 0
+      // requirements: inside building, no POI, no firefighter
+      const hasPoiOrCharacter = (location) => {
+        return Boolean(this.props.players.find(player => player.location === location) ||
+               this.props.victims.find(victim => victim.location === location))
+      }
+
+      while (!(isValid(locationToAddPoi) && !hasPoiOrCharacter(locationToAddPoi))) {
+        locationToAddPoi = Math.floor(Math.random() * 79) + 1
+      }
+      this.props.addPoi(locationToAddPoi)
+      // set status of that cell's danger to 0 (remove fire/smoke)
+      // this.props.removeFire?
+    }
   }
 
   handleCellClick(event, cell) {
@@ -328,7 +345,7 @@ const mapState = ({ board, boundary, player, victim, danger }) => ({
   cells: board,
   boundaries: boundary,
   players: player.players,
-  victims: victim,
+  victims: victim.poi,
   currentPlayerId: player.currentId,
   danger: danger
 })
@@ -357,6 +374,9 @@ const mapDispatch = dispatch => ({
   },
   explode: (actionCellDangerStatus, explosionLocation, boundariesObj) => {
     dispatch(explode(actionCellDangerStatus, explosionLocation, boundariesObj))
+  },
+  addPoi: (location) => {
+    dispatch(addNextPoi(location))
   }
 })
 
