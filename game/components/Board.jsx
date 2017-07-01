@@ -12,6 +12,7 @@ import {movePlayer,
        endTurn,
        updatePlayer,
       pickUpOrDropVictim} from '../reducers/player'
+
 import {createDanger, addRandomSmoke} from '../reducers/danger'
 import reducer from '../reducers/'
 
