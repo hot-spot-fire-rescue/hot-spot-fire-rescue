@@ -109,6 +109,7 @@ const playerReducer = (state = initial, action) => {
   case CREATE_PLAYER:
     return {...state,
       players: state.players.push({
+        id: action.id,
         ap: action.ap,
         location: action.location,
         color: action.color,
