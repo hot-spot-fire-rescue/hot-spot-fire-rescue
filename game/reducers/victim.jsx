@@ -25,7 +25,7 @@ Legend for Victim ID:
 7 = woman4
 8 = dog
 9 = cat
-10 = false alarm
+10-14 = false alarms
 `
 
 // -- // -- // Actions // -- // -- //

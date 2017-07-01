@@ -18,7 +18,11 @@ import {
 import {
   addNextPoi
 } from '../reducers/victim'
-import { createDanger, addRandomSmoke, explode } from '../reducers/danger'
+import {
+  createDanger,
+  addRandomSmoke,
+  removeDanger,
+  explode} from '../reducers/danger'
 import reducer from '../reducers/'
 
 import firebase from 'APP/fire'
@@ -104,22 +108,20 @@ class Board extends React.Component {
     // always check if it will cause explosion
     this.props.explode(actionCellDangerStatus, locationToAddSmoke, boundariesObj)
 
-    // add new POI if < 3 on board
+    // add new POI only if < 3 are on board
     const poiStatusCount = this.props.victims.countBy(poi => poi.status)
     if ((poiStatusCount.get(0, 0) + poiStatusCount.get(1, 0)) < 3) {
       let locationToAddPoi = 0
-      // requirements: inside building, no POI, no firefighter
-      const hasPoiOrCharacter = (location) => {
-        return Boolean(this.props.players.find(player => player.location === location) ||
-               this.props.victims.find(victim => victim.location === location))
-      }
-
-      while (!(isValid(locationToAddPoi) && !hasPoiOrCharacter(locationToAddPoi))) {
+      const hasPoiOrCharacter = (location) => (
+        Boolean(this.props.players.find(player => player.location === location) ||
+                this.props.victims.find(victim => victim.location === location))
+      )
+      while (!(isValid(locationToAddPoi) &&
+             !hasPoiOrCharacter(locationToAddPoi))) {
         locationToAddPoi = Math.floor(Math.random() * 79) + 1
       }
+      this.props.removeDanger(locationToAddPoi) // clear fire and smoke
       this.props.addPoi(locationToAddPoi)
-      // set status of that cell's danger to 0 (remove fire/smoke)
-      // this.props.removeFire?
     }
   }
 
@@ -377,6 +379,9 @@ const mapDispatch = dispatch => ({
   },
   addPoi: (location) => {
     dispatch(addNextPoi(location))
+  },
+  removeDanger: (location) => {
+    dispatch(removeDanger(location))
   }
 })
 
