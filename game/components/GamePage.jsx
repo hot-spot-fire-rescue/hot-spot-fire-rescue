@@ -9,6 +9,9 @@ import thunkMiddleware from 'redux-thunk'
 
 import reducer from '../reducers'
 import Board from './Board'
+import Chatroom from './Chatroom'
+import {Grid, Row, Col, Clearfix} from 'react-bootstrap'
+
 
 export default class extends React.Component {
   componentDidMount() {
@@ -115,9 +118,22 @@ export default class extends React.Component {
     // If our fireRef changes, we'll throw this store state away and create a new one.
     // That's fine!
     return <Provider store={store}>
-      <div className="gameboard">
-        <button onClick={this.clear}>clear</button>
-        <Board fireRef={this.props.fireRef}/>
+      <div>
+        <Grid>
+        <Row className='show-grid'>
+          <Col md={4} xs={6} style={{display: 'inline-block'}}>
+            <Chatroom />
+          </Col>
+          <Col md={2} xs={3} style={{display: 'inline-block'}}>
+          </Col>
+          <Col md={6} xs={9} style={{display: 'inline-block'}}>
+            <div className="gameboard">
+              <button onClick={this.clear}>clear</button>
+              <Board fireRef={this.props.fireRef}/>
+            </div>
+          </Col>
+          </Row>
+        </Grid>
       </div>
     </Provider>
   }

@@ -14,6 +14,7 @@ import {movePlayer,
 
 import firebase from 'APP/fire'
 import {loadPlayers} from './promises'
+
 const fbAuth = firebase.auth()
 const fbDB=firebase.database()
 

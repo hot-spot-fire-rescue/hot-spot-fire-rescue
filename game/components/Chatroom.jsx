@@ -1,5 +1,7 @@
 import React from 'react'
 import ReactDom from 'react-dom'
+import {connect} from 'react-redux'
+import {listenForMessages, addMessage} from '../reducers/chatroom'
 
 export class Chatroom extends React.Component {
   constructor(props) {
@@ -31,10 +33,31 @@ export class Chatroom extends React.Component {
     event.target.text.value = null
   }
 
-//   render(){
-//     const messages = this.props.messages
-//     return (
-      
-//       )
-//   }
-// }
+  render(){
+    const messages = this.props.messages
+    return (
+      <div className="mdl-shadow--2dp chatroom">
+        <div id="message-container" ref="messageList">
+          {messages && Object.keys(messages).map(k => messages[k]).map( (message, idx) =>
+              <div className="messages" key = {idx}><strong>{message.name}</strong>: {message.text}</div>
+            )}
+        </div>
+        <form id="message-form" action="#" onSubmit={this.saveMessage} >
+          <div id="message-input" className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style={{background:'white', opacity: '0.9', borderRadius: '5px'}}>
+            <input className="mdl-textfield__input" type="text" id="message" name="text" />
+            <label className="mdl-textfield__label" htmlFor="message">Type Message Here...</label>
+          </div>
+        </form>
+      </div>
+      )
+  }
+}
+
+// -- // -- // Container // -- // -- //
+
+const mapState = ({ messages, loggedInUser }) => ({ messages, loggedInUser })
+
+const mapDispatch = { listenForMessages, addMessage }
+
+export default connect(mapState, mapDispatch)(Chatroom)
+
