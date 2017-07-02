@@ -8,9 +8,11 @@
 }
 
 .gameboard {
+  background-image: url('/images/board.jpg');
+  background-size: 600px 480px;
   margin: 0;
   line-height: 0px;
-  width: 300px;
+  width: 600px;
 }
 
 .row {
@@ -20,115 +22,115 @@
 
 .cell {
   border: 1px solid black;
-  width: 30px;
-  height: 30px;
+  width: 60px;
+  height: 60px;
   display: inline-block;
   position: relative;
 }
 
 .horizontal-wall {
-  width: 30px;
-  height: 5px;
+  width: 60px;
+  height: 10px;
   position: absolute;
   background-color: black;
-  top: 26px;
+  top: 52px;
 }
 
 .horizontal-wall-damagedOnce {
-  width: 30px;
-  height: 5px;
+  width: 60px;
+  height: 10px;
   position: absolute;
   background-color: coral;
-  top: 26px;
+  top: 52px;
 }
 
 .horizontal-wall-damagedTwice {
-  width: 30px;
-  height: 5px;
+  width: 60px;
+  height: 10px;
   position: absolute;
   background-color: red;
-  top: 26px;
+  top: 52px;
 }
 
 .vertical-wall {
-  width: 5px;
-  height: 30px;
+  width: 10px;
+  height: 60px;
   position: absolute;
   background-color: black;
-  left: 26px;
+  left: 52px;
 }
 
 .vertical-wall-damagedOnce {
-  width: 5px;
-  height: 30px;
+  width: 10px;
+  height: 60px;
   position: absolute;
   background-color: coral;
-  left: 26px;
+  left: 52px;
 }
 
 .vertical-wall-damagedTwice {
-  width: 5px;
-  height: 30px;
+  width: 10px;
+  height: 60px;
   position: absolute;
   background-color: red;
-  left: 26px;
+  left: 52px;
 }
 
 .vertical-door-closed {
-  width: 5px;
-  height: 30px;
+  width: 10px;
+  height: 60px;
   position: absolute;
   background-color: blue;
-  left: 26px;
+  left: 52px;
 }
 
 .vertical-door-open {
-  width: 5px;
-  height: 30px;
+  width: 10px;
+  height: 60px;
   position: absolute;
   background-color: green;
-  left: 26px;
+  left: 52px;
 }
 
 .horizontal-door-closed {
-  width: 30px;
-  height: 5px;
+  width: 60px;
+  height: 10px;
   position: absolute;
   background-color:blue;
-  top: 26px;
+  top: 52px;
 }
 
 .horizontal-door-open {
-  width: 30px;
-  height: 5px;
+  width: 60px;
+  height: 10px;
   position: absolute;
   background-color: green;
-  top: 26px;
+  top: 52px;
 }
 
 .player {
   width: 10px;
   height: 10px;
-  border-radius: 5px;
+  border-radius: 10px;
   background-color: green;
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 20px;
+  left: 20px;
 }
 
 .poi {
   width: 10px;
   height: 10px;
-  border-radius: 5px;
+  border-radius: 10px;
   background-color: lightblue;
   position: absolute;
   top: 0px;
-  left: 10px;
+  left: 20px;
 }
 
 .victim-carried {
   background-color: lightgreen;
-  top: 5px;
+  top: 20px;
 }
 
 .victim-uncarried {
@@ -163,8 +165,8 @@
 .messages {
   margin-bottom: 10px;
   background-color: white;
-  padding: 5px;
-  border-radius: 5px;
+  padding: 10px;
+  border-radius: 10px;
   opacity: 0.9;
 }
 #message-filler {
@@ -187,9 +189,9 @@
 .message-container .pic {
   background-image: url('/images/profile_placeholder.png');
   background-repeat: no-repeat;
-  width: 30px;
-  height: 30px;
-  background-size: 30px;
+  width: 60px;
+  height: 60px;
+  background-size: 60px;
   border-radius: 20px;
 }
 .message-container .spacing {
@@ -199,7 +201,7 @@
 .message-container .message {
   display: table-cell;
   width: calc(100% - 40px);
-  padding: 5px 0 5px 10px;
+  padding: 10px 0 10px 10px;
 }
 .message-container .name {
   display: inline-block;
@@ -228,11 +230,11 @@
 }
 
 .mdl-textfield__input {
-  padding-left: 5px;
+  padding-left: 10px;
 }
 #message-form button, #image-form button {
   width: 100px;
-  margin: 15px 0 0 10px;
+  margin: 110px 0 0 10px;
 }
 
 .mdl-card {
@@ -262,5 +264,5 @@
 
 .mdl-button .material-icons {
   top: -1px;
-  margin-right: 5px;
+  margin-right: 10px;
 }

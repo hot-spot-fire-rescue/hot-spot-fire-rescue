@@ -1,7 +1,7 @@
 'use strict'
 import React from 'react'
 import { connect } from 'react-redux'
-import {Grid, Row, Col, Clearfix} from 'react-bootstrap'
+import {Grid, Row, Col, Clearfix, Image} from 'react-bootstrap'
 
 import { setupBoard } from '../utils/setup'
 import {
