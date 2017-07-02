@@ -9,13 +9,15 @@ export class Chatroom extends React.Component {
     this.saveMessage = this.saveMessage.bind(this)
   }
   componentDidMound() {
-    this.props.listenForMessages()
+    this.props.fireRef.once('value', (snapshot) => {
+      if (!snapshot.exists()) this.props.listenForMessages(this.props.gameId)
+    }) 
   }
   componentDidUpdate() {
     this.scrollToBottom()
   }
   scrollToBottom() {
-    const {messageList} = this.refs
+    const {messageList} = this.props.fireRef
     const scrollHeight = messageList.scrollHeight
     const height = messageList.clientHeight
     const maxScrollTop = scrollHeight - height
@@ -24,12 +26,13 @@ export class Chatroom extends React.Component {
 
   saveMessage(event) {
     event.preventDefault()
-    let name = this.props.loggedInUser.displayName.split(' ')
+    console.log(this.props.loggedInUser)
+    // let name = this.props.loggedInUser.displayName.split(' ')
     const message = {
-      name: `${name[0]} ${name[1]}`,
+      // name: `${name[0]} ${name[1]}`,
       text: event.target.text.value
     }
-    this.props.addMessage(message)
+    this.props.addMessage(this.props.gameId, message)
     event.target.text.value = null
   }
 
@@ -39,7 +42,7 @@ export class Chatroom extends React.Component {
       <div className="mdl-shadow--2dp chatroom">
         <div id="message-container" ref="messageList">
           {messages && Object.keys(messages).map(k => messages[k]).map( (message, idx) =>
-              <div className="messages" key = {idx}><strong>{message.name}</strong>: {message.text}</div>
+              <div className="messages" key = {idx}>{/*<strong>{message.name}</strong>:*/} {message.text}</div>
             )}
         </div>
         <form id="message-form" action="#" onSubmit={this.saveMessage} >
@@ -55,7 +58,7 @@ export class Chatroom extends React.Component {
 
 // -- // -- // Container // -- // -- //
 
-const mapState = ({ messages, loggedInUser }) => ({ messages, loggedInUser })
+const mapState = ({ messages }) => ({ messages})
 
 const mapDispatch = { listenForMessages, addMessage }
 

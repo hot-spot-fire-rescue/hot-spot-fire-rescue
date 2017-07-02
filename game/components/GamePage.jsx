@@ -122,7 +122,7 @@ export default class extends React.Component {
         <Grid>
         <Row className='show-grid'>
           <Col md={4} xs={6} style={{display: 'inline-block'}}>
-            <Chatroom />
+            <Chatroom fireRef={this.props.fireRef} gameId={this.props.gameId}/>
           </Col>
           <Col md={2} xs={3} style={{display: 'inline-block'}}>
           </Col>

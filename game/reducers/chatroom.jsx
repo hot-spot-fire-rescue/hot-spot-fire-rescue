@@ -20,16 +20,16 @@ export default function reducer (messages = {}, action) {
   }
 }
 
-export const listenForMessages = () => dispatch => {
+export const listenForMessages = (gameId) => dispatch => {
   const rootRef = firebase.database().ref()
-  const messagesRef = rootRef.child('board').child(store.getState().gameName).child('messages')
+  const messagesRef = rootRef.child('board').child(gameId).child('messages')
   messagesRef.limitToLast(24).on('value', snap => {
     dispatch(loadMessages(snap.val()))
   })
 }
 
-export const addMessage = message => dispatch => {
+export const addMessage = (gameId, message) => dispatch => {
   const rootRef = firebase.database().ref()
-  const messagesRef = rootRef.child('board').child(store.getState().gameName).child('messages')
+  const messagesRef = rootRef.child('board').child(gameId).child('messages')
   messagesRef.push(message)
 }

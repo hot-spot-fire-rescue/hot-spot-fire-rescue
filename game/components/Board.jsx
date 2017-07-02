@@ -1,20 +1,18 @@
 'use strict'
 import React from 'react'
 import {connect} from 'react-redux'
+import { browserHistory } from 'react-router'
 
 import {setupBoard} from '../utils/setup'
 import {sortCoord,
         switchDoor,
         damageWall} from '../reducers/boundary'
 import Danger from '../components/Danger'
-import {movePlayer,
+import {createPlayer, movePlayer,
         endTurn,
-        updatePlayer,
         pickUpOrDropVictim} from '../reducers/player'
 
 import firebase from 'APP/fire'
-import {loadPlayers} from './promises'
-
 const fbAuth = firebase.auth()
 const fbDB=firebase.database()
 
@@ -22,9 +20,9 @@ class Board extends React.Component {
   constructor(props) {
     super(props)
     this.state= {
-      players: loadPlayers, // Change name
+      players: [],
       currentUserId: '',
-      arrayUsers: []
+      currentUsername: ''
     }
     this.handleCellClick = this.handleCellClick.bind(this)
     this.handleDoorSwitch = this.handleDoorSwitch.bind(this)
@@ -35,7 +33,7 @@ class Board extends React.Component {
     this.lostVictimCount = this.lostVictimCount.bind(this)
     this.didGameEnd = this.didGameEnd.bind(this)
     this.removeUserCallback =this.removeUserCallback.bind(this)
-    this.playerJoin = this.playerJoin.bind(this)
+    this.onPlayerSubmit=this.onPlayerSubmit.bind(this)
   }
 
   componentWillMount() {
@@ -46,7 +44,7 @@ class Board extends React.Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.setState({currentUserId: user.uid})
+        this.setState({currentUserId: user.uid, currentUsername: user.displayName})
       }
     })
   }
@@ -123,17 +121,26 @@ class Board extends React.Component {
     this.setState({arrayUsers: this.state.arrayUsers})
   }
 
-  playerJoin(event) {
-    for (var i = 0; i < this.state.players.length; i++) {
-      if (!this.state.players[i].hasOwnProperty('uid')) {
-        this.state.players[i].uid = this.state.currentUserId
-        loadPlayers[i].uid = this.state.currentUserId
-        this.setState({players: this.state.players})
-        // console.log('DO WE HAVE THIS.PROPS????', this.props)
-        updatePlayer(this.state.players[i].id, this.state.currentUserId)
-        break
-      }
+  onPlayerSubmit(event) {
+    event.preventDefault()
+    console.log(event.target.color.value)
+    let playerInfo = {
+      id: this.state.currentUserId,
+      ap: 4,
+      location: parseInt(event.target.location.value),
+      color: event.target.color.value
     }
+    let statePlayerInfo= {
+      name: this.state.currentUsername,
+      color: event.target.color.value
+    }
+    this.setState({
+      players: this.state.players.concat([statePlayerInfo])
+    })
+    console.log('THIS STATEINFO', this.state.players)
+    console.log('THIS IS PLAYER INFO', playerInfo)
+    this.props.createAPlayer(playerInfo)
+    browserHistory.push('/game/test')
   }
 
   render() {
@@ -155,8 +162,10 @@ class Board extends React.Component {
     let handlePoiClick = this.handlePoiClick
     let rescuedVictimCount = this.rescuedVictimCount
     let lostVictimCount = this.lostVictimCount
-    let condition = this.state.players[currentPlayerId].uid !== this.state.currentUserId
-
+    let condition
+    if (players.size>0) {
+      condition = players.get(currentPlayerId).id!== this.state.currentUserId
+    }
     // don't put console logs in render
     if (condition) {
       handleCellClick = () => (console.log('It is not your turn yet.  Have patience, padawan'))
@@ -166,12 +175,55 @@ class Board extends React.Component {
     }
 
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
-
-    return (
+    return (players.size<1)? (
+              <div>
+              <h1>Add a Player</h1>
+                <div className="row col-lg-4">
+                  <form onSubmit={this.onPlayerSubmit}>
+                  <div className="form-group">
+                    <label htmlFor="location"></label>
+                    <input className="form-control" type="number" id="location" />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="color"></label>
+                    <input className="form-control" type="color" id="color"/>
+                  </div>
+                    <button className="btn btn-default" type="submit">Add New Player</button>
+                  </form>
+                </div>
+              </div>):(
       <div>
         <br></br>
-        <button id={this.state.currentUserId} onClick={this.playerJoin}> Join</button>
+          <div>
+          <h1>Add a Player</h1>
+            <div>
+            </div>
+            <div className="row col-lg-4">
+              <form onSubmit={this.onPlayerSubmit}>
+              <div className="form-group">
+                <label htmlFor="location"></label>
+                <input className="form-control" type="number" id="location" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="color"></label>
+                <input className="form-control" type="color" id="color"/>
+              </div>
+                <button className="btn btn-default" type="submit">Add New Player</button>
+              </form>
+            </div>
+          </div>
+        <br></br>
         <button disabled={condition} onClick={handleEndTurnClick}>End Turn</button>
+          <div>
+            {console.log('THIS IS THE STATE PLAYERS', this)}
+            {
+              this.state.players.map((player) => {
+                return (
+                  <li><p>{player.name}</p></li>
+                )
+              })
+            }
+          </div>
         <h6>Player0-blue, Player1-green, Player2-purple, Player3-orange </h6>
         <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
         <h5>Number of saved victims: {rescuedVictimCount()}</h5>
@@ -189,7 +241,6 @@ class Board extends React.Component {
             const player = players.find((val) => val.location === cell.cellNum)
             const poi = victims.find((val) => val.location === cell.cellNum)
             const fire = danger.get(cell.cellNum)
-
             return (
               <div key={cell.cellNum}
               className="cell"
@@ -316,8 +367,8 @@ const mapDispatch = dispatch => ({
   pickUpOrDropVictim: (victim, playerId) => {
     dispatch(pickUpOrDropVictim(victim, playerId))
   },
-  updatePlayer: (id, uid) => {
-    dispatch(updatePlayer(id, uid))
+  createAPlayer: (playerInfo) => {
+    dispatch(createPlayer(playerInfo.id, playerInfo.ap, playerInfo.location, playerInfo.color))
   }
 })
 
