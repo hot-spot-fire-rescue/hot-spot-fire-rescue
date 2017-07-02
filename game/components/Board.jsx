@@ -251,7 +251,7 @@ class Board extends React.Component {
 
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
 
-    return <Grid>
+    return <div className="play-area">
       { doNotShowTheBoard
         ? (
           <div>
@@ -438,7 +438,7 @@ class Board extends React.Component {
           </div>
         )
     }
-    </Grid>
+   </div>
   }
 }
 

@@ -1,7 +1,16 @@
+.main-grid {
+  margin: 0;
+  display: inline
+}
+
+.play-area {
+  margin: 20px
+}
+
 .gameboard {
   margin: 0;
   line-height: 0px;
-  width: 330px;
+  width: 300px;
 }
 
 .row {
