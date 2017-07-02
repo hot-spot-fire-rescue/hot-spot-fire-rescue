@@ -98,3 +98,4 @@ export const withAuth = Component => class extends React.Component {
 
 export const FireInput = ignite(({value, onChange}) => <input value={value || ''} onChange={onChange} />)
 export default ignite
+                                
