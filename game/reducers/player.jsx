@@ -151,8 +151,8 @@ const playerReducer = (state = initial, action) => {
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
     apCost = findMoveApCost(currentPlayer, nextCell, nextDangerKind)
-    const validStartingCell= nextCellNum%10===0 || (nextCellNum+1)%10===0
-
+    const validStartingCell= nextCellNum%10===0 || (nextCellNum+1)%10===0 || (nextCellNum)<10 || nextCellNum > 70
+    console.log(currentPlayer.location)
     if ((currentPlayer.location=== -1 && validStartingCell) || (nextCellNum !== currentPlayerLocation &&
         isAdjacent(nextCellNum, currentPlayerLocation) &&
         isPassable(nextBoundary) &&
