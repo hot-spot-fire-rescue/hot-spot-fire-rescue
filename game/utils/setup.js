@@ -45,12 +45,6 @@ const cellsWithPlayer = [6, 30, 73, 49]
 const cellsWithFire = [14, 18, 25, 37, 43, 56, 53, 68]
 const colors = ['blue', 'green', 'purple', 'orange']
 
-const initialPlayers = [
-  [0, 6, 'blue'],
-  [1, 30, 'green'],
-  [2, 73, 'purple'],
-  [3, 49, 'orange']]
-
 const initialFire = [
   [14, 'fire', 1],
   [37, 'fire', 1],
@@ -76,17 +70,10 @@ const hiddenPoiList = () => {
 }
 //
 
-initialPlayers.forEach(info => {
-  sendPlayersToFirebase(info[0], 4, info[1], info[2])
-})
-
 export const setupBoard = () => dispatch => {
   for (let idx = 0; idx < 80; idx++) {
     dispatch(createCell(idx))
   }
-  initialPlayers.forEach(info => {
-    dispatch(createPlayer(info[0], 4, info[1], info[2]))
-  })
   initialFire.forEach(fire => {
     dispatch(createDanger(fire[0], fire[1], fire[2]))
   })
