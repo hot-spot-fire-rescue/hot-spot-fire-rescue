@@ -50,8 +50,8 @@ class Board extends React.Component {
     this.damageCount = this.damageCount.bind(this)
     this.lostVictimCount = this.lostVictimCount.bind(this)
     this.didGameEnd = this.didGameEnd.bind(this)
-    this.onPlayerSubmit=this.onPlayerSubmit.bind(this)
-    this.removePlayerCallback=this.removePlayerCallback.bind(this)
+    this.onPlayerSubmit = this.onPlayerSubmit.bind(this)
+    this.removePlayerCallback = this.removePlayerCallback.bind(this)
   }
 
   componentWillMount() {
@@ -182,12 +182,15 @@ class Board extends React.Component {
   didGameEnd() {
     if (this.damageCount() > 23) {
       // Building collapsed!
+      console.info(`GAME OVER: The building collapsed`)
     }
     if (this.lostVictimCount() > 4) {
       // Defeat - 4 victims were lost
+      console.info(`GAME OVER: 4 victims were lost`)
     }
     if (this.rescuedVictimCount > 6) {
       // Victory - 7 victims were rescued!
+      console.info(`YOU WON! You rescued 7 victims from the burning buliding`)
     }
   }
 
@@ -228,15 +231,15 @@ class Board extends React.Component {
     let rescuedVictimCount = this.rescuedVictimCount
     let lostVictimCount = this.lostVictimCount
     let condition
-    if (players.size>0) {
+    if (players.size > 0) {
       condition = players.get(currentPlayerId).id!== this.state.currentUserId
     }
-    // don't put console logs in render
+ 
     let tooManyPlayers= players.size >6
     let notEnoughPlayers= players.size < 2
     let spectating= this.state.userIsPlaying === false
-    let doNotShowTheBoard= notEnoughPlayers && !spectating
-    if (condition || spectating || this.state.gameStarted===false) {
+    let doNotShowTheBoard = notEnoughPlayers && !spectating
+    if (condition || spectating || this.state.gameStarted === false) {
       handleCellClick = () => (console.log('It is not your turn yet.  Have patience, padawan'))
       handleDoorSwitch = () => (console.log('It is not your turn yet.  Have patience, padawan'))
       handleWallDamage = () => (console.log('It is not your turn yet.  Have patience, padawan'))
@@ -245,7 +248,7 @@ class Board extends React.Component {
 
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
 
-    return (doNotShowTheBoard)?(
+    return (doNotShowTheBoard) ? (
       <div>
       <h1>Add a Player</h1>
         <div className="row col-lg-4">
