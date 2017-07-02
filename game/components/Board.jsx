@@ -38,7 +38,7 @@ class Board extends React.Component {
     this.state= {
       currentUserId: '',
       currentUsername: '',
-      userIsPlaying: true,
+      userIsPlaying: false,
       gameStarted: false
     }
     this.handleCellClick = this.handleCellClick.bind(this)
@@ -277,7 +277,7 @@ class Board extends React.Component {
         }
       </div>
     ):(
-      <div>
+      <div>{console.log(this.state.userIsPlaying)}
         <div>
             {(spectating)?
               <div>
