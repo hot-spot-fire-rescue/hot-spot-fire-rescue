@@ -107,10 +107,11 @@ const boundaryReducer = (state = initial, action) => {
   case EXPLODE:
     console.log('check if boundary is exploded at Cell:', action.location)
     const adjacentCells = [action.location - 10, action.location + 10, action.location + 1, action.location - 1]
+    const doorToDestroy = []
+    const wallToDamage = []
+    const wallToDestroy = []
     for (var i = 0; i < adjacentCells.length; i++) {
       const adjBoundary = boundaryType(action.location, adjacentCells[i], action.boundaries)
-      console.log('adjBoundary', adjBoundary)
-      console.log('adjacentCells', adjacentCells[i])
       const adjCellKind = state.getIn([adjacentCells[i], 'kind'])
       const adjCellStatus = state.getIn([adjacentCells[i], 'status'])
 
@@ -121,25 +122,31 @@ const boundaryReducer = (state = initial, action) => {
         sortedCoord = sortCoord(coord)
         console.log('sorted Coord', sortedCoord)
         console.log('adjacentCells[i]')
-        return state.set(sortedCoord.toString(), {
-          ...state.get(sortedCoord.toString()),
-          status: 2
-        })
+        doorToDestroy.push(sortedCoord.toString())
+        // return state.set(sortedCoord.toString(), {
+        //   ...state.get(sortedCoord.toString()),
+        //   status: 2
+        // })
       } else if (action.actionCellDangerStatus ==='fire' && adjBoundary === 'intact wall') {
         console.log('explosion happened, intact wall was damaged', adjacentCells[i])
         sortedCoord = sortCoord([action.location, adjacentCells[i]])
-        return state.set(sortedCoord.toString(), {
-          ...state.get(sortedCoord.toString()),
-          status: 1
-        })
+        wallToDamage.push(sortedCoord.toString())
+        // return state.set(sortedCoord.toString(), {
+        //   ...state.get(sortedCoord.toString()),
+        //   status: 1
+        // })
       } else if (action.actionCellDangerStatus ==='fire' && adjBoundary === 'damaged wall') {
         console.log('explosion happened, damaged wall was destroyed', adjacentCells[i])
         sortedCoord = sortCoord([action.location, adjacentCells[i]])
-        return state.set(sortedCoord.toString(), {
-          ...state.get(sortedCoord.toString()),
-          status: 2
-        })
+        wallToDestroy.push(sortedCoord.toString())
+        // return state.set(sortedCoord.toString(), {
+        //   ...state.get(sortedCoord.toString()),
+        //   status: 2
+        // })
       }
+      console.log('doorToDestroy', doorToDestroy)
+      console.log('wallToDamage', wallToDamage)
+      console.log('wallToDestroy', wallToDestroy)
     }
   }
 

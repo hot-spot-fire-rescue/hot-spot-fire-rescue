@@ -83,8 +83,8 @@ class Board extends React.Component {
 
     let locationToAddSmoke = 0
     while (!isValid(locationToAddSmoke)) {
-      locationToAddSmoke = Math.floor(Math.random() * 79) + 1
-      // locationToAddSmoke = 14
+      // locationToAddSmoke = Math.floor(Math.random() * 79) + 1
+      locationToAddSmoke = 16
     }
 
     const boundariesObj = this.props.boundaries.toObject()
@@ -104,12 +104,14 @@ class Board extends React.Component {
     let actionCellDangerStatus = cellDangerStatus(locationToAddSmoke)
     actionCellDangerStatus = (actionCellDangerStatus === undefined) ? 'no status' : actionCellDangerStatus
 
-    // if current cell is not fire, dispatch endTurn to add smoke
-    if (cellDangerStatus(locationToAddSmoke) !== 'fire') {
-      this.props.endTurn(locationToAddSmoke, boundariesObj)
+    // always check if there is explosion, trigger explosion if target cell is already on fire
+    if (cellDangerStatus(locationToAddSmoke) === 'fire') {
+      console.log('going to dispatch explosion!')
+      this.props.explode(actionCellDangerStatus, locationToAddSmoke, boundariesObj)
     }
-    // always check if it will cause explosion
-    this.props.explode(actionCellDangerStatus, locationToAddSmoke, boundariesObj)
+
+    // After dealing with explosion, endTurn will calculate loss and damages
+    this.props.endTurn(locationToAddSmoke, boundariesObj)
 
     // check for fire on POIs and characters
     const fireLocations = this.props.danger.map(danger => {
