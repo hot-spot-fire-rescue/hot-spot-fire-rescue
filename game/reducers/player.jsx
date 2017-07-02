@@ -18,7 +18,7 @@ export const createPlayer = (id, ap, location, color, username) => ({
   username
 })
 
-export const REMOVE_PLAYER='REMOVE_PLAYER'
+export const REMOVE_PLAYER = 'REMOVE_PLAYER'
 export const removePlayer = (playerIndex) => ({
   type: REMOVE_PLAYER,
   playerIndex
@@ -152,7 +152,7 @@ const playerReducer = (state = initial, action) => {
     currentPlayerLocation = currentPlayer.location
     apCost = findMoveApCost(currentPlayer, nextCell, nextDangerKind)
     const validStartingCell= nextCellNum%10===0 || (nextCellNum+1)%10===0 || (nextCellNum)<10 || nextCellNum > 70
-    console.log(currentPlayer.location)
+
     if ((currentPlayer.location=== -1 && validStartingCell) || (nextCellNum !== currentPlayerLocation &&
         isAdjacent(nextCellNum, currentPlayerLocation) &&
         isPassable(nextBoundary) &&

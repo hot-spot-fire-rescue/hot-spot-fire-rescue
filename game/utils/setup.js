@@ -10,7 +10,6 @@ import {loadPlayers, sendPlayersToFirebase} from '../components/promises'
 Legend for Cells:
 ----------------------
 0 = empty, 1 = smoke, 2 = fire
-
 Legend for Boundaries:
 ----------------------
 door: 0 = closed, 1 = open, 2 = destroyed
