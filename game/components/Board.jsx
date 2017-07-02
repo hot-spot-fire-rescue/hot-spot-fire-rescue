@@ -319,14 +319,13 @@ class Board extends React.Component {
 
             <br></br>
             <button disabled={condition} onClick={handleEndTurnClick}>End Turn</button>
-            <h6>Player0-blue, Player1-green, Player2-purple, Player3-orange </h6>
-            <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
+            <h4>Player {currentPlayerId} has {remainingAp} AP left</h4>
             <h5>Number of saved victims: {rescuedVictimCount()}</h5>
             <h5>Number of lost victims: {lostVictimCount()}</h5>
             <h5>Total damage to building: {damageCount()}</h5>
-
           <Row>
             <Col sm={9}>
+            <div className='gameboard'>
               {
                 cells.map(cell => {
                   const eastBoundaryCoord = [cell.cellNum, cell.cellNum + 1].toString()
@@ -430,6 +429,7 @@ class Board extends React.Component {
                   )
                 })
               }
+            </div>
             </Col>
             <Col sm={3}>
               <Chatroom username={this.state.currentUsername}/>
@@ -437,7 +437,7 @@ class Board extends React.Component {
           </Row>
           </div>
         )
-      }
+    }
     </Grid>
   }
 }

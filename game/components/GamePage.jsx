@@ -117,7 +117,7 @@ export default class extends React.Component {
     // If our fireRef changes, we'll throw this store state away and create a new one.
     // That's fine!
     return <Provider store={store}>
-      <div className="gameboard">
+      <div>
         <button onClick={this.clear}>clear</button>
         <Board fireRef={this.props.fireRef}/>
       </div>
