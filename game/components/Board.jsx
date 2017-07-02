@@ -235,12 +235,12 @@ class Board extends React.Component {
     let condition
 
     if (players.size > 0) {
-      condition = players.get(currentPlayerId).id!== this.state.currentUserId
+      condition = players.get(currentPlayerId).id !== this.state.currentUserId
     }
- 
-    let tooManyPlayers= players.size >6
-    let notEnoughPlayers= players.size < 2
-    let spectating= this.state.userIsPlaying === false
+
+    let tooManyPlayers = players.size > 6
+    let notEnoughPlayers = players.size < 2
+    let spectating = this.state.userIsPlaying === false
     let doNotShowTheBoard = notEnoughPlayers && !spectating
     if (condition || spectating || this.state.gameStarted === false) {
       handleCellClick = () => (console.log('It is not your turn yet.  Have patience, padawan'))
@@ -251,77 +251,82 @@ class Board extends React.Component {
 
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
 
-    return (doNotShowTheBoard) ? (
-      <div>
-      <h1>Add a Player</h1>
-        <div className="row col-lg-4">
-          <form onSubmit={this.onPlayerSubmit}>
-          <div className="form-group">
-            <label htmlFor="color"></label>
-            <input className="form-control" type="color" id="color"/>
-          </div>
-            <button className="btn btn-default" type="submit" disabled={tooManyPlayers}>Add New Player</button>
-          </form>
-        </div>
-        <ul>
-          {
-            players.map((player) => {
-              let idx= players.indexOf(player)
-              return (
-                <div key={idx}>
-                  <li style={{color: `${player.color}`}}> <p style={{color: `${player.color}`}}>{player.username} </p></li><button id={idx} onClick= {this.removePlayerCallback} disabled={player.id!==this.state.currentUserId}>X</button>
-                </div>
-              )
-            })
-          }
-        </ul>
-        <button disabled={players.size<1} onClick= {() => {
-          this.setState({userIsPlaying: false})
-        }}> Just Spectating</button>
-        {
-          (players.size < 1)?<p>You cannot spectate an empty game</p>: null
-        }
-      </div>
-    ) : (
-      <div>{console.log(this.state.userIsPlaying)}
-        <div>
-            {(spectating)?
-              <div>
-              <h1>Join the Game!</h1>
-                  <div className="row col-lg-4">
-                    <form onSubmit={this.onPlayerSubmit}>
-                    <div className="form-group">
-                      <label htmlFor="color"></label>
-                      <input className="form-control" type="color" id="color"/>
-                    </div>
-                      <button className="btn btn-default" type="submit" disabled={tooManyPlayers}>Add New Player</button>
-                    </form>
-                  </div>
+    return <Grid>
+      { doNotShowTheBoard
+        ? (
+          <div>
+          <h1>Add a Player</h1>
+            <div className="row col-lg-4">
+              <form onSubmit={this.onPlayerSubmit}>
+              <div className="form-group">
+                <label htmlFor="color"></label>
+                <input className="form-control" type="color" id="color"/>
               </div>
-            :<div></div>}
-        </div>
-        <ul>
+                <button className="btn btn-default" type="submit" disabled={tooManyPlayers}>Add New Player</button>
+              </form>
+            </div>
+            <ul>
+              {
+                players.map((player) => {
+                  let idx = players.indexOf(player)
+                  return (
+                    <div key={idx}>
+                      <li style={{color: `${player.color}`}}> <p style={{color: `${player.color}`}}>{player.username} </p></li><button id={idx} onClick= {this.removePlayerCallback} disabled={player.id!==this.state.currentUserId}>X</button>
+                    </div>
+                  )
+                })
+              }
+            </ul>
+            <button disabled={players.size<1} onClick= {() => {
+              this.setState({userIsPlaying: false})
+            }}> Just Spectating</button>
             {
-              players.map((player) => {
-                return (
-                  <div>
-                    <li key= {`${player.color}`} style={{color: `${player.color}`}}> <p style={{color: `${player.color}`}}>{player.username} </p></li>
-                  </div>
-                )
-              })
+              (players.size < 1)?<p>You cannot spectate an empty game</p>: null
             }
-          </ul>
-          {
-            (!this.state.gameStarted && !spectating)?<button onClick={() => this.setState({gameStarted: true})}>Start the Game</button>:<div></div>
-          }
-              <br></br>
-              <button disabled={condition} onClick={handleEndTurnClick}>End Turn</button>
-              <h6>Player0-blue, Player1-green, Player2-purple, Player3-orange </h6>
-              <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
-              <h5>Number of saved victims: {rescuedVictimCount()}</h5>
-              <h5>Number of lost victims: {lostVictimCount()}</h5>
-              <h5>Total damage to building: {damageCount()}</h5>
+          </div>
+        ) : (
+          <div>
+            <div>
+              {spectating &&
+                <div>
+                <h1>Join the Game!</h1>
+                    <div className="row col-lg-4">
+                      <form onSubmit={this.onPlayerSubmit}>
+                      <div className="form-group">
+                        <label htmlFor="color"></label>
+                        <input className="form-control" type="color" id="color"/>
+                      </div>
+                        <button className="btn btn-default" type="submit" disabled={tooManyPlayers}>Add New Player</button>
+                      </form>
+                    </div>
+                </div>
+              }
+            </div>
+            <ul>
+              {
+                players.map((player) => {
+                  return (
+                    <div>
+                      <li key= {`${player.color}`} style={{color: `${player.color}`}}> <p style={{color: `${player.color}`}}>{player.username} </p></li>
+                    </div>
+                  )
+                })
+              }
+            </ul>
+            {
+              (!this.state.gameStarted && !spectating)?<button onClick={() => this.setState({gameStarted: true})}>Start the Game</button>:<div></div>
+            }
 
+            <br></br>
+            <button disabled={condition} onClick={handleEndTurnClick}>End Turn</button>
+            <h6>Player0-blue, Player1-green, Player2-purple, Player3-orange </h6>
+            <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
+            <h5>Number of saved victims: {rescuedVictimCount()}</h5>
+            <h5>Number of lost victims: {lostVictimCount()}</h5>
+            <h5>Total damage to building: {damageCount()}</h5>
+
+          <Row>
+            <Col sm={9}>
               {
                 cells.map(cell => {
                   const eastBoundaryCoord = [cell.cellNum, cell.cellNum + 1].toString()
@@ -425,17 +430,15 @@ class Board extends React.Component {
                   )
                 })
               }
-            </div>
-          </Col>
-          <br />
-          <hr />
-          <Col md={4} style={{display: 'inline-block'}}>
-            <Chatroom username={this.state.currentUsername}/>
-          </Col>
-        </Row>
-      </Grid>
-    </div>
-    )
+            </Col>
+            <Col sm={3}>
+              <Chatroom username={this.state.currentUsername}/>
+            </Col>
+          </Row>
+          </div>
+        )
+      }
+    </Grid>
   }
 }
 
