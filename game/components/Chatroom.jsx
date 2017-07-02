@@ -2,9 +2,10 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {addMessage} from '../reducers/message'
-import MobileTearSheet from 'material-ui/MobileTearSheet'
+import MobileTearSheet from './MobileTearSheet'
 import Avatar from 'material-ui/Avatar'
 import {List, ListItem} from 'material-ui/List'
+import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors'
 import Subheader from 'material-ui/Subheader'
 import Divider from 'material-ui/Divider'
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble'
@@ -21,20 +22,47 @@ export function Chatroom(props) {
 
   return (
     <div>
-      <form className= 'form-horizontal' onSubmit = {handleSubmit}>
-        <fieldset>
-          <legend>{formTitle}</legend>
-          {warning && <div className = 'alert alert-warning'>{warning}</div>}
-          <div className='form-group'>
-            <TextField
-              hintText = 'Type your message here'
-              multiLine={true}
-              value = {text}
-              onChange = {handleChange}
-            /><br />
-          </div>
-        </fieldset>
-      </form>
+      <MobileTearSheet>
+        <List>
+          <Subheader>Recent chats</Subheader>
+          {
+            messages && messages.slice(-8).map(message => {
+              let key = messages.indexOf(message)
+              let messageUsername = messages.getIn([key, 'user'])
+              let messageText = messages.getIn([key, 'text'])
+              let render = `${messageUsername} : ${messageText}`
+            return (
+              <div>
+                <ListItem
+                  leftAvatar={<Avatar src='https://maxcdn.icons8.com/Share/icon/Users//circled_user_female1600.png' />}
+                  secondaryText={
+                    <p>
+                      <span style={{color: darkBlack}}>{messageUsername}</span> -- {messageText}
+                    </p>
+                  }
+                />
+                <Divider inset={true} />
+              </div>
+            )
+          })
+        }
+        </List>
+      </MobileTearSheet>
+      <div style={{display: 'inline-block'}}>
+        <form className= 'form-horizontal' onSubmit = {handleSubmit} style={{display: 'inline-block'}}>
+          <fieldset>
+            <legend>{formTitle}</legend>
+            {warning && <div className = 'alert alert-warning'>{warning}</div>}
+            <div className='form-group'>
+              <TextField
+                hintText = 'Type your message here'
+                value = {text}
+                onChange = {handleChange}
+              /><br />
+            </div>
+          </fieldset>
+        </form>
+      </div>
     </div>
     )
 }
@@ -96,7 +124,7 @@ class ChatroomContainer extends React.Component {
         warning = {warning}
         handleSubmit = {this.handleSubmit}
         handleChange = {this.handleChange}
-        formTitle = 'Chat'
+        formTitle = 'Chat Room'
       />
       )
   }

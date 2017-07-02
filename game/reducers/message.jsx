@@ -26,7 +26,7 @@ const initial = List()
 const messageReducer = (state = initial, action) => {
   switch (action.type) {
     case ADD_MESSAGE:
-      return state.set(action.userUame, fromJs({
+      return state.set(state.size, fromJS({
         user: action.userName,
         text: action.text
       }))

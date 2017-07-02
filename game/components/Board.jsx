@@ -281,16 +281,16 @@ class Board extends React.Component {
     ):(
     <div>
       <Grid>
-        <Row className='show-grid'>
+        <Row className='show-grid' style={{display: 'inline-block'}}>
           <Col md={8} style={{display: 'inline-block'}}>
-            <div>{console.log(this.state.userIsPlaying)}
-              <div>
+            <div style={{display: 'inline-block'}}>{console.log(this.state.userIsPlaying)}
+              <div style={{display: 'inline-block'}}>
                   {(spectating)?
-                    <div>
+                    <div style={{display: 'inline-block'}}>
                     <h1>Join the Game!</h1>
                         <div className="row col-lg-4">
                           <form onSubmit={this.onPlayerSubmit}>
-                          <div className="form-group">
+                          <div style={{display: 'inline-block'}} className="form-group">
                             <label htmlFor="color"></label>
                             <input className="form-control" type="color" id="color"/>
                           </div>
@@ -304,7 +304,7 @@ class Board extends React.Component {
                   {
                     players.map((player) => {
                       return (
-                        <div>
+                        <div style={{display: 'inline-block'}}>
                           <li key= {`${player.color}`} style={{color: `${player.color}`}}> <p style={{color: `${player.color}`}}>{player.username} </p></li>
                         </div>
                       )
@@ -427,6 +427,8 @@ class Board extends React.Component {
               }
             </div>
           </Col>
+          <br />
+          <hr />
           <Col md={4} style={{display: 'inline-block'}}>
             <Chatroom username={this.state.currentUsername}/>
           </Col>
