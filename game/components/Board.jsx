@@ -166,7 +166,7 @@ class Board extends React.Component {
     const wallsByStatus = this.props.boundaries
                           .filter(boundary => boundary.kind === 'wall')
                           .countBy(wall => wall.status)
-    return wallsByStatus.get(1, 0) + wallsByStatus.get(2, 0)
+    return wallsByStatus.get(1, 0) + (wallsByStatus.get(2, 0) * 2)
   }
 
   rescuedVictimCount() {
