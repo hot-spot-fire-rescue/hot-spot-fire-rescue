@@ -24,8 +24,8 @@ export const removePlayer = (playerIndex) => ({
   playerIndex
 })
 
-export const UPDATE_PLAYER='UPDATE_PLAYER'
-export const updatePlayer= (id, uid) => ({
+export const UPDATE_PLAYER = 'UPDATE_PLAYER'
+export const updatePlayer = (id, uid) => ({
   type: UPDATE_PLAYER,
   id,
   uid
