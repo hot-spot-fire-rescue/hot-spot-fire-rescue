@@ -44,7 +44,6 @@ const cellsWithPlayer = [6, 30, 73, 49]
 const cellsWithFire = [14, 18, 25, 37, 43, 56, 53, 68]
 const colors = ['blue', 'green', 'purple', 'orange']
 
-
 const initialFire = [
   [14, 'fire', 1],
   [37, 'fire', 1],
@@ -62,8 +61,6 @@ const initialPoiList = [
   [4, 0, 58]
 ]
 
-<<<<<<< HEAD
-=======
 // create rest of 12 POIs here with status -1
 // TODO: randomize every game
 const hiddenPoiList = () => {
@@ -71,11 +68,6 @@ const hiddenPoiList = () => {
   return poiIdList.map(id => [id, -1, 0]) // id, status, location (0 is a placeholder)
 }
 //
-
-initialPlayers.forEach(info => {
-  sendPlayersToFirebase(info[0], 4, info[1], info[2])
-})
->>>>>>> df5b4ebbb5aff0f33ab0ea94f845f463c953fb22
 
 export const setupBoard = () => dispatch => {
   for (let idx = 0; idx < 80; idx++) {
