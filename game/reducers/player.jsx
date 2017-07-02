@@ -18,14 +18,14 @@ export const createPlayer = (id, ap, location, color, username) => ({
   username
 })
 
-export const REMOVE_PLAYER='REMOVE_PLAYER'
+export const REMOVE_PLAYER = 'REMOVE_PLAYER'
 export const removePlayer = (playerIndex) => ({
   type: REMOVE_PLAYER,
   playerIndex
 })
 
-export const UPDATE_PLAYER='UPDATE_PLAYER'
-export const updatePlayer= (id, uid) => ({
+export const UPDATE_PLAYER = 'UPDATE_PLAYER'
+export const updatePlayer = (id, uid) => ({
   type: UPDATE_PLAYER,
   id,
   uid
@@ -151,7 +151,7 @@ const playerReducer = (state = initial, action) => {
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
     apCost = findMoveApCost(currentPlayer, nextCell, nextDangerKind)
-    const validStartingCell= nextCellNum%10===0 || (nextCellNum+1)%10===0
+    const validStartingCell= nextCellNum%10===0 || (nextCellNum+1)%10===0 || (nextCellNum)<10 || nextCellNum > 70
 
     if ((currentPlayer.location=== -1 && validStartingCell) || (nextCellNum !== currentPlayerLocation &&
         isAdjacent(nextCellNum, currentPlayerLocation) &&

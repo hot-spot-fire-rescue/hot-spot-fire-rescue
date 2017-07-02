@@ -2,13 +2,47 @@
 import React from 'react'
 import {Route, IndexRedirect, IndexRoute, Link} from 'react-router'
 
-const Lobby = () => <div>
-  <h1>Lobby</h1>
+let n = 5
+let added = false
+const gamesArray = [1, 2, 3, 4, 5]
+const Lobby = (props) => {
+  return (
+    <div>
+      <h1>Lobby</h1>
+      {/*console.log('PROPS', props)*/}
+      {/*console.log(this)*/}
+      {/*console.log(gamesArray)*/}
+      <h2><Link to='/game/test'>Start Game</Link></h2>
+      <p>
+        Our preliminary board for Hot Spot
+      </p>
+        <div>
+          {
+            gamesArray.map((game) => (<h2><Link to={`/game/${game}`}>START ANOTHER GAME: {game}</Link></h2>))
+          }
+        </div>
+        <button onClick={() => {
+          n = n + 1
+          gamesArray.push(n)
+          // console.log('HIIIIII', gamesArray)
+          return gamesArray
+        } }> Click here to add an array</button>
+      {/*console.log(gamesArray)*/}
+    </div>
+  )
+}
 
-  <h2><Link to='/game/test'>Start Game</Link></h2>
-  <p>
-    Our preliminary board for Hot Spot
-  </p>
-</div>
+const mapState = ({ games }) => ({
+  games: games
+})
+
+const mapDispatch = dispatch => ({
+  createAGame: (id) => {
+    dispatch(createGame(id))
+  },
+  removeAGame: (id) => {
+    dispatch(removeGame(id))
+  }
+})
 
 export default Lobby

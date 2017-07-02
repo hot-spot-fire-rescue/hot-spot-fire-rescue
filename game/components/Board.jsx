@@ -52,8 +52,8 @@ class Board extends React.Component {
     this.damageCount = this.damageCount.bind(this)
     this.lostVictimCount = this.lostVictimCount.bind(this)
     this.didGameEnd = this.didGameEnd.bind(this)
-    this.onPlayerSubmit=this.onPlayerSubmit.bind(this)
-    this.removePlayerCallback=this.removePlayerCallback.bind(this)
+    this.onPlayerSubmit = this.onPlayerSubmit.bind(this)
+    this.removePlayerCallback = this.removePlayerCallback.bind(this)
   }
 
   componentWillMount() {
@@ -168,7 +168,7 @@ class Board extends React.Component {
     const wallsByStatus = this.props.boundaries
                           .filter(boundary => boundary.kind === 'wall')
                           .countBy(wall => wall.status)
-    return wallsByStatus.get(1, 0) + wallsByStatus.get(2, 0)
+    return wallsByStatus.get(1, 0) + (wallsByStatus.get(2, 0) * 2)
   }
 
   rescuedVictimCount() {
@@ -184,12 +184,15 @@ class Board extends React.Component {
   didGameEnd() {
     if (this.damageCount() > 23) {
       // Building collapsed!
+      console.info(`GAME OVER: The building collapsed`)
     }
     if (this.lostVictimCount() > 4) {
       // Defeat - 4 victims were lost
+      console.info(`GAME OVER: 4 victims were lost`)
     }
     if (this.rescuedVictimCount > 6) {
       // Victory - 7 victims were rescued!
+      console.info(`YOU WON! You rescued 7 victims from the burning buliding`)
     }
   }
 
@@ -230,15 +233,16 @@ class Board extends React.Component {
     let rescuedVictimCount = this.rescuedVictimCount
     let lostVictimCount = this.lostVictimCount
     let condition
-    if (players.size>0) {
+
+    if (players.size > 0) {
       condition = players.get(currentPlayerId).id!== this.state.currentUserId
     }
-    // don't put console logs in render
+ 
     let tooManyPlayers= players.size >6
     let notEnoughPlayers= players.size < 2
     let spectating= this.state.userIsPlaying === false
-    let doNotShowTheBoard= notEnoughPlayers && !spectating
-    if (condition || spectating || this.state.gameStarted===false) {
+    let doNotShowTheBoard = notEnoughPlayers && !spectating
+    if (condition || spectating || this.state.gameStarted === false) {
       handleCellClick = () => (console.log('It is not your turn yet.  Have patience, padawan'))
       handleDoorSwitch = () => (console.log('It is not your turn yet.  Have patience, padawan'))
       handleWallDamage = () => (console.log('It is not your turn yet.  Have patience, padawan'))
@@ -247,7 +251,7 @@ class Board extends React.Component {
 
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
 
-    return (doNotShowTheBoard)?(
+    return (doNotShowTheBoard) ? (
       <div>
       <h1>Add a Player</h1>
         <div className="row col-lg-4">
@@ -278,42 +282,38 @@ class Board extends React.Component {
           (players.size < 1)?<p>You cannot spectate an empty game</p>: null
         }
       </div>
-    ):(
-    <div>
-      <Grid>
-        <Row className='show-grid' style={{display: 'inline-block'}}>
-          <Col md={8} style={{display: 'inline-block'}}>
-            <div style={{display: 'inline-block'}}>{console.log(this.state.userIsPlaying)}
-              <div style={{display: 'inline-block'}}>
-                  {(spectating)?
-                    <div style={{display: 'inline-block'}}>
-                    <h1>Join the Game!</h1>
-                        <div className="row col-lg-4">
-                          <form onSubmit={this.onPlayerSubmit}>
-                          <div style={{display: 'inline-block'}} className="form-group">
-                            <label htmlFor="color"></label>
-                            <input className="form-control" type="color" id="color"/>
-                          </div>
-                            <button className="btn btn-default" type="submit" disabled={tooManyPlayers}>Add New Player</button>
-                          </form>
-                        </div>
+    ) : (
+      <div>{console.log(this.state.userIsPlaying)}
+        <div>
+            {(spectating)?
+              <div>
+              <h1>Join the Game!</h1>
+                  <div className="row col-lg-4">
+                    <form onSubmit={this.onPlayerSubmit}>
+                    <div className="form-group">
+                      <label htmlFor="color"></label>
+                      <input className="form-control" type="color" id="color"/>
                     </div>
-                  :<div></div>}
+                      <button className="btn btn-default" type="submit" disabled={tooManyPlayers}>Add New Player</button>
+                    </form>
+                  </div>
               </div>
-              <ul>
-                  {
-                    players.map((player) => {
-                      return (
-                        <div style={{display: 'inline-block'}}>
-                          <li key= {`${player.color}`} style={{color: `${player.color}`}}> <p style={{color: `${player.color}`}}>{player.username} </p></li>
-                        </div>
-                      )
-                    })
-                  }
-                </ul>
-                {
-                  (!this.state.gameStarted && !spectating)?<button onClick={() => this.setState({gameStarted: true})}>Start the Game</button>:<div></div>
-                }
+            :<div></div>}
+        </div>
+        <ul>
+            {
+              players.map((player) => {
+                return (
+                  <div>
+                    <li key= {`${player.color}`} style={{color: `${player.color}`}}> <p style={{color: `${player.color}`}}>{player.username} </p></li>
+                  </div>
+                )
+              })
+            }
+          </ul>
+          {
+            (!this.state.gameStarted && !spectating)?<button onClick={() => this.setState({gameStarted: true})}>Start the Game</button>:<div></div>
+          }
               <br></br>
               <button disabled={condition} onClick={handleEndTurnClick}>End Turn</button>
               <h6>Player0-blue, Player1-green, Player2-purple, Player3-orange </h6>
