@@ -56,12 +56,26 @@ const initialFire = [
   [18, 'fire', 1]
 ]
 
-const initialPoi = [
-  [11, 24], // id, location
-  [4, 52],
-  [8, 58]
+const initialPoiList = [
+  [11, 0, 24], // id, status, location
+  [0, 0, 52],
+  [4, 0, 58]
 ]
 
+<<<<<<< HEAD
+=======
+// create rest of 12 POIs here with status -1
+// TODO: randomize every game
+const hiddenPoiList = () => {
+  const poiIdList = [3, 7, 1, 8, 5, 10, 14, 6, 9, 2, 13, 12]
+  return poiIdList.map(id => [id, -1, 0]) // id, status, location (0 is a placeholder)
+}
+//
+
+initialPlayers.forEach(info => {
+  sendPlayersToFirebase(info[0], 4, info[1], info[2])
+})
+>>>>>>> df5b4ebbb5aff0f33ab0ea94f845f463c953fb22
 
 export const setupBoard = () => dispatch => {
   for (let idx = 0; idx < 80; idx++) {
@@ -70,8 +84,11 @@ export const setupBoard = () => dispatch => {
   initialFire.forEach(fire => {
     dispatch(createDanger(fire[0], fire[1], fire[2]))
   })
-  initialPoi.forEach(poi => {
-    dispatch(createPoi(poi[0], poi[1]))
+  initialPoiList.forEach(poi => {
+    dispatch(createPoi(poi[0], poi[1], poi[2]))
+  })
+  hiddenPoiList().forEach(poi => {
+    dispatch(createPoi(poi[0], poi[1], poi[2]))
   })
   initialWallCoords().forEach(wallCoord => {
     dispatch(createBoundary(wallCoord, 'wall', 0))

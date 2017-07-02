@@ -4,6 +4,7 @@ import {DAMAGE_WALL,
         SWITCH_DOOR} from './boundary'
 import {REMOVE_FIRE, REMOVE_SMOKE, FIRE_TO_SMOKE} from './danger'
 import {AP_COSTS} from '../utils/constants'
+import {findClosestAmbulance} from '../utils/functions'
 
 // -- // -- // Actions // -- // -- //
 
@@ -23,12 +24,6 @@ export const updatePlayer= (id, uid) => ({
   uid
 })
 
-// export const RECEIVE_PLAYERS = 'RECEIVE_PLAYERS'
-// export const receivePlayers = players => ({
-//   type: RECEIVE_PLAYERS,
-//   players
-// })
-
 export const MOVE_PLAYER = 'MOVE_PLAYER'
 export const movePlayer = (id, nextCell, nextBoundary, nextDangerKind) => ({
   type: MOVE_PLAYER,
@@ -39,8 +34,10 @@ export const movePlayer = (id, nextCell, nextBoundary, nextDangerKind) => ({
 })
 
 export const END_TURN = 'END_TURN'
-export const endTurn = () => ({
-  type: END_TURN
+export const endTurn = (location, boundaries) => ({
+  type: END_TURN,
+  location,
+  boundaries
 })
 
 export const PICK_UP_OR_DROP_VICTIM = 'PICK_UP_OR_DROP_VICTIM'
@@ -48,6 +45,12 @@ export const pickUpOrDropVictim = (victim, playerId) => ({
   type: PICK_UP_OR_DROP_VICTIM,
   victim,
   playerId
+})
+
+export const CHECK_FOR_FIRE_DAMAGE = 'CHECK_FOR_FIRE_DAMAGE'
+export const checkForFireDamage = (fireLocations) => ({
+  type: CHECK_FOR_FIRE_DAMAGE,
+  fireLocations
 })
 
 // -- // -- // Helpers // -- // -- //
@@ -103,7 +106,8 @@ const playerReducer = (state = initial, action) => {
     apCost,
     nextPlayerId,
     errorMessage,
-    victim
+    victim,
+    closestAmbulanceLocation
 
   switch (action.type) {
   case CREATE_PLAYER:
@@ -178,7 +182,7 @@ const playerReducer = (state = initial, action) => {
     const nextFireBoundary = action.nextBoundary
     if (currentPlayer.ap >= AP_COSTS.removeFire &&
       (isAdjacent(action.location, currentPlayerLocation) || (action.location === currentPlayerLocation)) &&
-      isPassable(nextFireBoundary) ) {
+      isPassable(nextFireBoundary)) {
       return {...state,
         players: state.players.set(state.currentId, {
           ...currentPlayer,
@@ -211,7 +215,7 @@ const playerReducer = (state = initial, action) => {
     const nextFireToSmokeBoundary = action.nextBoundary
     if (currentPlayer.ap >= AP_COSTS.fireToSmoke &&
      (isAdjacent(action.location, currentPlayerLocation) || (action.location === currentPlayerLocation)) &&
-      isPassable(nextFireToSmokeBoundary) )  {
+      isPassable(nextFireToSmokeBoundary)) {
       return {...state,
         players: state.players.set(state.currentId, {
           ...state.players.get(state.currentId),
@@ -389,6 +393,22 @@ const playerReducer = (state = initial, action) => {
         })
       }
     }
+
+  case CHECK_FOR_FIRE_DAMAGE:
+    state.players.forEach((player, idx) => {
+      closestAmbulanceLocation = findClosestAmbulance(player.location)
+      if (action.fireLocations[player.location]) {
+        console.info(`Player #${idx + 1} was knocked down by the explosion!`)
+        state = {...state,
+          players: state.players.set(idx, {
+            ...state.players.get(idx),
+            location: closestAmbulanceLocation,
+            carriedVictim: null
+          })
+        }
+      }
+    })
+    return state
   }
 
   return state

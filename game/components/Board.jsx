@@ -1,26 +1,59 @@
 'use strict'
 import React from 'react'
+<<<<<<< HEAD
 import {connect} from 'react-redux'
 import { browserHistory } from 'react-router'
+=======
+import { connect } from 'react-redux'
+>>>>>>> df5b4ebbb5aff0f33ab0ea94f845f463c953fb22
 
-import {setupBoard} from '../utils/setup'
-import {sortCoord,
-        switchDoor,
-        damageWall} from '../reducers/boundary'
+import { setupBoard } from '../utils/setup'
+import {
+  sortCoord,
+  switchDoor,
+  damageWall
+} from '../reducers/boundary'
 import Danger from '../components/Danger'
+<<<<<<< HEAD
 import {createPlayer, movePlayer,
         endTurn,
         pickUpOrDropVictim} from '../reducers/player'
 
 import firebase from 'APP/fire'
+=======
+import {
+  movePlayer,
+  endTurn,
+  updatePlayer,
+  pickUpOrDropVictim,
+  checkForFireDamage
+} from '../reducers/player'
+import {
+  addNextPoi
+} from '../reducers/victim'
+import {
+  createDanger,
+  addRandomSmoke,
+  removeDanger,
+  explode} from '../reducers/danger'
+import reducer from '../reducers/'
+
+import firebase from 'APP/fire'
+import { loadPlayers } from './promises'
+>>>>>>> df5b4ebbb5aff0f33ab0ea94f845f463c953fb22
 const fbAuth = firebase.auth()
-const fbDB=firebase.database()
+const fbDB = firebase.database()
 
 class Board extends React.Component {
   constructor(props) {
     super(props)
+<<<<<<< HEAD
     this.state= {
       players: [],
+=======
+    this.state = {
+      players: loadPlayers, // Change name
+>>>>>>> df5b4ebbb5aff0f33ab0ea94f845f463c953fb22
       currentUserId: '',
       currentUsername: ''
     }
@@ -30,10 +63,16 @@ class Board extends React.Component {
     this.handleEndTurnClick = this.handleEndTurnClick.bind(this)
     this.handlePoiClick = this.handlePoiClick.bind(this)
     this.rescuedVictimCount = this.rescuedVictimCount.bind(this)
+    this.damageCount = this.damageCount.bind(this)
     this.lostVictimCount = this.lostVictimCount.bind(this)
     this.didGameEnd = this.didGameEnd.bind(this)
+<<<<<<< HEAD
     this.removeUserCallback =this.removeUserCallback.bind(this)
     this.onPlayerSubmit=this.onPlayerSubmit.bind(this)
+=======
+    this.removeUserCallback = this.removeUserCallback.bind(this)
+    this.playerJoin = this.playerJoin.bind(this)
+>>>>>>> df5b4ebbb5aff0f33ab0ea94f845f463c953fb22
   }
 
   componentWillMount() {
@@ -44,7 +83,11 @@ class Board extends React.Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
+<<<<<<< HEAD
         this.setState({currentUserId: user.uid, currentUsername: user.displayName})
+=======
+        this.setState({ currentUserId: user.uid })
+>>>>>>> df5b4ebbb5aff0f33ab0ea94f845f463c953fb22
       }
     })
   }
@@ -60,7 +103,66 @@ class Board extends React.Component {
 
   handleEndTurnClick(event) {
     event.stopPropagation()
-    this.props.endTurn()
+
+    const isValid = (num) => {
+      return !(num % 10 === 0 || num % 10 === 9 || num >= 70 || num <= 10)
+    }
+
+    let locationToAddSmoke = 0
+    while (!isValid(locationToAddSmoke)) {
+      locationToAddSmoke = Math.floor(Math.random() * 79) + 1
+      // locationToAddSmoke = 14
+    }
+
+    const boundariesObj = this.props.boundaries.toObject()
+
+    // helper function - to check the danger status of a cell
+    const cellDangerStatus = (location) => {
+      const targetCellKind = this.props.danger.getIn([location, 'kind'])
+      const targetCellStatus = this.props.danger.getIn([location, 'status'])
+      if (targetCellKind === 'fire' && targetCellStatus === 1) {
+        return 'fire'
+      } else if (targetCellKind === 'smoke' && targetCellStatus === 1) {
+        return 'smoke'
+      }
+      return undefined
+    }
+
+    let actionCellDangerStatus = cellDangerStatus(locationToAddSmoke)
+    actionCellDangerStatus = (actionCellDangerStatus === undefined) ? 'no status' : actionCellDangerStatus
+
+    // if current cell is not fire, dispatch endTurn to add smoke
+    if (cellDangerStatus(locationToAddSmoke) !== 'fire') {
+      this.props.endTurn(locationToAddSmoke, boundariesObj)
+    }
+    // always check if it will cause explosion
+    this.props.explode(actionCellDangerStatus, locationToAddSmoke, boundariesObj)
+
+    // check for fire on POIs and characters
+    const fireLocations = this.props.danger.map(danger => {
+      if (danger && danger.get('kind') === 'fire' && danger.get('status') === 1) {
+        return true
+      } else {
+        return false
+      }
+    })
+    this.props.checkFireDamage(fireLocations.toArray())
+
+    // add new POI only if < 3 are on board
+    const poiStatusCount = this.props.victims.countBy(poi => poi.status)
+    if ((poiStatusCount.get(0, 0) + poiStatusCount.get(1, 0)) < 3) {
+      let locationToAddPoi = 0
+      const hasPoiOrCharacter = (location) => (
+        Boolean(this.props.players.find(player => player.location === location) ||
+                this.props.victims.find(victim => victim.location === location))
+      )
+      while (!(isValid(locationToAddPoi) &&
+             !hasPoiOrCharacter(locationToAddPoi))) {
+        locationToAddPoi = Math.floor(Math.random() * 79) + 1
+      }
+      this.props.removeDanger(locationToAddPoi) // clear fire and smoke
+      this.props.addPoi(locationToAddPoi)
+    }
   }
 
   handleCellClick(event, cell) {
@@ -74,9 +176,9 @@ class Board extends React.Component {
       const nextCellDangerKind = this.props.danger.getIn([cell.cellNum, 'kind'], '')
 
       this.props.move(this.props.currentPlayerId,
-                      nextCell,
-                      nextBoundary,
-                      nextCellDangerKind)
+        nextCell,
+        nextBoundary,
+        nextCellDangerKind)
     }
   }
 
@@ -86,7 +188,10 @@ class Board extends React.Component {
   }
 
   damageCount() {
-    // TODO
+    const wallsByStatus = this.props.boundaries
+                          .filter(boundary => boundary.kind === 'wall')
+                          .countBy(wall => wall.status)
+    return wallsByStatus.get(1, 0) + wallsByStatus.get(2, 0)
   }
 
   rescuedVictimCount() {
@@ -113,14 +218,13 @@ class Board extends React.Component {
 
   removeUserCallback(event) {
     event.stopPropagation()
-    // console.log(event.target.id)
-    const targetIndex= this.state.arrayUsers.indexOf(event.target.id)
+    const targetIndex = this.state.arrayUsers.indexOf(event.target.id)
     this.state.arrayUsers.splice(targetIndex, 1)
     delete this.state.players[targetIndex]['uid']
-    // console.log(this.state.players[targetIndex])
-    this.setState({arrayUsers: this.state.arrayUsers})
+    this.setState({ arrayUsers: this.state.arrayUsers })
   }
 
+<<<<<<< HEAD
   onPlayerSubmit(event) {
     event.preventDefault()
     console.log(event.target.color.value)
@@ -133,6 +237,17 @@ class Board extends React.Component {
     let statePlayerInfo= {
       name: this.state.currentUsername,
       color: event.target.color.value
+=======
+  playerJoin(event) {
+    for (var i = 0; i < this.state.players.length; i++) {
+      if (!this.state.players[i].hasOwnProperty('uid')) {
+        this.state.players[i].uid = this.state.currentUserId
+        loadPlayers[i].uid = this.state.currentUserId
+        this.setState({ players: this.state.players })
+        updatePlayer(this.state.players[i].id, this.state.currentUserId)
+        break
+      }
+>>>>>>> df5b4ebbb5aff0f33ab0ea94f845f463c953fb22
     }
     this.setState({
       players: this.state.players.concat([statePlayerInfo])
@@ -144,8 +259,6 @@ class Board extends React.Component {
   }
 
   render() {
-    // console.log('board re rendering')
-    // console.log(loadPlayers)
     const {
       players,
       danger,
@@ -153,13 +266,14 @@ class Board extends React.Component {
       currentPlayerId,
       cells,
       boundaries,
-      fetchInitialData} = this.props
+      fetchInitialData } = this.props
 
     let handleCellClick = this.handleCellClick
     let handleDoorSwitch = this.handleDoorSwitch
     let handleWallDamage = this.handleWallDamage
     let handleEndTurnClick = this.handleEndTurnClick
     let handlePoiClick = this.handlePoiClick
+    let damageCount = this.damageCount
     let rescuedVictimCount = this.rescuedVictimCount
     let lostVictimCount = this.lostVictimCount
     let condition
@@ -228,6 +342,7 @@ class Board extends React.Component {
         <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
         <h5>Number of saved victims: {rescuedVictimCount()}</h5>
         <h5>Number of lost victims: {lostVictimCount()}</h5>
+        <h5>Total damage to building: {damageCount()}</h5>
 
         {
           cells.map(cell => {
@@ -243,8 +358,8 @@ class Board extends React.Component {
             const fire = danger.get(cell.cellNum)
             return (
               <div key={cell.cellNum}
-              className="cell"
-              onClick={(evt) => handleCellClick(evt, cell)}>
+                className="cell"
+                onClick={(evt) => handleCellClick(evt, cell)}>
                 {
                   fire
                   && <Danger location={location} kind={kind} status={status} />
@@ -252,7 +367,7 @@ class Board extends React.Component {
                 {
                   player
                   && <div className='player'
-                    style={{backgroundColor: player.color}}/>
+                    style={{ backgroundColor: player.color }} />
                 }
                 {
                   poi && poi.status === 0
@@ -261,12 +376,12 @@ class Board extends React.Component {
                 {
                   poi && poi.status === 1 && !poi.carriedBy
                   && <div className={`poi victim-uncarried`}
-                    onClick={(evt) => handlePoiClick(evt, poi, player)}/>
+                    onClick={(evt) => handlePoiClick(evt, poi, player)} />
                 }
                 {
                   poi && poi.status === 1 && poi.carriedBy
                   && <div className={`poi victim-carried`}
-                    onClick={(evt) => handlePoiClick(evt, poi, player)}/>
+                    onClick={(evt) => handlePoiClick(evt, poi, player)} />
                 }
                 {
                   eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 0
@@ -339,11 +454,11 @@ class Board extends React.Component {
 
 // -- // -- // Container // -- // -- //
 
-const mapState = ({board, boundary, player, victim, danger}) => ({
+const mapState = ({ board, boundary, player, victim, danger }) => ({
   cells: board,
   boundaries: boundary,
   players: player.players,
-  victims: victim,
+  victims: victim.poi,
   currentPlayerId: player.currentId,
   danger: danger
 })
@@ -352,8 +467,8 @@ const mapDispatch = dispatch => ({
   fetchInitialData: () => {
     dispatch(setupBoard())
   },
-  endTurn: () => {
-    dispatch(endTurn())
+  endTurn: (location, boundaries) => {
+    dispatch(endTurn(location, boundaries))
   },
   openOrCloseDoor: (coord) => {
     dispatch(switchDoor(coord))
@@ -367,8 +482,25 @@ const mapDispatch = dispatch => ({
   pickUpOrDropVictim: (victim, playerId) => {
     dispatch(pickUpOrDropVictim(victim, playerId))
   },
+<<<<<<< HEAD
   createAPlayer: (playerInfo) => {
     dispatch(createPlayer(playerInfo.id, playerInfo.ap, playerInfo.location, playerInfo.color))
+=======
+  updatePlayer: (id, uid) => {
+    dispatch(updatePlayer(id, uid))
+  },
+  explode: (actionCellDangerStatus, explosionLocation, boundariesObj) => {
+    dispatch(explode(actionCellDangerStatus, explosionLocation, boundariesObj))
+  },
+  addPoi: (location) => {
+    dispatch(addNextPoi(location))
+  },
+  removeDanger: (location) => {
+    dispatch(removeDanger(location))
+  },
+  checkFireDamage: (fireLocations) => {
+    dispatch(checkForFireDamage(fireLocations))
+>>>>>>> df5b4ebbb5aff0f33ab0ea94f845f463c953fb22
   }
 })
 
