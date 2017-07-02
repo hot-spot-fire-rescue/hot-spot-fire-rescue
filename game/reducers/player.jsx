@@ -9,12 +9,19 @@ import {findClosestAmbulance} from '../utils/functions'
 // -- // -- // Actions // -- // -- //
 
 export const CREATE_PLAYER = 'CREATE_PLAYER'
-export const createPlayer = (id, ap, location, color) => ({
+export const createPlayer = (id, ap, location, color, username) => ({
   type: CREATE_PLAYER,
   id,
   ap,
   location,
   color,
+  username
+})
+
+export const REMOVE_PLAYER='REMOVE_PLAYER'
+export const removePlayer = (playerIndex) => ({
+  type: REMOVE_PLAYER,
+  playerIndex
 })
 
 export const UPDATE_PLAYER='UPDATE_PLAYER'
@@ -113,15 +120,21 @@ const playerReducer = (state = initial, action) => {
   case CREATE_PLAYER:
     return {...state,
       players: state.players.push({
+        id: action.id,
         ap: action.ap,
         location: action.location,
         color: action.color,
+        username: action.username,
         carriedVictim: null,
         uid: null,
         error: null
       })
     }
 
+  case REMOVE_PLAYER:
+    return {...state,
+      players: state.players.delete(action.playerIndex)
+    }
   case UPDATE_PLAYER:
     return {...state,
       players: state.players.set(action.id, {
@@ -138,12 +151,13 @@ const playerReducer = (state = initial, action) => {
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
     apCost = findMoveApCost(currentPlayer, nextCell, nextDangerKind)
+    const validStartingCell= nextCellNum%10===0 || (nextCellNum+1)%10===0
 
-    if (nextCellNum !== currentPlayerLocation &&
+    if ((currentPlayer.location=== -1 && validStartingCell) || (nextCellNum !== currentPlayerLocation &&
         isAdjacent(nextCellNum, currentPlayerLocation) &&
         isPassable(nextBoundary) &&
         hasEnoughAp(currentPlayer, apCost) &&
-        !(nextDangerKind === 'fire' && currentPlayer.carriedVictim)) {
+        !(nextDangerKind === 'fire' && currentPlayer.carriedVictim))) {
       return {...state,
         players: state.players.set(action.id, {
           ...state.players.get(action.id),
