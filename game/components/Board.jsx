@@ -23,7 +23,9 @@ import {
   createDanger,
   addRandomSmoke,
   removeDanger,
-  explode} from '../reducers/danger'
+  explode,
+  flashOver
+} from '../reducers/danger'
 import reducer from '../reducers/'
 
 import firebase from 'APP/fire'
@@ -84,7 +86,7 @@ class Board extends React.Component {
     let locationToAddSmoke = 0
     while (!isValid(locationToAddSmoke)) {
       // locationToAddSmoke = Math.floor(Math.random() * 79) + 1
-      locationToAddSmoke = 16
+      locationToAddSmoke = 22
     }
 
     const boundariesObj = this.props.boundaries.toObject()
@@ -112,6 +114,7 @@ class Board extends React.Component {
 
     // After dealing with explosion, endTurn will calculate loss and damages
     this.props.endTurn(locationToAddSmoke, boundariesObj)
+    this.props.flashOver(boundariesObj)
 
     // check for fire on POIs and characters
     const fireLocations = this.props.danger.map(danger => {
@@ -405,6 +408,9 @@ const mapDispatch = dispatch => ({
   },
   checkFireDamage: (fireLocations) => {
     dispatch(checkForFireDamage(fireLocations))
+  },
+  flashOver: (boundaries) => {
+    dispatch(flashOver(boundaries))
   }
 })
 

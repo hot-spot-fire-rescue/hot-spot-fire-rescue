@@ -75,6 +75,12 @@ export const explode = (actionCellDangerStatus, location, boundaries) => ({
   boundaries
 })
 
+export const FLASH_OVER = 'FLASH_OVER'
+export const flashOver = (boundaries) => ({
+  type: FLASH_OVER,
+  boundaries
+})
+
 
 // -- // -- // State // -- // -- //
 
@@ -84,6 +90,31 @@ const initial = List()
 // -- // -- // Helper // -- // -- //
 const sortCoord = (location, adjLocation) => {
   return location < adjLocation ? ([location, adjLocation]).toString() : ([adjLocation, location]).toString()
+}
+
+const cellDangerStatus = (danger, location) => {
+  const targetCellKind = danger.getIn([location, 'kind'])
+  const targetCellStatus = danger.getIn([location, 'status'])
+  if (targetCellKind === 'fire' && targetCellStatus === 1) {
+    return 'fire'
+  } else if (targetCellKind === 'smoke' && targetCellStatus === 1) {
+    return 'smoke'
+  }
+  return undefined
+}
+
+const hasAdjacentFire = (danger, location) => {
+  if (checkCellDangerStatus(danger, location + 10) === 'fire') {
+    return true
+  } else if (checkCellDangerStatus(danger, location - 10) === 'fire') {
+    return true
+  } else if (checkCellDangerStatus(danger, location + 1) === 'fire') {
+    return true
+  } else if (checkCellDangerStatus(danger, location + 1) === 'fire') {
+    return true
+  } else {
+    return false
+  }
 }
 
 //  helper function - to check the type of boundary
@@ -104,6 +135,17 @@ export const openBoundary = (location, adjLocation, boundaries) => {
   } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 2) {
     return true
   }
+}
+
+const checkCellDangerStatus = (danger, location) => {
+  const targetCellKind = danger.getIn([location, 'kind'])
+  const targetCellStatus = danger.getIn([location, 'status'])
+  if (targetCellKind === 'smoke' && targetCellStatus === 1) {
+    return 'smoke'
+  } else if (targetCellKind === 'fire' && targetCellStatus === 1) {
+    return 'fire'
+  }
+  return undefined
 }
 
 // helper function used to calculate the next adjacent cell
@@ -150,39 +192,39 @@ const dangerReducer = (state = initial, action) => {
     }
 
   case END_TURN:
-    const checkCellDangerStatus = (location) => {
-      const targetCellKind = state.getIn([location, 'kind'])
-      const targetCellStatus = state.getIn([location, 'status'])
-      if (targetCellKind === 'smoke' && targetCellStatus === 1) {
-        return 'smoke'
-      } else if (targetCellKind === 'fire' && targetCellStatus === 1) {
-        return 'fire'
-      }
-      return undefined
-    }
-    const hasAdjacentFire = (location) => {
-      if (checkCellDangerStatus(location + 10) === 'fire') {
-        return true
-      } else if (checkCellDangerStatus(location - 10) === 'fire') {
-        return true
-      } else if (checkCellDangerStatus(location + 1) === 'fire') {
-        return true
-      } else if (checkCellDangerStatus(location + 1) === 'fire') {
-        return true
-      } else {
-        return false
-      }
-    }
+    // const checkCellDangerStatus = (location) => {
+    //   const targetCellKind = state.getIn([location, 'kind'])
+    //   const targetCellStatus = state.getIn([location, 'status'])
+    //   if (targetCellKind === 'smoke' && targetCellStatus === 1) {
+    //     return 'smoke'
+    //   } else if (targetCellKind === 'fire' && targetCellStatus === 1) {
+    //     return 'fire'
+    //   }
+    //   return undefined
+    // }
+    // const hasAdjacentFire = (location) => {
+    //   if (checkCellDangerStatus(location + 10) === 'fire') {
+    //     return true
+    //   } else if (checkCellDangerStatus(location - 10) === 'fire') {
+    //     return true
+    //   } else if (checkCellDangerStatus(location + 1) === 'fire') {
+    //     return true
+    //   } else if (checkCellDangerStatus(location + 1) === 'fire') {
+    //     return true
+    //   } else {
+    //     return false
+    //   }
+    // }
 
-    if (checkCellDangerStatus(action.location) !== 'fire') {
-      if (checkCellDangerStatus(action.location) === 'smoke') {
+    if (checkCellDangerStatus(state, action.location) !== 'fire') {
+      if (checkCellDangerStatus(state, action.location) === 'smoke') {
         console.log('test1')
         return state.set(action.location, fromJS({
           location: action.location,
           kind: 'fire',
           status: 1
         }))
-      } else if (checkCellDangerStatus(action.location) === undefined && hasAdjacentFire(action.location) === true) {
+      } else if (checkCellDangerStatus(state, action.location) === undefined && hasAdjacentFire(state, action.location) === true) {
         console.log('test2')
         return state.set(action.location, fromJS({
           location: action.location,
@@ -201,20 +243,58 @@ const dangerReducer = (state = initial, action) => {
       break
     }
 
+  case FLASH_OVER:
+    let cellsToAddFire = []
+    let toKeepChecking = true
+
+    const dangerList = state.toObject()
+    const cellsToCheck = Object.values(dangerList).filter((val) => {
+      return val !== undefined
+    })
+
+    const findAllSmoke = (cellsToCheck) => {
+      const allSmoke = []
+      cellsToCheck.forEach((cell) => {
+        if ((cell.get('kind') === 'smoke') && (cell.get('status') === 1)) {
+          allSmoke.push(cell.get('location'))
+        }
+      })
+      return allSmoke
+    }
+
+    while (toKeepChecking) {
+      const fireToAddEachTerm = []
+      const allSmoke = findAllSmoke(cellsToCheck)
+      console.log('allsmoke', allSmoke)
+      for (var t = 0; t < allSmoke.length; t++) {
+        if (hasAdjacentFire(state, allSmoke[t]) === true) {
+          fireToAddEachTerm.push(allSmoke[t])
+        }
+      }
+
+      if (fireToAddEachTerm.length) {
+        toKeepChecking = true
+      } else {
+        toKeepChecking = false
+      }
+      console.log('fireToAddEachTerm', fireToAddEachTerm)
+    }
+    return true
+
   case EXPLODE:
     console.log('explosion cause more dangers')
     const adjacentCells = [action.location - 10, action.location + 10, action.location + 1, action.location - 1]
 
-    const cellDangerStatus = (location) => {
-      const targetCellKind = state.getIn([location, 'kind'])
-      const targetCellStatus = state.getIn([location, 'status'])
-      if (targetCellKind === 'fire' && targetCellStatus === 1) {
-        return 'fire'
-      } else if (targetCellKind === 'smoke' && targetCellStatus === 1) {
-        return 'smoke'
-      }
-      return undefined
-    }
+    // const cellDangerStatus = (location) => {
+    //   const targetCellKind = state.getIn([location, 'kind'])
+    //   const targetCellStatus = state.getIn([location, 'status'])
+    //   if (targetCellKind === 'fire' && targetCellStatus === 1) {
+    //     return 'fire'
+    //   } else if (targetCellKind === 'smoke' && targetCellStatus === 1) {
+    //     return 'smoke'
+    //   }
+    //   return undefined
+    // }
 
     const toSetFire = []
     for (var i = 0; i < adjacentCells.length; i++) {
@@ -223,19 +303,20 @@ const dangerReducer = (state = initial, action) => {
       const adjCellStatus = state.getIn([adjacentCells[i], 'status'])
 
       // no adjacent boundary and empty adjacent space - add a fire to adj
-      if (isBoundaryOpen === true && cellDangerStatus(adjacentCells[i]) === undefined) {
+      if (isBoundaryOpen === true && cellDangerStatus(state, adjacentCells[i]) === undefined) {
         toSetFire.push(adjacentCells[i])
-      } else if (isBoundaryOpen === true && cellDangerStatus(adjacentCells[i]) ==='fire') {
+      } else if (isBoundaryOpen === true && cellDangerStatus(state, adjacentCells[i]) ==='fire') {
         const locAdjust = nextAdj(i)
         let currentLoc = adjacentCells[i]
         let adjToCheckSpread = currentLoc + locAdjust
-        while (openBoundary(currentLoc, adjToCheckSpread, action.boundaries) === true && cellDangerStatus(adjacentCells[i]) ==='fire') {
+        while (openBoundary(currentLoc, adjToCheckSpread, action.boundaries) === true && cellDangerStatus(state, adjacentCells[i]) ==='fire') {
           currentLoc = adjToCheckSpread
           adjToCheckSpread = adjToCheckSpread - locAdjust
         }
         toSetFire.push(currentLoc)
       }
     }
+    console.log('cellsToSetFire', toSetFire)
     let newState
     for (var j = 0; j < toSetFire.length; j++) {
       console.log('explosion happened, fire is spreading in cell:', toSetFire[j])
@@ -245,8 +326,10 @@ const dangerReducer = (state = initial, action) => {
         status: 1
       }))
     }
+    console.log('newState', newState)
     return newState
   }
+
   return state
 }
 
