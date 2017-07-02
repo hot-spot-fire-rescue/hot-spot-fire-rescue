@@ -45,6 +45,7 @@ class Board extends React.Component {
     this.handleEndTurnClick = this.handleEndTurnClick.bind(this)
     this.handlePoiClick = this.handlePoiClick.bind(this)
     this.rescuedVictimCount = this.rescuedVictimCount.bind(this)
+    this.damageCount = this.damageCount.bind(this)
     this.lostVictimCount = this.lostVictimCount.bind(this)
     this.didGameEnd = this.didGameEnd.bind(this)
     this.removeUserCallback = this.removeUserCallback.bind(this)
@@ -75,6 +76,7 @@ class Board extends React.Component {
 
   handleEndTurnClick(event) {
     event.stopPropagation()
+
     const isValid = (num) => {
       return !(num % 10 === 0 || num % 10 === 9 || num >= 70 || num <= 10)
     }
@@ -159,7 +161,10 @@ class Board extends React.Component {
   }
 
   damageCount() {
-    // TODO
+    const wallsByStatus = this.props.boundaries
+                          .filter(boundary => boundary.kind === 'wall')
+                          .countBy(wall => wall.status)
+    return wallsByStatus.get(1, 0) + wallsByStatus.get(2, 0)
   }
 
   rescuedVictimCount() {
@@ -219,6 +224,7 @@ class Board extends React.Component {
     let handleWallDamage = this.handleWallDamage
     let handleEndTurnClick = this.handleEndTurnClick
     let handlePoiClick = this.handlePoiClick
+    let damageCount = this.damageCount
     let rescuedVictimCount = this.rescuedVictimCount
     let lostVictimCount = this.lostVictimCount
     let condition = this.state.players[currentPlayerId].uid !== this.state.currentUserId
@@ -242,6 +248,7 @@ class Board extends React.Component {
         <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
         <h5>Number of saved victims: {rescuedVictimCount()}</h5>
         <h5>Number of lost victims: {lostVictimCount()}</h5>
+        <h5>Total damage to building: {damageCount()}</h5>
 
         {
           cells.map(cell => {
