@@ -137,7 +137,7 @@
   width: 30px;
   height: 30px;
   border-radius: 30px;
-  border: 1px solid gray;
+  border: 2px solid gray;
   position: absolute;
   top: 0px;
   left: 15px;
@@ -145,17 +145,54 @@
 }
 
 .carried {
-  border: 1px solid green;
+  border: 2px solid green;
   top: 15px;
 }
 
 .poi-unrevealed {
-  background-image: url('/images/poi-unrevealed.jpg');
+  background-image: url('/images/victims/unrevealed.jpg');
 }
 
 .poi-man1 {
-  background-image: url('/images/man1.jpg');
+  background-image: url('/images/victims/man1.jpg');
 }
+
+.poi-man2 {
+  background-image: url('/images/victims/man2.jpg');
+}
+
+.poi-man3 {
+  background-image: url('/images/victims/man3.jpg');
+}
+
+.poi-woman1 {
+  background-image: url('/images/victims/woman1.jpg');
+}
+
+.poi-woman2 {
+  background-image: url('/images/victims/woman2.jpg');
+}
+
+.poi-woman3 {
+  background-image: url('/images/victims/woman3.jpg');
+}
+
+.poi-child1 {
+  background-image: url('/images/victims/child1.jpg');
+}
+
+.poi-child2 {
+  background-image: url('/images/victims/child2.jpg');
+}
+
+.poi-dog {
+  background-image: url('/images/victims/dog.jpg');
+}
+
+.poi-cat {
+  background-image: url('/images/victims/cat.jpg');
+}
+
 
 /* Fire and smoke */
 
