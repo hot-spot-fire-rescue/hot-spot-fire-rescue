@@ -28,6 +28,12 @@
   position: relative;
 }
 
+/* Walls */
+
+.wall {
+  z-index: 1
+}
+
 .horizontal-wall {
   width: 60px;
   height: 10px;
@@ -76,6 +82,8 @@
   left: 52px;
 }
 
+/* Doors */
+
 .door {
   background-size: 34px;
   border: 1px solid black;
@@ -83,6 +91,7 @@
   width: 35px;
   height: 35px;
   position: absolute;
+  z-index: 2
 }
 
 .vertical-door-closed {
@@ -109,6 +118,8 @@
   left: 12px;
 }
 
+/* Players */
+
 .player {
   width: 10px;
   height: 10px;
@@ -119,24 +130,34 @@
   left: 20px;
 }
 
+/* POIs and victims */
+
 .poi {
-  width: 10px;
-  height: 10px;
-  border-radius: 10px;
-  background-color: lightblue;
+  background-size: 30px;
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  border: 1px solid gray;
   position: absolute;
   top: 0px;
-  left: 20px;
+  left: 15px;
+  z-index: 2;
 }
 
-.victim-carried {
-  background-color: lightgreen;
-  top: 20px;
+.carried {
+  border: 1px solid green;
+  top: 15px;
 }
 
-.victim-uncarried {
-  background-color: lightcoral;
+.poi-unrevealed {
+  background-image: url('/images/poi-unrevealed.jpg');
 }
+
+.poi-man1 {
+  background-image: url('/images/man1.jpg');
+}
+
+/* Fire and smoke */
 
 .fire {
   width: 10px;
@@ -155,7 +176,7 @@
   left: 0px;
 }
 
-/*chatroom message*/
+/* Chatroom message */
 
 #message-container {
   overflow-y: scroll;

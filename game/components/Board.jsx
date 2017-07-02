@@ -353,16 +353,16 @@ class Board extends React.Component {
                       }
                       {
                         poi && poi.status === 0
-                        && <div className='poi'>?</div>
+                        && <div className={`poi poi-unrevealed`}/>
                       }
                       {
                         poi && poi.status === 1 && !poi.carriedBy
-                        && <div className={`poi victim-uncarried`}
+                        && <div className={`poi poi-${poi.type}`}
                           onClick={(evt) => handlePoiClick(evt, poi, player)} />
                       }
                       {
                         poi && poi.status === 1 && poi.carriedBy
-                        && <div className={`poi victim-carried`}
+                        && <div className={`poi poi-${poi.type} carried`}
                           onClick={(evt) => handlePoiClick(evt, poi, player)} />
                       }
                       {
