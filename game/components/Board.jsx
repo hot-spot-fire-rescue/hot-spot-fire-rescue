@@ -431,7 +431,7 @@ class Board extends React.Component {
               }
             </div>
             </Col>
-            <Col sm={3}>
+            <Col sm={6} md={4}>
               <Chatroom username={this.state.currentUsername}/>
             </Col>
           </Row>

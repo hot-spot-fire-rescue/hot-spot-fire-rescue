@@ -40,6 +40,7 @@ export function Chatroom(props) {
                         <span style={{color: darkBlack}}>{messageUsername}</span> -- {messageText}
                       </p>
                     }
+                    secondaryTextLines={2}
                   />
                   <Divider inset={true} />
                 </div>
