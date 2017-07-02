@@ -76,36 +76,37 @@
   left: 52px;
 }
 
-.vertical-door-closed {
-  width: 10px;
-  height: 60px;
+.door {
+  background-size: 34px;
+  border: 1px solid black;
+  border-radius: 35px;
+  width: 35px;
+  height: 35px;
   position: absolute;
-  background-color: blue;
-  left: 52px;
+}
+
+.vertical-door-closed {
+  background-image: url(/images/closed_door.jpg);
+  top: 12px;
+  left: 45px;
 }
 
 .vertical-door-open {
-  width: 10px;
-  height: 60px;
-  position: absolute;
-  background-color: green;
-  left: 52px;
+  background-image: url(/images/open_door.jpg);
+  top: 12px;
+  left: 45px;
 }
 
 .horizontal-door-closed {
-  width: 60px;
-  height: 10px;
-  position: absolute;
-  background-color:blue;
-  top: 52px;
+  background-image: url(/images/closed_door.jpg);
+  top: 40px;
+  left: 12px;
 }
 
 .horizontal-door-open {
-  width: 60px;
-  height: 10px;
-  position: absolute;
-  background-color: green;
-  top: 52px;
+  background-image: url(/images/open_door.jpg);
+  top: 40px;
+  left: 12px;
 }
 
 .player {

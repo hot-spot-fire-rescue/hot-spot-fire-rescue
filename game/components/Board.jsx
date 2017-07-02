@@ -404,25 +404,25 @@ class Board extends React.Component {
                       {
                         eastBoundary && eastBoundary.kind === 'door'
                         && eastBoundary.status === 0
-                        && <div className='vertical-door-closed'
+                        && <div className={`door vertical-door-closed`}
                           onClick={(evt) => handleDoorSwitch(evt, eastBoundary)} />
                       }
                       {
                         southBoundary && southBoundary.kind === 'door'
                         && southBoundary.status === 0
-                        && <div className='horizontal-door-closed'
+                        && <div className={`door horizontal-door-closed`}
                           onClick={(evt) => handleDoorSwitch(evt, southBoundary)} />
                       }
                       {
                         eastBoundary && eastBoundary.kind === 'door'
                         && eastBoundary.status === 1
-                        && <div className='vertical-door-open'
+                        && <div className={`door vertical-door-open`}
                           onClick={(evt) => handleDoorSwitch(evt, eastBoundary)} />
                       }
                       {
                         southBoundary && southBoundary.kind === 'door'
                         && southBoundary.status === 1
-                        && <div className='horizontal-door-open'
+                        && <div className={`door horizontal-door-open`}
                           onClick={(evt) => handleDoorSwitch(evt, southBoundary)} />
                       }
                     </div>
