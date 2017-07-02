@@ -31,20 +31,22 @@ export function Chatroom(props) {
               let messageUsername = messages.getIn([key, 'user'])
               let messageText = messages.getIn([key, 'text'])
               let render = `${messageUsername} : ${messageText}`
-            return (
-              <div>
-                <ListItem
-                  leftAvatar={<Avatar src='https://maxcdn.icons8.com/Share/icon/Users//circled_user_female1600.png' />}
-                  secondaryText={
-                    <p>
-                      <span style={{color: darkBlack}}>{messageUsername}</span> -- {messageText}
-                    </p>
-                  }
-                />
-                <Divider inset={true} />
-              </div>
-            )
-          })
+              return (
+                <div>
+                  <ListItem
+                    leftAvatar={<Avatar src='https://maxcdn.icons8.com/Share/icon/Users//circled_user_female1600.png' />}
+                    secondaryText={
+                      <p>
+                        <span style={{color: darkBlack}}>{messageUsername}</span> -- {messageText}
+                      </p>
+                    }
+                    secondaryTextLines={2}
+                  />
+                  <Divider inset={true} />
+                </div>
+              )
+            }
+          )
         }
         </List>
       </MobileTearSheet>
@@ -64,7 +66,7 @@ export function Chatroom(props) {
         </form>
       </div>
     </div>
-    )
+  )
 }
 
 // -- // -- // Container // -- // -- //
@@ -126,7 +128,7 @@ class ChatroomContainer extends React.Component {
         handleChange = {this.handleChange}
         formTitle = 'Chat Room'
       />
-      )
+    )
   }
 }
 

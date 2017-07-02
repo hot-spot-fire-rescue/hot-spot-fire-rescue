@@ -46,9 +46,8 @@ class Danger extends React.Component {
       removeSmoke,
     } = this.props
 
-    const sortedCoords = sortCoord([location, players.get(this.props.currentPlayerId).location])
+    const sortedCoords = sortCoord([location, players.get(this.props.currentPlayerId, {}).location])
     const nextBoundary = boundaries.get(sortedCoords.toString()) || ''
-
 
     if (kind === 'fire' && status === 1) {
       return (
