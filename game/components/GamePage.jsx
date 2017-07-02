@@ -9,7 +9,7 @@ import thunkMiddleware from 'redux-thunk'
 
 import reducer from '../reducers'
 import Board from './Board'
-import Chatroom from './Chatroom'
+// import Chatroom from './Chatroom'
 import {Grid, Row, Col, Clearfix} from 'react-bootstrap'
 
 

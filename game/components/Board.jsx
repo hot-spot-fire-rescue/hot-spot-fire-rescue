@@ -1,6 +1,7 @@
 'use strict'
 import React from 'react'
 import { connect } from 'react-redux'
+import {Grid, Row, Col, Clearfix} from 'react-bootstrap'
 
 import { setupBoard } from '../utils/setup'
 import {
@@ -27,6 +28,7 @@ import {
   removeDanger,
   explode} from '../reducers/danger'
 import reducer from '../reducers/'
+import Chatroom from './Chatroom'
 
 import firebase from 'APP/fire'
 const fbAuth = firebase.auth()
@@ -277,149 +279,160 @@ class Board extends React.Component {
         }
       </div>
     ):(
-      <div>{console.log(this.state.userIsPlaying)}
-        <div>
-            {(spectating)?
+    <div>
+      <Grid>
+        <Row className='show-grid'>
+          <Col md={8} style={{display: 'inline-block'}}>
+            <div>{console.log(this.state.userIsPlaying)}
               <div>
-              <h1>Join the Game!</h1>
-                  <div className="row col-lg-4">
-                    <form onSubmit={this.onPlayerSubmit}>
-                    <div className="form-group">
-                      <label htmlFor="color"></label>
-                      <input className="form-control" type="color" id="color"/>
+                  {(spectating)?
+                    <div>
+                    <h1>Join the Game!</h1>
+                        <div className="row col-lg-4">
+                          <form onSubmit={this.onPlayerSubmit}>
+                          <div className="form-group">
+                            <label htmlFor="color"></label>
+                            <input className="form-control" type="color" id="color"/>
+                          </div>
+                            <button className="btn btn-default" type="submit" disabled={tooManyPlayers}>Add New Player</button>
+                          </form>
+                        </div>
                     </div>
-                      <button className="btn btn-default" type="submit" disabled={tooManyPlayers}>Add New Player</button>
-                    </form>
-                  </div>
+                  :<div></div>}
               </div>
-            :<div></div>}
-        </div>
-        <ul>
-            {
-              players.map((player) => {
-                return (
-                  <div>
-                    <li key= {`${player.color}`} style={{color: `${player.color}`}}> <p style={{color: `${player.color}`}}>{player.username} </p></li>
-                  </div>
-                )
-              })
-            }
-          </ul>
-          {
-            (!this.state.gameStarted && !spectating)?<button onClick={() => this.setState({gameStarted: true})}>Start the Game</button>:<div></div>
-          }
-        <br></br>
-        <button disabled={condition} onClick={handleEndTurnClick}>End Turn</button>
-        <h6>Player0-blue, Player1-green, Player2-purple, Player3-orange </h6>
-        <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
-        <h5>Number of saved victims: {rescuedVictimCount()}</h5>
-        <h5>Number of lost victims: {lostVictimCount()}</h5>
-        <h5>Total damage to building: {damageCount()}</h5>
+              <ul>
+                  {
+                    players.map((player) => {
+                      return (
+                        <div>
+                          <li key= {`${player.color}`} style={{color: `${player.color}`}}> <p style={{color: `${player.color}`}}>{player.username} </p></li>
+                        </div>
+                      )
+                    })
+                  }
+                </ul>
+                {
+                  (!this.state.gameStarted && !spectating)?<button onClick={() => this.setState({gameStarted: true})}>Start the Game</button>:<div></div>
+                }
+              <br></br>
+              <button disabled={condition} onClick={handleEndTurnClick}>End Turn</button>
+              <h6>Player0-blue, Player1-green, Player2-purple, Player3-orange </h6>
+              <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
+              <h5>Number of saved victims: {rescuedVictimCount()}</h5>
+              <h5>Number of lost victims: {lostVictimCount()}</h5>
+              <h5>Total damage to building: {damageCount()}</h5>
 
-        {
-          cells.map(cell => {
-            const eastBoundaryCoord = [cell.cellNum, cell.cellNum + 1].toString()
-            const southBoundaryCoord = [cell.cellNum, cell.cellNum + 10].toString()
-            const eastBoundary = boundaries.get(eastBoundaryCoord)
-            const southBoundary = boundaries.get(southBoundaryCoord)
-            const kind = danger.getIn([cell.cellNum, 'kind'])
-            const status = danger.getIn([cell.cellNum, 'status'])
-            const location = danger.getIn([cell.cellNum, 'location'])
-            const player = players.find((val) => val.location === cell.cellNum)
-            const poi = victims.find((val) => val.location === cell.cellNum)
-            const fire = danger.get(cell.cellNum)
-            return (
-              <div key={cell.cellNum}
-                className="cell"
-                onClick={(evt) => handleCellClick(evt, cell)}>
-                {
-                  fire
-                  && <Danger location={location} kind={kind} status={status} />
-                }
-                {
-                  player
-                  && <div className='player'
-                    style={{ backgroundColor: player.color }} />
-                }
-                {
-                  poi && poi.status === 0
-                  && <div className='poi'>?</div>
-                }
-                {
-                  poi && poi.status === 1 && !poi.carriedBy
-                  && <div className={`poi victim-uncarried`}
-                    onClick={(evt) => handlePoiClick(evt, poi, player)} />
-                }
-                {
-                  poi && poi.status === 1 && poi.carriedBy
-                  && <div className={`poi victim-carried`}
-                    onClick={(evt) => handlePoiClick(evt, poi, player)} />
-                }
-                {
-                  eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 0
-                  && <div className='vertical-wall'
-                    id={eastBoundaryCoord}
-                    onClick={(evt) => handleWallDamage(evt, eastBoundary)} />
-                }
-                {
-                  eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 1
-                  && <div className='vertical-wall-damagedOnce'
-                    id={eastBoundaryCoord}
-                    onClick={(evt) => handleWallDamage(evt, eastBoundary)} />
-                }
-                {
-                  eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 2
-                  && <div className='vertical-wall-damagedTwice'
-                    id={eastBoundaryCoord}
-                    onClick={(evt) => handleWallDamage(evt, eastBoundary)} />
-                }
-                {
-                  southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 0
-                  && <div className='horizontal-wall'
-                    id={southBoundaryCoord}
-                    onClick={(evt) => handleWallDamage(evt, southBoundary)} />
-                }
-                {
-                  southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 1
-                  && <div className='horizontal-wall-damagedOnce'
-                    id={southBoundaryCoord}
-                    onClick={(evt) => handleWallDamage(evt, southBoundary)} />
-                }
-                {
-                  southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 2
-                  && <div className='horizontal-wall-damagedTwice'
-                    id={southBoundaryCoord}
-                    onClick={(evt) => handleWallDamage(evt, southBoundary)} />
-                }
-                {
-                  eastBoundary && eastBoundary.kind === 'door'
-                  && eastBoundary.status === 0
-                  && <div className='vertical-door-closed'
-                    onClick={(evt) => handleDoorSwitch(evt, eastBoundary)} />
-                }
-                {
-                  southBoundary && southBoundary.kind === 'door'
-                  && southBoundary.status === 0
-                  && <div className='horizontal-door-closed'
-                    onClick={(evt) => handleDoorSwitch(evt, southBoundary)} />
-                }
-                {
-                  eastBoundary && eastBoundary.kind === 'door'
-                  && eastBoundary.status === 1
-                  && <div className='vertical-door-open'
-                    onClick={(evt) => handleDoorSwitch(evt, eastBoundary)} />
-                }
-                {
-                  southBoundary && southBoundary.kind === 'door'
-                  && southBoundary.status === 1
-                  && <div className='horizontal-door-open'
-                    onClick={(evt) => handleDoorSwitch(evt, southBoundary)} />
-                }
-              </div>
-            )
-          })
-        }
-      </div>
+              {
+                cells.map(cell => {
+                  const eastBoundaryCoord = [cell.cellNum, cell.cellNum + 1].toString()
+                  const southBoundaryCoord = [cell.cellNum, cell.cellNum + 10].toString()
+                  const eastBoundary = boundaries.get(eastBoundaryCoord)
+                  const southBoundary = boundaries.get(southBoundaryCoord)
+                  const kind = danger.getIn([cell.cellNum, 'kind'])
+                  const status = danger.getIn([cell.cellNum, 'status'])
+                  const location = danger.getIn([cell.cellNum, 'location'])
+                  const player = players.find((val) => val.location === cell.cellNum)
+                  const poi = victims.find((val) => val.location === cell.cellNum)
+                  const fire = danger.get(cell.cellNum)
+                  return (
+                    <div key={cell.cellNum}
+                      className="cell"
+                      onClick={(evt) => handleCellClick(evt, cell)}>
+                      {
+                        fire
+                        && <Danger location={location} kind={kind} status={status} />
+                      }
+                      {
+                        player
+                        && <div className='player'
+                          style={{ backgroundColor: player.color }} />
+                      }
+                      {
+                        poi && poi.status === 0
+                        && <div className='poi'>?</div>
+                      }
+                      {
+                        poi && poi.status === 1 && !poi.carriedBy
+                        && <div className={`poi victim-uncarried`}
+                          onClick={(evt) => handlePoiClick(evt, poi, player)} />
+                      }
+                      {
+                        poi && poi.status === 1 && poi.carriedBy
+                        && <div className={`poi victim-carried`}
+                          onClick={(evt) => handlePoiClick(evt, poi, player)} />
+                      }
+                      {
+                        eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 0
+                        && <div className='vertical-wall'
+                          id={eastBoundaryCoord}
+                          onClick={(evt) => handleWallDamage(evt, eastBoundary)} />
+                      }
+                      {
+                        eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 1
+                        && <div className='vertical-wall-damagedOnce'
+                          id={eastBoundaryCoord}
+                          onClick={(evt) => handleWallDamage(evt, eastBoundary)} />
+                      }
+                      {
+                        eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 2
+                        && <div className='vertical-wall-damagedTwice'
+                          id={eastBoundaryCoord}
+                          onClick={(evt) => handleWallDamage(evt, eastBoundary)} />
+                      }
+                      {
+                        southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 0
+                        && <div className='horizontal-wall'
+                          id={southBoundaryCoord}
+                          onClick={(evt) => handleWallDamage(evt, southBoundary)} />
+                      }
+                      {
+                        southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 1
+                        && <div className='horizontal-wall-damagedOnce'
+                          id={southBoundaryCoord}
+                          onClick={(evt) => handleWallDamage(evt, southBoundary)} />
+                      }
+                      {
+                        southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 2
+                        && <div className='horizontal-wall-damagedTwice'
+                          id={southBoundaryCoord}
+                          onClick={(evt) => handleWallDamage(evt, southBoundary)} />
+                      }
+                      {
+                        eastBoundary && eastBoundary.kind === 'door'
+                        && eastBoundary.status === 0
+                        && <div className='vertical-door-closed'
+                          onClick={(evt) => handleDoorSwitch(evt, eastBoundary)} />
+                      }
+                      {
+                        southBoundary && southBoundary.kind === 'door'
+                        && southBoundary.status === 0
+                        && <div className='horizontal-door-closed'
+                          onClick={(evt) => handleDoorSwitch(evt, southBoundary)} />
+                      }
+                      {
+                        eastBoundary && eastBoundary.kind === 'door'
+                        && eastBoundary.status === 1
+                        && <div className='vertical-door-open'
+                          onClick={(evt) => handleDoorSwitch(evt, eastBoundary)} />
+                      }
+                      {
+                        southBoundary && southBoundary.kind === 'door'
+                        && southBoundary.status === 1
+                        && <div className='horizontal-door-open'
+                          onClick={(evt) => handleDoorSwitch(evt, southBoundary)} />
+                      }
+                    </div>
+                  )
+                })
+              }
+            </div>
+          </Col>
+          <Col md={4} style={{display: 'inline-block'}}>
+            <Chatroom username={this.state.currentUsername}/>
+          </Col>
+        </Row>
+      </Grid>
+    </div>
     )
   }
 }
