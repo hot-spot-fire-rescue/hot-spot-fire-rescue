@@ -95,8 +95,6 @@ const sortCoord = (location, adjLocation) => {
 const CheckcellDangerStatus = (danger, location) => {
   const targetCellKind = danger.getIn([location, 'kind'])
   const targetCellStatus = danger.getIn([location, 'status'])
-  console.log('targetCellKind', targetCellKind)
-  console.log('targetCellStatus', targetCellStatus)
   if (targetCellKind === 'fire' && targetCellStatus === 1) {
     return 'fire'
   } else if (targetCellKind === 'smoke' && targetCellStatus === 1) {
@@ -105,26 +103,40 @@ const CheckcellDangerStatus = (danger, location) => {
   return undefined
 }
 
-//  helper function - to check the type of boundary
-export const openBoundary = (location, adjLocation, boundaries) => {
 
+//  helper function - to check the type of boundary
+// export const openBoundary = (location, adjLocation, boundaries) => {
+//   const boundaryFound = boundaries[sortCoord(location, adjLocation)]
+//   if (boundaryFound === undefined) {
+//     return true
+//   } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 0) {
+//     return false
+//   } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 1) {
+//     return true
+//   } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 2) {
+//     return true
+//   } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 0) {
+//     return false
+//   } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 1) {
+//     return false
+//   } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 2) {
+//     return true
+//   }
+// }
+export const openBoundary = (location, adjLocation, boundaries) => {
   const boundaryFound = boundaries[sortCoord(location, adjLocation)]
   if (boundaryFound === undefined) {
     return true
-  } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 0) {
-    return false
-  } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 1) {
-    return true
-  } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 2) {
-    return true
-  } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 0) {
-    return false
-  } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 1) {
-    return false
-  } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 2) {
-    return true
   }
+  if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 0) {
+    return false
+  }
+  if (boundaryFound['kind'] === 'wall' && (boundaryFound['status'] === 0 || boundaryFound['status'] === 1)) {
+    return false
+  }
+  return true
 }
+
 
 const hasAdjacentFire = (danger, location, boundaries) => {
   if (openBoundary(location, location + 10, boundaries) && checkCellDangerStatus(danger, location + 10) === 'fire') {
@@ -133,7 +145,7 @@ const hasAdjacentFire = (danger, location, boundaries) => {
     return true
   } else if (openBoundary(location, location + 1, boundaries) && checkCellDangerStatus(danger, location + 1) === 'fire') {
     return true
-  } else if (openBoundary(location, location - 1, boundaries) && checkCellDangerStatus(danger, location + 1) === 'fire') {
+  } else if (openBoundary(location, location - 1, boundaries) && checkCellDangerStatus(danger, location - 1) === 'fire') {
     return true
   } else {
     return false
@@ -216,12 +228,6 @@ const dangerReducer = (state = initial, action) => {
           kind: 'fire',
           status: 1
         }))
-      } else if (checkCellDangerStatus(state, action.location) === undefined && hasAdjacentFire(state, action.location, action.boundaries) === true) {
-        return state.set(action.location, fromJS({
-          location: action.location,
-          kind: 'fire',
-          status: 1
-        }))
       } else {
         return state.set(action.location, fromJS({
           location: action.location,
@@ -239,13 +245,15 @@ const dangerReducer = (state = initial, action) => {
 
     while (true) {
       const fireToAddEachTerm = []
-      console.log('allsmoke', allSmoke)
       for (var t = 0; t < allSmoke.length; t++) {
-        console.log('hasAdjacentFire', allSmoke[t], hasAdjacentFire(state, allSmoke[t], action.boundaries))
-        if (hasAdjacentFire(state, allSmoke[t], action.boundaries) === true) {
-          console.log('has adjacent fire')
+        if (hasAdjacentFire(state, allSmoke[t], action.boundaries)) {
+          console.log('cell:', allSmoke[t], 'has adjacent fire without bound', hasAdjacentFire(state, allSmoke[t], action.boundaries))
           fireToAddEachTerm.push(allSmoke[t])
+          console.log('updated toaddfireEachTerm', fireToAddEachTerm)
         }
+      }
+      if (fireToAddEachTerm.length === 0) {
+        break
       }
       for (var k = 0; k < fireToAddEachTerm.length; k++) {
         console.log('falsh over', fireToAddEachTerm[k])
@@ -257,9 +265,6 @@ const dangerReducer = (state = initial, action) => {
         state = updatedState
       }
       allSmoke = findSmoke(state)
-      if (fireToAddEachTerm.length === 0 || allSmoke.lenght === 0) {
-        break
-      }
     }
     return state
 
