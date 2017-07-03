@@ -162,7 +162,6 @@ const nextAdj = (i) => {
 }
 
 // -- // -- // Reducer // -- // -- //
-
 const dangerReducer = (state = initial, action) => {
   switch (action.type) {
   case CREATE_DANGER:
@@ -279,22 +278,22 @@ const dangerReducer = (state = initial, action) => {
       }
       console.log('fireToAddEachTerm', fireToAddEachTerm)
     }
-    return true
+    break
 
   case EXPLODE:
     console.log('explosion cause more dangers')
     const adjacentCells = [action.location - 10, action.location + 10, action.location + 1, action.location - 1]
 
-    // const cellDangerStatus = (location) => {
-    //   const targetCellKind = state.getIn([location, 'kind'])
-    //   const targetCellStatus = state.getIn([location, 'status'])
-    //   if (targetCellKind === 'fire' && targetCellStatus === 1) {
-    //     return 'fire'
-    //   } else if (targetCellKind === 'smoke' && targetCellStatus === 1) {
-    //     return 'smoke'
-    //   }
-    //   return undefined
-    // }
+    const cellDangerStatus = (location) => {
+      const targetCellKind = state.getIn([location, 'kind'])
+      const targetCellStatus = state.getIn([location, 'status'])
+      if (targetCellKind === 'fire' && targetCellStatus === 1) {
+        return 'fire'
+      } else if (targetCellKind === 'smoke' && targetCellStatus === 1) {
+        return 'smoke'
+      }
+      return undefined
+    }
 
     const toSetFire = []
     for (var i = 0; i < adjacentCells.length; i++) {
