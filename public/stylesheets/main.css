@@ -13,6 +13,7 @@
   margin: 0;
   line-height: 0px;
   width: 600px;
+  z-index: -1;
 }
 
 .row {
@@ -30,57 +31,52 @@
 
 /* Walls */
 
-.wall {
-  z-index: 1
-}
-
 .horizontal-wall {
-  width: 60px;
-  height: 10px;
-  position: absolute;
   background-color: black;
-  top: 52px;
-}
-
-.horizontal-wall-damagedOnce {
   width: 60px;
   height: 10px;
-  position: absolute;
-  background-color: coral;
   top: 52px;
-}
-
-.horizontal-wall-damagedTwice {
-  width: 60px;
-  height: 10px;
   position: absolute;
-  background-color: red;
-  top: 52px;
+  z-index: 1;
 }
 
 .vertical-wall {
-  width: 10px;
-  height: 60px;
-  position: absolute;
   background-color: black;
-  left: 52px;
-}
-
-.vertical-wall-damagedOnce {
   width: 10px;
   height: 60px;
-  position: absolute;
-  background-color: coral;
   left: 52px;
+  position: absolute;
+  z-index: 1
 }
 
-.vertical-wall-damagedTwice {
-  width: 10px;
-  height: 60px;
-  position: absolute;
-  background-color: red;
-  left: 52px;
+.vertical-wall-damaged-once {
+  background-color: transparent;
+  background-image: url('/images/damaged-once.png');
+  background-size: 30px 35px;
+  background-repeat: no-repeat;
+  width: 35px;
+  height: 40px;
+  top: 15px;
+  left: 48px;
+  z-index: 2
 }
+
+.horizontal-wall-damaged-once {
+  background-color: transparent;
+  background-image: url('/images/damaged-once.png');
+  background-size: 30px 35px;
+  background-repeat: no-repeat;
+  width: 35px;
+  height: 40px;
+  top: 48px;
+  left: 15px;
+  z-index: 2
+}
+
+.damaged-twice {
+  background-image: url('/images/damaged-twice.png');
+}
+
 
 /* Doors */
 
@@ -133,11 +129,11 @@
 /* POIs and victims */
 
 .poi {
-  background-size: 30px;
+  background-size: 28px;
   width: 30px;
   height: 30px;
   border-radius: 30px;
-  border: 2px solid gray;
+  border: 2px solid orangered;
   position: absolute;
   top: 0px;
   left: 15px;
@@ -147,6 +143,7 @@
 .carried {
   border: 2px solid green;
   top: 15px;
+  left: 8px;
 }
 
 .poi-unrevealed {
