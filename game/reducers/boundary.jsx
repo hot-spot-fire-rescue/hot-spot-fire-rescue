@@ -144,6 +144,7 @@ const boundaryReducer = (state = initial, action) => {
         status: 2,
         coord: doorToDestroy[j]
       })
+      state = newState
     }
 
     for (var k = 0; k < wallToDestroy.length; k++) {
@@ -152,6 +153,7 @@ const boundaryReducer = (state = initial, action) => {
         status: 1,
         coord: wallToDamage[k]
       })
+      state = newState
     }
 
     for (var l = 0; l < wallToDestroy.length; l++) {
@@ -160,9 +162,11 @@ const boundaryReducer = (state = initial, action) => {
         status: 2,
         coord: wallToDamage[l]
       })
+      state = newState
     }
-    // return newState
+    return newState === undefined ? state: newState
   }
+
   return state
 }
 

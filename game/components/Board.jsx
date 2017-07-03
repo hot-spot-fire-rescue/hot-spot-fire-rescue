@@ -86,7 +86,7 @@ class Board extends React.Component {
     let locationToAddSmoke = 0
     while (!isValid(locationToAddSmoke)) {
       // locationToAddSmoke = Math.floor(Math.random() * 79) + 1
-      locationToAddSmoke = 22
+      locationToAddSmoke = 32
     }
 
     const boundariesObj = this.props.boundaries.toObject()
@@ -114,7 +114,7 @@ class Board extends React.Component {
     // After dealing with explosion, endTurn will calculate loss and damages
     this.props.endTurn(locationToAddSmoke, boundariesObj)
 
-    this.props.flashOver(boundariesObj)
+    // this.props.flashOver(boundariesObj)
 
     // check for fire on POIs and characters
     const fireLocations = this.props.danger.map(danger => {
