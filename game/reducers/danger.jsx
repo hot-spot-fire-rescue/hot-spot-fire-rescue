@@ -247,16 +247,13 @@ const dangerReducer = (state = initial, action) => {
       const fireToAddEachTerm = []
       for (var t = 0; t < allSmoke.length; t++) {
         if (hasAdjacentFire(state, allSmoke[t], action.boundaries)) {
-          console.log('cell:', allSmoke[t], 'has adjacent fire without bound', hasAdjacentFire(state, allSmoke[t], action.boundaries))
           fireToAddEachTerm.push(allSmoke[t])
-          console.log('updated toaddfireEachTerm', fireToAddEachTerm)
         }
       }
       if (fireToAddEachTerm.length === 0) {
         break
       }
       for (var k = 0; k < fireToAddEachTerm.length; k++) {
-        console.log('falsh over', fireToAddEachTerm[k])
         const updatedState = state.set(fireToAddEachTerm[k], fromJS({
           location: fireToAddEachTerm[k],
           kind: 'fire',
@@ -273,7 +270,6 @@ const dangerReducer = (state = initial, action) => {
 
     const toSetFire = []
     for (var i = 0; i < adjacentCells.length; i++) {
-      console.log('explodebOUNARIES', action.boundaries)
       const isBoundaryOpen = openBoundary(action.location, adjacentCells[i], action.boundaries)
 
       // no adjacent boundary and empty adjacent space - add a fire to adj
