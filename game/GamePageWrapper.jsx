@@ -15,5 +15,5 @@ export default ({params: {id}}) =>
         /whiteboards/$whiteboardTitle. This is where the whiteboard is
         stored in Firebase. Each whiteboard is an array of actions that
         users have dispatched into the whiteboard. */}
-    <GamePage fireRef={db.ref('board').child(id)}/>
+    <GamePage fireRef={db.ref('board').child(id)} gameId={id}/>
   </div>

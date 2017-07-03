@@ -10,8 +10,9 @@ export const AP_COSTS = {
 }
 
 export const VICTIM_LEGEND = [
-  'man1', 'man2', 'man3', 'man4',
-  'woman1', 'woman2', 'woman3', 'woman4',
+  'man1', 'man2', 'man3',
+  'child1', 'child2',
+  'woman1', 'woman2', 'woman3',
   'dog', 'cat', 'falseAlarm', 'falseAlarm',
   'falseAlarm', 'falseAlarm', 'falseAlarm'
 ]

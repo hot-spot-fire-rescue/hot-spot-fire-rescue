@@ -1,6 +1,6 @@
 'use strict'
 import React from 'react'
-import {Router, Route, IndexRedirect, browserHistory} from 'react-router'
+import {Router, Route, Link, IndexRedirect, browserHistory} from 'react-router'
 import {render} from 'react-dom'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import WhoAmI from './components/WhoAmI'
@@ -9,6 +9,7 @@ import NotFound from './components/NotFound'
 import firebase from 'APP/fire'
 
 import Game from 'APP/game'
+import Chat from 'APP/chat'
 
 // Get the auth API from Firebase.
 const auth = firebase.auth()
@@ -39,7 +40,7 @@ auth.onAuthStateChanged(user => user || auth.signInAnonymously())
 
 // Our root App component just renders a little frame with a nav
 // and whatever children the router gave us.
-const App = ({children}) =>(
+const App = ({children}) => (
   <MuiThemeProvider>
     <div>
       <nav>
@@ -47,17 +48,18 @@ const App = ({children}) =>(
             greeting and a logout button, or sign in buttons, depending
             on if anyone's logged in */}
         <WhoAmI auth={auth}/>
+        <h2><Link to='/chat/welcome'>Chat</Link></h2>
       </nav>
       {/* Render our children (whatever the router gives us) */}
       {children}
     </div>
   </MuiThemeProvider>
 )
-  
 
 render(
   <Router history={browserHistory}>
     <Route path="/" component={App}>
+      <Route path='chat/:room' component={Chat}/>
       <IndexRedirect to="home"/>
       {Game}
     </Route>

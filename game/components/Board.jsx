@@ -1,6 +1,7 @@
 'use strict'
 import React from 'react'
 import { connect } from 'react-redux'
+import {Grid, Row, Col, Clearfix, Image} from 'react-bootstrap'
 
 import { setupBoard } from '../utils/setup'
 import {
@@ -10,6 +11,8 @@ import {
 } from '../reducers/boundary'
 import Danger from '../components/Danger'
 import {
+  createPlayer,
+  removePlayer,
   movePlayer,
   endTurn,
   updatePlayer,
@@ -27,19 +30,20 @@ import {
   flashOver
 } from '../reducers/danger'
 import reducer from '../reducers/'
+import Chatroom from './Chatroom'
 
 import firebase from 'APP/fire'
-import { loadPlayers } from './promises'
 const fbAuth = firebase.auth()
 const fbDB = firebase.database()
 
 class Board extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      players: loadPlayers, // Change name
+    this.state= {
       currentUserId: '',
-      arrayUsers: []
+      currentUsername: '',
+      userIsPlaying: false,
+      gameStarted: false
     }
     this.handleCellClick = this.handleCellClick.bind(this)
     this.handleDoorSwitch = this.handleDoorSwitch.bind(this)
@@ -50,8 +54,8 @@ class Board extends React.Component {
     this.damageCount = this.damageCount.bind(this)
     this.lostVictimCount = this.lostVictimCount.bind(this)
     this.didGameEnd = this.didGameEnd.bind(this)
-    this.removeUserCallback = this.removeUserCallback.bind(this)
-    this.playerJoin = this.playerJoin.bind(this)
+    this.onPlayerSubmit = this.onPlayerSubmit.bind(this)
+    this.removePlayerCallback = this.removePlayerCallback.bind(this)
   }
 
   componentWillMount() {
@@ -62,7 +66,7 @@ class Board extends React.Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.setState({ currentUserId: user.uid })
+        this.setState({ currentUserId: user.uid, currentUsername: user.displayName })
       }
     })
   }
@@ -168,7 +172,7 @@ class Board extends React.Component {
     const wallsByStatus = this.props.boundaries
                           .filter(boundary => boundary.kind === 'wall')
                           .countBy(wall => wall.status)
-    return wallsByStatus.get(1, 0) + wallsByStatus.get(2, 0)
+    return wallsByStatus.get(1, 0) + (wallsByStatus.get(2, 0) * 2)
   }
 
   rescuedVictimCount() {
@@ -184,33 +188,34 @@ class Board extends React.Component {
   didGameEnd() {
     if (this.damageCount() > 23) {
       // Building collapsed!
+      console.info(`GAME OVER: The building collapsed`)
     }
     if (this.lostVictimCount() > 4) {
       // Defeat - 4 victims were lost
+      console.info(`GAME OVER: 4 victims were lost`)
     }
     if (this.rescuedVictimCount > 6) {
       // Victory - 7 victims were rescued!
+      console.info(`YOU WON! You rescued 7 victims from the burning buliding`)
     }
   }
 
-  removeUserCallback(event) {
-    event.stopPropagation()
-    const targetIndex = this.state.arrayUsers.indexOf(event.target.id)
-    this.state.arrayUsers.splice(targetIndex, 1)
-    delete this.state.players[targetIndex]['uid']
-    this.setState({ arrayUsers: this.state.arrayUsers })
+  onPlayerSubmit(event) {
+    event.preventDefault()
+    let playerInfo = {
+      id: this.state.currentUserId,
+      ap: 5,
+      location: -1,
+      color: event.target.color.value,
+      username: this.state.currentUsername
+    }
+    this.props.createAPlayer(playerInfo)
+    this.setState({userIsPlaying: true})
   }
 
-  playerJoin(event) {
-    for (var i = 0; i < this.state.players.length; i++) {
-      if (!this.state.players[i].hasOwnProperty('uid')) {
-        this.state.players[i].uid = this.state.currentUserId
-        loadPlayers[i].uid = this.state.currentUserId
-        this.setState({ players: this.state.players })
-        updatePlayer(this.state.players[i].id, this.state.currentUserId)
-        break
-      }
-    }
+  removePlayerCallback(event) {
+    const removeAPlayer = this.props.removeAPlayer
+    this.props.removeAPlayer(event.target.id)
   }
 
   render() {
@@ -231,10 +236,17 @@ class Board extends React.Component {
     let damageCount = this.damageCount
     let rescuedVictimCount = this.rescuedVictimCount
     let lostVictimCount = this.lostVictimCount
-    let condition = this.state.players[currentPlayerId].uid !== this.state.currentUserId
+    let condition
 
-    // don't put console logs in render
-    if (condition) {
+    if (players.size > 0) {
+      condition = players.get(currentPlayerId).id !== this.state.currentUserId
+    }
+
+    let tooManyPlayers = players.size > 6
+    let notEnoughPlayers = players.size < 2
+    let spectating = this.state.userIsPlaying === false
+    let doNotShowTheBoard = notEnoughPlayers && !spectating
+    if (condition || spectating || this.state.gameStarted === false) {
       handleCellClick = () => (console.log('It is not your turn yet.  Have patience, padawan'))
       handleDoorSwitch = () => (console.log('It is not your turn yet.  Have patience, padawan'))
       handleWallDamage = () => (console.log('It is not your turn yet.  Have patience, padawan'))
@@ -242,123 +254,197 @@ class Board extends React.Component {
     }
 
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
-    return (
-      <div>
-        <br></br>
-        <button id={this.state.currentUserId} onClick={this.playerJoin}> Join</button>
-        <button disabled={condition} onClick={handleEndTurnClick}>End Turn</button>
-        <h6>Player0-blue, Player1-green, Player2-purple, Player3-orange </h6>
-        <h3>Player {currentPlayerId} has {remainingAp} AP left</h3>
-        <h5>Number of saved victims: {rescuedVictimCount()}</h5>
-        <h5>Number of lost victims: {lostVictimCount()}</h5>
-        <h5>Total damage to building: {damageCount()}</h5>
 
-        {
-          cells.map(cell => {
-            const eastBoundaryCoord = [cell.cellNum, cell.cellNum + 1].toString()
-            const southBoundaryCoord = [cell.cellNum, cell.cellNum + 10].toString()
-            const eastBoundary = boundaries.get(eastBoundaryCoord)
-            const southBoundary = boundaries.get(southBoundaryCoord)
-            const kind = danger.getIn([cell.cellNum, 'kind'])
-            const status = danger.getIn([cell.cellNum, 'status'])
-            const location = danger.getIn([cell.cellNum, 'location'])
-            const player = players.find((val) => val.location === cell.cellNum)
-            const poi = victims.find((val) => val.location === cell.cellNum)
-            const fire = danger.get(cell.cellNum)
-
-            return (
-              <div key={cell.cellNum}
-                className="cell"
-                onClick={(evt) => handleCellClick(evt, cell)}>
-                {
-                  fire
-                  && <Danger location={location} kind={kind} status={status} />
-                }
-                {
-                  player
-                  && <div className='player'
-                    style={{ backgroundColor: player.color }} />
-                }
-                {
-                  poi && poi.status === 0
-                  && <div className='poi'>?</div>
-                }
-                {
-                  poi && poi.status === 1 && !poi.carriedBy
-                  && <div className={`poi victim-uncarried`}
-                    onClick={(evt) => handlePoiClick(evt, poi, player)} />
-                }
-                {
-                  poi && poi.status === 1 && poi.carriedBy
-                  && <div className={`poi victim-carried`}
-                    onClick={(evt) => handlePoiClick(evt, poi, player)} />
-                }
-                {
-                  eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 0
-                  && <div className='vertical-wall'
-                    id={eastBoundaryCoord}
-                    onClick={(evt) => handleWallDamage(evt, eastBoundary)} />
-                }
-                {
-                  eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 1
-                  && <div className='vertical-wall-damagedOnce'
-                    id={eastBoundaryCoord}
-                    onClick={(evt) => handleWallDamage(evt, eastBoundary)} />
-                }
-                {
-                  eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 2
-                  && <div className='vertical-wall-damagedTwice'
-                    id={eastBoundaryCoord}
-                    onClick={(evt) => handleWallDamage(evt, eastBoundary)} />
-                }
-                {
-                  southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 0
-                  && <div className='horizontal-wall'
-                    id={southBoundaryCoord}
-                    onClick={(evt) => handleWallDamage(evt, southBoundary)} />
-                }
-                {
-                  southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 1
-                  && <div className='horizontal-wall-damagedOnce'
-                    id={southBoundaryCoord}
-                    onClick={(evt) => handleWallDamage(evt, southBoundary)} />
-                }
-                {
-                  southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 2
-                  && <div className='horizontal-wall-damagedTwice'
-                    id={southBoundaryCoord}
-                    onClick={(evt) => handleWallDamage(evt, southBoundary)} />
-                }
-                {
-                  eastBoundary && eastBoundary.kind === 'door'
-                  && eastBoundary.status === 0
-                  && <div className='vertical-door-closed'
-                    onClick={(evt) => handleDoorSwitch(evt, eastBoundary)} />
-                }
-                {
-                  southBoundary && southBoundary.kind === 'door'
-                  && southBoundary.status === 0
-                  && <div className='horizontal-door-closed'
-                    onClick={(evt) => handleDoorSwitch(evt, southBoundary)} />
-                }
-                {
-                  eastBoundary && eastBoundary.kind === 'door'
-                  && eastBoundary.status === 1
-                  && <div className='vertical-door-open'
-                    onClick={(evt) => handleDoorSwitch(evt, eastBoundary)} />
-                }
-                {
-                  southBoundary && southBoundary.kind === 'door'
-                  && southBoundary.status === 1
-                  && <div className='horizontal-door-open'
-                    onClick={(evt) => handleDoorSwitch(evt, southBoundary)} />
-                }
+    return <div className="play-area">
+      { doNotShowTheBoard
+        ? (
+          <div>
+          <h1>Add a Player</h1>
+            <div className="row col-lg-4">
+              <form onSubmit={this.onPlayerSubmit}>
+              <div className="form-group">
+                <label htmlFor="color"></label>
+                <input className="form-control" type="color" id="color"/>
               </div>
-            )
-          })
-        }
-      </div>
-    )
+                <button className="btn btn-default" type="submit" disabled={tooManyPlayers}>Add New Player</button>
+              </form>
+            </div>
+            <ul>
+              {
+                players.map((player) => {
+                  let idx = players.indexOf(player)
+                  return (
+                    <div key={idx}>
+                      <li style={{color: `${player.color}`}}> <p style={{color: `${player.color}`}}>{player.username} </p></li><button id={idx} onClick= {this.removePlayerCallback} disabled={player.id!==this.state.currentUserId}>X</button>
+                    </div>
+                  )
+                })
+              }
+            </ul>
+            <button disabled={players.size<1} onClick= {() => {
+              this.setState({userIsPlaying: false})
+            }}> Just Spectating</button>
+            {
+              (players.size < 1)?<p>You cannot spectate an empty game</p>: null
+            }
+          </div>
+        ) : (
+          <div>
+            <div>
+              {spectating &&
+                <div>
+                <h1>Join the Game!</h1>
+                    <div className="row col-lg-4">
+                      <form onSubmit={this.onPlayerSubmit}>
+                      <div className="form-group">
+                        <label htmlFor="color"></label>
+                        <input className="form-control" type="color" id="color"/>
+                      </div>
+                        <button className="btn btn-default" type="submit" disabled={tooManyPlayers}>Add New Player</button>
+                      </form>
+                    </div>
+                </div>
+              }
+            </div>
+            <ul>
+              {
+                players.map((player) => {
+                  return (
+                    <div>
+                      <li key= {`${player.color}`} style={{color: `${player.color}`}}> <p style={{color: `${player.color}`}}>{player.username} </p></li>
+                    </div>
+                  )
+                })
+              }
+            </ul>
+            {
+              (!this.state.gameStarted && !spectating)?<button onClick={() => this.setState({gameStarted: true})}>Start the Game</button>:<div></div>
+            }
+
+            <br></br>
+            <button disabled={condition} onClick={handleEndTurnClick}>End Turn</button>
+            <h4>Player {currentPlayerId} has {remainingAp} AP left</h4>
+            <h5>Number of saved victims: {rescuedVictimCount()}</h5>
+            <h5>Number of lost victims: {lostVictimCount()}</h5>
+            <h5>Total damage to building: {damageCount()}</h5>
+          <Row>
+            <Col sm={9}>
+            <div className='gameboard'>
+              {
+                cells.map(cell => {
+                  const eastBoundaryCoord = [cell.cellNum, cell.cellNum + 1].toString()
+                  const southBoundaryCoord = [cell.cellNum, cell.cellNum + 10].toString()
+                  const eastBoundary = boundaries.get(eastBoundaryCoord)
+                  const southBoundary = boundaries.get(southBoundaryCoord)
+                  const kind = danger.getIn([cell.cellNum, 'kind'])
+                  const status = danger.getIn([cell.cellNum, 'status'])
+                  const location = danger.getIn([cell.cellNum, 'location'])
+                  const player = players.find((val) => val.location === cell.cellNum)
+                  const poi = victims.find((val) => val.location === cell.cellNum)
+                  const fire = danger.get(cell.cellNum)
+                  return (
+                    <div key={cell.cellNum}
+                      className="cell"
+                      onClick={(evt) => handleCellClick(evt, cell)}>
+                      {
+                        fire
+                        && <Danger location={location} kind={kind} status={status} />
+                      }
+                      {
+                        player
+                        && <div className='player'
+                          style={{ backgroundColor: player.color }} />
+                      }
+                      {
+                        poi && poi.status === 0
+                        && <div className={`poi poi-unrevealed`}/>
+                      }
+                      {
+                        poi && poi.status === 1 && !poi.carriedBy
+                        && <div className={`poi poi-${poi.type}`}
+                          onClick={(evt) => handlePoiClick(evt, poi, player)} />
+                      }
+                      {
+                        poi && poi.status === 1 && !(poi.carriedBy === null)
+                        && <div className={`poi poi-${poi.type} carried`}
+                          onClick={(evt) => handlePoiClick(evt, poi, player)} />
+                      }
+                      {
+                        eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 0
+                        && <div className={`vertical-wall`}
+                          onClick={(evt) => handleWallDamage(evt, eastBoundary)} />
+                      }
+                      {
+                        eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 1
+                        && <div className={`vertical-wall vertical-wall-damaged-once`}
+                          onClick={(evt) => handleWallDamage(evt, eastBoundary)} />
+                      }
+                      {
+                        eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 2
+                        && <div className={`vertical-wall vertical-wall-damaged-once damaged-twice`}/>
+                      }
+                      {
+                        southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 0
+                        && <div className={`horizontal-wall`}
+                          onClick={(evt) => handleWallDamage(evt, southBoundary)} />
+                      }
+                      {
+                        southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 1
+                        && <div className={`horizontal-wall horizontal-wall-damaged-once`}
+                          onClick={(evt) => handleWallDamage(evt, southBoundary)} />
+                      }
+                      {
+                        southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 2
+                        && <div className={`horizontal-wall horizontal-wall-damaged-once damaged-twice`}/>
+                      }
+                      {
+                        eastBoundary && eastBoundary.kind === 'door'
+                        && eastBoundary.status === 0
+                        && <div className={`door vertical-door-closed`}
+                          onClick={(evt) => handleDoorSwitch(evt, eastBoundary)} />
+                      }
+                      {
+                        eastBoundary && eastBoundary.kind === 'door'
+                        && eastBoundary.status === 1
+                        && <div className={`door vertical-door-open`}
+                          onClick={(evt) => handleDoorSwitch(evt, eastBoundary)} />
+                      }
+                      {
+                        eastBoundary && eastBoundary.kind === 'door'
+                        && eastBoundary.status === 2
+                        && <div className={`door vertical-door-destroyed`}/>
+                      }
+                      {
+                        southBoundary && southBoundary.kind === 'door'
+                        && southBoundary.status === 0
+                        && <div className={`door horizontal-door-closed`}
+                          onClick={(evt) => handleDoorSwitch(evt, southBoundary)} />
+                      }
+                      {
+                        southBoundary && southBoundary.kind === 'door'
+                        && southBoundary.status === 1
+                        && <div className={`door horizontal-door-open`}
+                          onClick={(evt) => handleDoorSwitch(evt, southBoundary)} />
+                      }
+                      {
+                        southBoundary && southBoundary.kind === 'door'
+                        && southBoundary.status === 2
+                        && <div className={`door horizontal-door-destroyed`}/>
+                      }
+                    </div>
+                  )
+                })
+              }
+            </div>
+            </Col>
+            <Col sm={3}>
+              <Chatroom username={this.state.currentUsername}/>
+            </Col>
+          </Row>
+          </div>
+        )
+    }
+   </div>
   }
 }
 
@@ -409,6 +495,12 @@ const mapDispatch = dispatch => ({
   },
   flashOver: (boundaries) => {
     dispatch(flashOver(boundaries))
+  },
+  createAPlayer: (playerInfo) => {
+    dispatch(createPlayer(playerInfo.id, playerInfo.ap, playerInfo.location, playerInfo.color, playerInfo.username))
+  },
+  removeAPlayer: (player) => {
+    dispatch(removePlayer(player))
   }
 })
 

@@ -1,11 +1,10 @@
 import React from 'react'
-
 import {createStore, applyMiddleware} from 'redux'
 import {composeWithDevTools} from 'redux-devtools-extension'
 import {Provider} from 'react-redux'
-
 import createLogger from 'redux-logger'
 import thunkMiddleware from 'redux-thunk'
+import {Grid, Row, Col, Clearfix} from 'react-bootstrap'
 
 import reducer from '../reducers'
 import Board from './Board'
@@ -115,10 +114,10 @@ export default class extends React.Component {
     // If our fireRef changes, we'll throw this store state away and create a new one.
     // That's fine!
     return <Provider store={store}>
-      <div className="gameboard">
+      <Grid className="main-grid">
         <button onClick={this.clear}>clear</button>
         <Board fireRef={this.props.fireRef}/>
-      </div>
+      </Grid>
     </Provider>
   }
 }
