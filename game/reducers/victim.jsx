@@ -20,11 +20,11 @@ Legend for Victim ID:
 0 = man1
 1 = man2
 2 = man3
-3 = man4
-4 = woman1
-5 = woman2
-6 = woman3
-7 = woman4
+3 = woman1
+4 = woman2
+5 = woman3
+6 = child1
+7 = child2
 8 = dog
 9 = cat
 10-14 = false alarms
@@ -191,7 +191,7 @@ const victimReducer = (state = initial, action) => {
           state = {...state,
             poi: state.poi.set(idx, {
               ...state.poi.get(idx),
-              status: 1
+              status: -1
             })
           }
         }

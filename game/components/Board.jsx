@@ -1,7 +1,7 @@
 'use strict'
 import React from 'react'
 import { connect } from 'react-redux'
-import {Grid, Row, Col, Clearfix} from 'react-bootstrap'
+import {Grid, Row, Col, Clearfix, Image} from 'react-bootstrap'
 
 import { setupBoard } from '../utils/setup'
 import {
@@ -353,77 +353,79 @@ class Board extends React.Component {
                       }
                       {
                         poi && poi.status === 0
-                        && <div className='poi'>?</div>
+                        && <div className={`poi poi-unrevealed`}/>
                       }
                       {
                         poi && poi.status === 1 && !poi.carriedBy
-                        && <div className={`poi victim-uncarried`}
+                        && <div className={`poi poi-${poi.type}`}
                           onClick={(evt) => handlePoiClick(evt, poi, player)} />
                       }
                       {
-                        poi && poi.status === 1 && poi.carriedBy
-                        && <div className={`poi victim-carried`}
+                        poi && poi.status === 1 && !(poi.carriedBy === null)
+                        && <div className={`poi poi-${poi.type} carried`}
                           onClick={(evt) => handlePoiClick(evt, poi, player)} />
                       }
                       {
                         eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 0
-                        && <div className='vertical-wall'
-                          id={eastBoundaryCoord}
+                        && <div className={`vertical-wall`}
                           onClick={(evt) => handleWallDamage(evt, eastBoundary)} />
                       }
                       {
                         eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 1
-                        && <div className='vertical-wall-damagedOnce'
-                          id={eastBoundaryCoord}
+                        && <div className={`vertical-wall vertical-wall-damaged-once`}
                           onClick={(evt) => handleWallDamage(evt, eastBoundary)} />
                       }
                       {
                         eastBoundary && eastBoundary.kind === 'wall' && eastBoundary.status === 2
-                        && <div className='vertical-wall-damagedTwice'
-                          id={eastBoundaryCoord}
-                          onClick={(evt) => handleWallDamage(evt, eastBoundary)} />
+                        && <div className={`vertical-wall vertical-wall-damaged-once damaged-twice`}/>
                       }
                       {
                         southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 0
-                        && <div className='horizontal-wall'
-                          id={southBoundaryCoord}
+                        && <div className={`horizontal-wall`}
                           onClick={(evt) => handleWallDamage(evt, southBoundary)} />
                       }
                       {
                         southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 1
-                        && <div className='horizontal-wall-damagedOnce'
-                          id={southBoundaryCoord}
+                        && <div className={`horizontal-wall horizontal-wall-damaged-once`}
                           onClick={(evt) => handleWallDamage(evt, southBoundary)} />
                       }
                       {
                         southBoundary && southBoundary.kind === 'wall' && southBoundary.status === 2
-                        && <div className='horizontal-wall-damagedTwice'
-                          id={southBoundaryCoord}
-                          onClick={(evt) => handleWallDamage(evt, southBoundary)} />
+                        && <div className={`horizontal-wall horizontal-wall-damaged-once damaged-twice`}/>
                       }
                       {
                         eastBoundary && eastBoundary.kind === 'door'
                         && eastBoundary.status === 0
-                        && <div className='vertical-door-closed'
+                        && <div className={`door vertical-door-closed`}
                           onClick={(evt) => handleDoorSwitch(evt, eastBoundary)} />
-                      }
-                      {
-                        southBoundary && southBoundary.kind === 'door'
-                        && southBoundary.status === 0
-                        && <div className='horizontal-door-closed'
-                          onClick={(evt) => handleDoorSwitch(evt, southBoundary)} />
                       }
                       {
                         eastBoundary && eastBoundary.kind === 'door'
                         && eastBoundary.status === 1
-                        && <div className='vertical-door-open'
+                        && <div className={`door vertical-door-open`}
                           onClick={(evt) => handleDoorSwitch(evt, eastBoundary)} />
+                      }
+                      {
+                        eastBoundary && eastBoundary.kind === 'door'
+                        && eastBoundary.status === 2
+                        && <div className={`door vertical-door-destroyed`}/>
+                      }
+                      {
+                        southBoundary && southBoundary.kind === 'door'
+                        && southBoundary.status === 0
+                        && <div className={`door horizontal-door-closed`}
+                          onClick={(evt) => handleDoorSwitch(evt, southBoundary)} />
                       }
                       {
                         southBoundary && southBoundary.kind === 'door'
                         && southBoundary.status === 1
-                        && <div className='horizontal-door-open'
+                        && <div className={`door horizontal-door-open`}
                           onClick={(evt) => handleDoorSwitch(evt, southBoundary)} />
+                      }
+                      {
+                        southBoundary && southBoundary.kind === 'door'
+                        && southBoundary.status === 2
+                        && <div className={`door horizontal-door-destroyed`}/>
                       }
                     </div>
                   )

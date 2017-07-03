@@ -8,9 +8,12 @@
 }
 
 .gameboard {
+  background-image: url('/images/board.jpg');
+  background-size: 600px 480px;
   margin: 0;
   line-height: 0px;
-  width: 300px;
+  width: 600px;
+  z-index: -1;
 }
 
 .row {
@@ -20,127 +23,195 @@
 
 .cell {
   border: 1px solid black;
-  width: 30px;
-  height: 30px;
+  width: 60px;
+  height: 60px;
   display: inline-block;
   position: relative;
 }
 
+/* Walls */
+
 .horizontal-wall {
-  width: 30px;
-  height: 5px;
-  position: absolute;
   background-color: black;
-  top: 26px;
-}
-
-.horizontal-wall-damagedOnce {
-  width: 30px;
-  height: 5px;
+  width: 60px;
+  height: 10px;
+  top: 52px;
   position: absolute;
-  background-color: coral;
-  top: 26px;
-}
-
-.horizontal-wall-damagedTwice {
-  width: 30px;
-  height: 5px;
-  position: absolute;
-  background-color: red;
-  top: 26px;
+  z-index: 1;
 }
 
 .vertical-wall {
-  width: 5px;
-  height: 30px;
-  position: absolute;
   background-color: black;
-  left: 26px;
+  width: 10px;
+  height: 60px;
+  left: 52px;
+  position: absolute;
+  z-index: 1
 }
 
-.vertical-wall-damagedOnce {
-  width: 5px;
-  height: 30px;
-  position: absolute;
-  background-color: coral;
-  left: 26px;
+.vertical-wall-damaged-once {
+  background-color: transparent;
+  background-image: url('/images/damaged-once.png');
+  background-size: 30px 35px;
+  background-repeat: no-repeat;
+  width: 35px;
+  height: 40px;
+  top: 15px;
+  left: 48px;
+  z-index: 2
 }
 
-.vertical-wall-damagedTwice {
-  width: 5px;
-  height: 30px;
+.horizontal-wall-damaged-once {
+  background-color: transparent;
+  background-image: url('/images/damaged-once.png');
+  background-size: 30px 35px;
+  background-repeat: no-repeat;
+  width: 35px;
+  height: 40px;
+  top: 48px;
+  left: 15px;
+  z-index: 2
+}
+
+.damaged-twice {
+  background-image: url('/images/damaged-twice.png');
+}
+
+
+/* Doors */
+
+.door {
+  background-size: 34px;
+  border: 1px solid black;
+  border-radius: 35px;
+  width: 35px;
+  height: 35px;
   position: absolute;
-  background-color: red;
-  left: 26px;
+  z-index: 2
 }
 
 .vertical-door-closed {
-  width: 5px;
-  height: 30px;
-  position: absolute;
-  background-color: blue;
-  left: 26px;
+  background-image: url('/images/closed_door.jpg');
+  top: 12px;
+  left: 45px;
 }
 
 .vertical-door-open {
-  width: 5px;
-  height: 30px;
-  position: absolute;
-  background-color: green;
-  left: 26px;
+  background-image: url('/images/open_door.jpg');
+  top: 12px;
+  left: 45px;
+}
+
+.vertical-door-destroyed {
+  background-image: url('/images/destroyed_door.jpg');
+  top: 12px;
+  left: 45px;
 }
 
 .horizontal-door-closed {
-  width: 30px;
-  height: 5px;
-  position: absolute;
-  background-color:blue;
-  top: 26px;
+  background-image: url('/images/closed_door.jpg');
+  top: 40px;
+  left: 12px;
 }
 
 .horizontal-door-open {
-  width: 30px;
-  height: 5px;
-  position: absolute;
-  background-color: green;
-  top: 26px;
+  background-image: url('/images/open_door.jpg');
+  top: 40px;
+  left: 12px;
 }
+
+.horizontal-door-destroyed {
+  background-image: url('/images/destroyed_door.jpg');
+  top: 40px;
+  left: 12px;
+}
+
+
+/* Players */
 
 .player {
   width: 10px;
   height: 10px;
-  border-radius: 5px;
+  border-radius: 10px;
   background-color: green;
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 20px;
+  left: 20px;
 }
+
+/* POIs and victims */
 
 .poi {
-  width: 10px;
-  height: 10px;
-  border-radius: 5px;
-  background-color: lightblue;
+  background-size: 28px;
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  border: 2px solid orangered;
   position: absolute;
-  top: 0px;
-  left: 10px;
+  top: 15px;
+  z-index: 2;
 }
 
-.victim-carried {
-  background-color: lightgreen;
-  top: 5px;
+.carried {
+  border: 2px solid green;
+  top: 15px;
+  left: 8px;
 }
 
-.victim-uncarried {
-  background-color: lightcoral;
+.poi-unrevealed {
+  background-image: url('/images/victims/unrevealed.jpg');
 }
+
+.poi-man1 {
+  background-image: url('/images/victims/man1.jpg');
+}
+
+.poi-man2 {
+  background-image: url('/images/victims/man2.jpg');
+}
+
+.poi-man3 {
+  background-image: url('/images/victims/man3.jpg');
+}
+
+.poi-woman1 {
+  background-image: url('/images/victims/woman1.jpg');
+}
+
+.poi-woman2 {
+  background-image: url('/images/victims/woman2.jpg');
+}
+
+.poi-woman3 {
+  background-image: url('/images/victims/woman3.jpg');
+}
+
+.poi-child1 {
+  background-image: url('/images/victims/child1.jpg');
+}
+
+.poi-child2 {
+  background-image: url('/images/victims/child2.jpg');
+}
+
+.poi-dog {
+  background-image: url('/images/victims/dog.jpg');
+}
+
+.poi-cat {
+  background-image: url('/images/victims/cat.jpg');
+}
+
+
+/* Fire and smoke */
 
 .fire {
-  width: 10px;
-  height: 10px;
+  background-image: url('/images/fire.gif');
+  width: 20px;
+  height: 20px;
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 15px;
+  left: 15px;
 }
 
 .smoke {
@@ -152,7 +223,7 @@
   left: 0px;
 }
 
-/*chatroom message*/
+/* Chatroom message */
 
 #message-container {
   overflow-y: scroll;
@@ -163,8 +234,8 @@
 .messages {
   margin-bottom: 10px;
   background-color: white;
-  padding: 5px;
-  border-radius: 5px;
+  padding: 10px;
+  border-radius: 10px;
   opacity: 0.9;
 }
 #message-filler {
@@ -187,9 +258,9 @@
 .message-container .pic {
   background-image: url('/images/profile_placeholder.png');
   background-repeat: no-repeat;
-  width: 30px;
-  height: 30px;
-  background-size: 30px;
+  width: 60px;
+  height: 60px;
+  background-size: 60px;
   border-radius: 20px;
 }
 .message-container .spacing {
@@ -199,7 +270,7 @@
 .message-container .message {
   display: table-cell;
   width: calc(100% - 40px);
-  padding: 5px 0 5px 10px;
+  padding: 10px 0 10px 10px;
 }
 .message-container .name {
   display: inline-block;
@@ -228,11 +299,11 @@
 }
 
 .mdl-textfield__input {
-  padding-left: 5px;
+  padding-left: 10px;
 }
 #message-form button, #image-form button {
   width: 100px;
-  margin: 15px 0 0 10px;
+  margin: 110px 0 0 10px;
 }
 
 .mdl-card {
@@ -262,5 +333,5 @@
 
 .mdl-button .material-icons {
   top: -1px;
-  margin-right: 5px;
+  margin-right: 10px;
 }
