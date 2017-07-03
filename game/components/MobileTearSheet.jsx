@@ -30,7 +30,6 @@ class MobileTearSheet extends Component {
       },
       container: {
         border: 'solid 1px #d9d9d9',
-        borderBottom: 'none',
         height: this.props.height,
         overflow: 'hidden',
       },
