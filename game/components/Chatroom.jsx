@@ -24,9 +24,9 @@ export function Chatroom(props) {
     <div>
       <MobileTearSheet>
         <List>
-          <Subheader>Recent chats</Subheader>
+          <Subheader>Recent Messages</Subheader>
           {
-            messages && messages.slice(-8).map(message => {
+            messages && messages.slice(-6).map(message => {
               let key = messages.indexOf(message)
               let messageUsername = messages.getIn([key, 'user'])
               let messageText = messages.getIn([key, 'text'])
@@ -50,21 +50,18 @@ export function Chatroom(props) {
         }
         </List>
       </MobileTearSheet>
-      <div style={{display: 'inline-block'}}>
-        <form className= 'form-horizontal' onSubmit = {handleSubmit} style={{display: 'inline-block'}}>
+        <form onSubmit = {handleSubmit}>
           <fieldset>
-            <legend>{formTitle}</legend>
-            {warning && <div className = 'alert alert-warning'>{warning}</div>}
+            {/*<legend>{formTitle}</legend>*/}
             <div className='form-group'>
-              <TextField
+             <TextField
                 hintText = 'Type your message here'
                 value = {text}
                 onChange = {handleChange}
-              /><br />
+              />
             </div>
           </fieldset>
         </form>
-      </div>
     </div>
   )
 }
@@ -126,7 +123,7 @@ class ChatroomContainer extends React.Component {
         warning = {warning}
         handleSubmit = {this.handleSubmit}
         handleChange = {this.handleChange}
-        formTitle = 'Chat Room'
+        formTitle = '  Chat Room'
       />
     )
   }
