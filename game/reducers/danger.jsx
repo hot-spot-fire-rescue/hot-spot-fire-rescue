@@ -75,6 +75,12 @@ export const explode = (actionCellDangerStatus, location, boundaries) => ({
   boundaries
 })
 
+export const FLASH_OVER = 'FLASH_OVER'
+export const flashOver = (boundaries) => ({
+  type: FLASH_OVER,
+  boundaries
+})
+
 
 // -- // -- // State // -- // -- //
 
@@ -86,41 +92,106 @@ const sortCoord = (location, adjLocation) => {
   return location < adjLocation ? ([location, adjLocation]).toString() : ([adjLocation, location]).toString()
 }
 
+const CheckcellDangerStatus = (danger, location) => {
+  const targetCellKind = danger.getIn([location, 'kind'])
+  const targetCellStatus = danger.getIn([location, 'status'])
+  if (targetCellKind === 'fire' && targetCellStatus === 1) {
+    return 'fire'
+  } else if (targetCellKind === 'smoke' && targetCellStatus === 1) {
+    return 'smoke'
+  }
+  return undefined
+}
+
+
 //  helper function - to check the type of boundary
+// export const openBoundary = (location, adjLocation, boundaries) => {
+//   const boundaryFound = boundaries[sortCoord(location, adjLocation)]
+//   if (boundaryFound === undefined) {
+//     return true
+//   } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 0) {
+//     return false
+//   } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 1) {
+//     return true
+//   } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 2) {
+//     return true
+//   } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 0) {
+//     return false
+//   } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 1) {
+//     return false
+//   } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 2) {
+//     return true
+//   }
+// }
 export const openBoundary = (location, adjLocation, boundaries) => {
   const boundaryFound = boundaries[sortCoord(location, adjLocation)]
   if (boundaryFound === undefined) {
     return true
-  } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 0) {
-    return false
-  } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 1) {
-    return true
-  } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 2) {
-    return true
-  } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 0) {
-    return false
-  } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 1) {
-    return false
-  } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 2) {
-    return true
   }
+  if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 0) {
+    return false
+  }
+  if (boundaryFound['kind'] === 'wall' && (boundaryFound['status'] === 0 || boundaryFound['status'] === 1)) {
+    return false
+  }
+  return true
+}
+
+
+const hasAdjacentFire = (danger, location, boundaries) => {
+  if (openBoundary(location, location + 10, boundaries) && checkCellDangerStatus(danger, location + 10) === 'fire') {
+    return true
+  } else if (openBoundary(location, location - 10, boundaries) && checkCellDangerStatus(danger, location - 10) === 'fire') {
+    return true
+  } else if (openBoundary(location, location + 1, boundaries) && checkCellDangerStatus(danger, location + 1) === 'fire') {
+    return true
+  } else if (openBoundary(location, location - 1, boundaries) && checkCellDangerStatus(danger, location - 1) === 'fire') {
+    return true
+  } else {
+    return false
+  }
+}
+
+const checkCellDangerStatus = (danger, location) => {
+  const targetCellKind = danger.getIn([location, 'kind'])
+  const targetCellStatus = danger.getIn([location, 'status'])
+  if (targetCellKind === 'smoke' && targetCellStatus === 1) {
+    return 'smoke'
+  } else if (targetCellKind === 'fire' && targetCellStatus === 1) {
+    return 'fire'
+  }
+  return undefined
 }
 
 // helper function used to calculate the next adjacent cell
-const nextAdj = (i, currentLoc) => {
+const nextAdj = (i) => {
   if (i === 0) {
-    return () => currentLoc - 10
+    return -10
   } else if (i === 1) {
-    return () => currentLoc + 10
+    return 10
   } else if (i === 2) {
-    return () => currentLoc + 1
+    return 1
   } else if (i === 3) {
-    return () => currentLoc - 1
+    return -1
   }
 }
 
-// -- // -- // Reducer // -- // -- //
 
+const findSmoke = (danger) => {
+  const dangerList = danger.toObject()
+  const cellsToCheck = Object.values(dangerList).filter((val) => {
+    return val !== undefined
+  })
+  const allSmoke = []
+  cellsToCheck.forEach((cell) => {
+    if ((cell.get('kind') === 'smoke') && (cell.get('status') === 1)) {
+      allSmoke.push(cell.get('location'))
+    }
+  })
+  return allSmoke
+}
+
+// -- // -- // Reducer // -- // -- //
 const dangerReducer = (state = initial, action) => {
   switch (action.type) {
   case CREATE_DANGER:
@@ -150,76 +221,87 @@ const dangerReducer = (state = initial, action) => {
     }
 
   case END_TURN:
-    const checkCellDangerStatus = (location) => {
-      const targetCellKind = state.getIn([location, 'kind'])
-      const targetCellStatus = state.getIn([location, 'status'])
-      if (targetCellKind === 'smoke' && targetCellStatus === 1) {
-        return 'smoke'
-      } else if (targetCellKind === 'fire' && targetCellStatus === 1) {
-        return 'fire'
+    if (checkCellDangerStatus(state, action.location) !== 'fire') {
+      if (checkCellDangerStatus(state, action.location) === 'smoke') {
+        return state.set(action.location, fromJS({
+          location: action.location,
+          kind: 'fire',
+          status: 1
+        }))
+      } else {
+        return state.set(action.location, fromJS({
+          location: action.location,
+          kind: 'smoke',
+          status: 1
+        }))
       }
-      return undefined
+    } else {
+      break
     }
-    if (checkCellDangerStatus(action.location) === 'smoke') {
-      return state.set(action.location, fromJS({
-        location: action.location,
+
+  case FLASH_OVER:
+    let updatedState
+    let allSmoke = findSmoke(state)
+
+    while (true) {
+      const fireToAddEachTerm = []
+      for (var t = 0; t < allSmoke.length; t++) {
+        if (hasAdjacentFire(state, allSmoke[t], action.boundaries)) {
+          fireToAddEachTerm.push(allSmoke[t])
+        }
+      }
+      if (fireToAddEachTerm.length === 0) {
+        break
+      }
+      for (var k = 0; k < fireToAddEachTerm.length; k++) {
+        const updatedState = state.set(fireToAddEachTerm[k], fromJS({
+          location: fireToAddEachTerm[k],
+          kind: 'fire',
+          status: 1
+        }))
+        state = updatedState
+      }
+      allSmoke = findSmoke(state)
+    }
+    return state
+
+  case EXPLODE:
+    const adjacentCells = [action.location - 10, action.location + 10, action.location + 1, action.location - 1]
+
+    const toSetFire = []
+    for (var i = 0; i < adjacentCells.length; i++) {
+      const isBoundaryOpen = openBoundary(action.location, adjacentCells[i], action.boundaries)
+
+      // no adjacent boundary and empty adjacent space - add a fire to adj
+      if (isBoundaryOpen && checkCellDangerStatus(state, adjacentCells[i]) === undefined) {
+        toSetFire.push(adjacentCells[i])
+      } else if (isBoundaryOpen && checkCellDangerStatus(state, adjacentCells[i])==='fire') {
+        const locAdjust = nextAdj(i)
+        let currentLoc = adjacentCells[i]
+        let adjToCheckSpread = currentLoc + locAdjust
+
+        while (openBoundary(currentLoc, adjToCheckSpread, action.boundaries) && (checkCellDangerStatus(state, adjToCheckSpread) ==='fire')) {
+          currentLoc = adjToCheckSpread
+          adjToCheckSpread = adjToCheckSpread + locAdjust
+        }
+        if (openBoundary(currentLoc, adjToCheckSpread, action.boundaries)) {
+          toSetFire.push(adjToCheckSpread)
+        }
+      }
+    }
+
+    let newState
+    for (var j = 0; j < toSetFire.length; j++) {
+      const fireLoc = Number(toSetFire[j])
+      newState = state.set(fireLoc, fromJS({
+        location: fireLoc,
         kind: 'fire',
         status: 1
       }))
-    } else {
-      return state.set(action.location, fromJS({
-        location: action.location,
-        kind: 'smoke',
-        status: 1
-      }))
+      state = newState
     }
-
-  case EXPLODE:
-    console.log('explosion cause more dangers')
-    const adjacentCells = [action.location - 10, action.location + 10, action.location + 1, action.location - 1]
-
-    for (var i = 0; i < adjacentCells.length; i++) {
-      const adjBoundary = openBoundary(action.location, adjacentCells[i], action.boundaries)
-      const adjCellKind = state.getIn([adjacentCells[i], 'kind'])
-      const adjCellStatus = state.getIn([adjacentCells[i], 'status'])
-
-      // no adjacent boundary and empty adjacent space - add a fire to adj
-      if (adjBoundary === true && adjCellKind === undefined) {
-        console.log('explosion happened, fire caused in the empty space', adjacentCells[i])
-        return state.set(adjacentCells[i], fromJS({
-          location: adjacentCells[i],
-          kind: 'fire',
-          status: 1
-        }))
-
-      // has smoke in adjacent cell, turn the smoke into fire
-      } else if (adjBoundary === true && adjCellKind === 'smoke' && adjCellStatus === 1) {
-        console.log('explosion happened, turned smoke into fire', adjacentCells[i])
-        return state.set(adjacentCells[i], fromJS({
-          location: adjacentCells[i],
-          kind: 'fire',
-          status: 1
-        }))
-
-      // fire pass through fire space, and spread into one more empty space
-      } else if (adjBoundary === true && adjCellKind === 'fire' && adjCellStatus === 1) {
-
-        let currentLoc = adjacentCells[i]
-        let adjToCheckSpread = nextAdj(i, currentLoc)
-        while (openBoundary(currentLoc, adjToCheckSpread, action.boundaries) === true && state.getIn([adjToCheckSpread, 'kind']) === 'fire' && state.getIn([adjToCheckSpread, 'status'] === 1)) {
-          currentLoc = adjToCheckSpread
-          adjToCheckSpread = adjToCheckSpread - 10
-        }
-        console.log('explosion happened, fire is spreading')
-        return state.set(adjToCheckSpread, fromJS({
-          location: adjacentCells[i],
-          kind: 'fire',
-          status: 1
-        }))
-      }
-    }
+    return newState === undefined ? state : newState
   }
-
   return state
 }
 

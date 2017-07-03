@@ -26,7 +26,9 @@ import {
   createDanger,
   addRandomSmoke,
   removeDanger,
-  explode} from '../reducers/danger'
+  explode,
+  flashOver
+} from '../reducers/danger'
 import reducer from '../reducers/'
 import Chatroom from './Chatroom'
 
@@ -88,7 +90,7 @@ class Board extends React.Component {
     let locationToAddSmoke = 0
     while (!isValid(locationToAddSmoke)) {
       locationToAddSmoke = Math.floor(Math.random() * 79) + 1
-      // locationToAddSmoke = 14
+      // locationToAddSmoke = 12
     }
 
     const boundariesObj = this.props.boundaries.toObject()
@@ -108,12 +110,14 @@ class Board extends React.Component {
     let actionCellDangerStatus = cellDangerStatus(locationToAddSmoke)
     actionCellDangerStatus = (actionCellDangerStatus === undefined) ? 'no status' : actionCellDangerStatus
 
-    // if current cell is not fire, dispatch endTurn to add smoke
-    if (cellDangerStatus(locationToAddSmoke) !== 'fire') {
-      this.props.endTurn(locationToAddSmoke, boundariesObj)
+    // always check if there is explosion, trigger explosion if target cell is already on fire
+    if (cellDangerStatus(locationToAddSmoke) === 'fire') {
+      this.props.explode(actionCellDangerStatus, locationToAddSmoke, boundariesObj)
     }
-    // always check if it will cause explosion
-    this.props.explode(actionCellDangerStatus, locationToAddSmoke, boundariesObj)
+
+    // After dealing with explosion, endTurn will calculate loss and damages
+    this.props.endTurn(locationToAddSmoke, boundariesObj)
+    this.props.flashOver(boundariesObj)
 
     // check for fire on POIs and characters
     const fireLocations = this.props.danger.map(danger => {
@@ -123,8 +127,8 @@ class Board extends React.Component {
         return false
       }
     })
-    this.props.checkFireDamage(fireLocations.toArray())
 
+    this.props.checkFireDamage(fireLocations.toArray())
     // add new POI only if < 3 are on board
     const poiStatusCount = this.props.victims.countBy(poi => poi.status)
     if ((poiStatusCount.get(0, 0) + poiStatusCount.get(1, 0)) < 3) {
@@ -488,6 +492,9 @@ const mapDispatch = dispatch => ({
   },
   checkFireDamage: (fireLocations) => {
     dispatch(checkForFireDamage(fireLocations))
+  },
+  flashOver: (boundaries) => {
+    dispatch(flashOver(boundaries))
   },
   createAPlayer: (playerInfo) => {
     dispatch(createPlayer(playerInfo.id, playerInfo.ap, playerInfo.location, playerInfo.color, playerInfo.username))

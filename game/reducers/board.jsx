@@ -15,6 +15,13 @@ export const createCell = (cellNum) => ({
   status: 0
 })
 
+export const FLASH_OVER = 'FLASH_OVER'
+export const flashOver = (cellNum) => ({
+  type: CREATE_CELL,
+  cellNum,
+  status: 0
+})
+
 // -- // -- // State // -- // -- //
 
 const initial = List()
