@@ -191,7 +191,7 @@ const victimReducer = (state = initial, action) => {
           state = {...state,
             poi: state.poi.set(idx, {
               ...state.poi.get(idx),
-              status: 1
+              status: -1
             })
           }
         }

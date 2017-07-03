@@ -400,22 +400,32 @@ class Board extends React.Component {
                           onClick={(evt) => handleDoorSwitch(evt, eastBoundary)} />
                       }
                       {
-                        southBoundary && southBoundary.kind === 'door'
-                        && southBoundary.status === 0
-                        && <div className={`door horizontal-door-closed`}
-                          onClick={(evt) => handleDoorSwitch(evt, southBoundary)} />
-                      }
-                      {
                         eastBoundary && eastBoundary.kind === 'door'
                         && eastBoundary.status === 1
                         && <div className={`door vertical-door-open`}
                           onClick={(evt) => handleDoorSwitch(evt, eastBoundary)} />
                       }
                       {
+                        eastBoundary && eastBoundary.kind === 'door'
+                        && eastBoundary.status === 2
+                        && <div className={`door vertical-door-destroyed`}/>
+                      }
+                      {
+                        southBoundary && southBoundary.kind === 'door'
+                        && southBoundary.status === 0
+                        && <div className={`door horizontal-door-closed`}
+                          onClick={(evt) => handleDoorSwitch(evt, southBoundary)} />
+                      }
+                      {
                         southBoundary && southBoundary.kind === 'door'
                         && southBoundary.status === 1
                         && <div className={`door horizontal-door-open`}
                           onClick={(evt) => handleDoorSwitch(evt, southBoundary)} />
+                      }
+                      {
+                        southBoundary && southBoundary.kind === 'door'
+                        && southBoundary.status === 2
+                        && <div className={`door horizontal-door-destroyed`}/>
                       }
                     </div>
                   )

@@ -91,28 +91,41 @@
 }
 
 .vertical-door-closed {
-  background-image: url(/images/closed_door.jpg);
+  background-image: url('/images/closed_door.jpg');
   top: 12px;
   left: 45px;
 }
 
 .vertical-door-open {
-  background-image: url(/images/open_door.jpg);
+  background-image: url('/images/open_door.jpg');
+  top: 12px;
+  left: 45px;
+}
+
+.vertical-door-destroyed {
+  background-image: url('/images/destroyed_door.jpg');
   top: 12px;
   left: 45px;
 }
 
 .horizontal-door-closed {
-  background-image: url(/images/closed_door.jpg);
+  background-image: url('/images/closed_door.jpg');
   top: 40px;
   left: 12px;
 }
 
 .horizontal-door-open {
-  background-image: url(/images/open_door.jpg);
+  background-image: url('/images/open_door.jpg');
   top: 40px;
   left: 12px;
 }
+
+.horizontal-door-destroyed {
+  background-image: url('/images/destroyed_door.jpg');
+  top: 40px;
+  left: 12px;
+}
+
 
 /* Players */
 
@@ -135,8 +148,7 @@
   border-radius: 30px;
   border: 2px solid orangered;
   position: absolute;
-  top: 0px;
-  left: 15px;
+  top: 15px;
   z-index: 2;
 }
 
@@ -194,11 +206,12 @@
 /* Fire and smoke */
 
 .fire {
-  width: 10px;
-  height: 10px;
+  background-image: url('/images/fire.gif');
+  width: 20px;
+  height: 20px;
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 15px;
+  left: 15px;
 }
 
 .smoke {
