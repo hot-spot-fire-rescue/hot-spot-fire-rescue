@@ -1,5 +1,5 @@
 import {Map} from 'immutable'
-import {EXPLODE} from './danger'
+import {EXPLODE, nextAdj} from './danger'
 
 `
 Legend for Boundaries:
@@ -117,20 +117,18 @@ const boundaryReducer = (state = initial, action) => {
       const adjCellStatus = state.getIn([adjacentCells[i], 'status'])
 
       if (action.actionCellDangerStatus ==='fire' && (adjBoundary === 'closed door' || adjBoundary === 'opened door')) {
-        console.log('explosion happened, open/closed door was destroyed', adjacentCells[i])
         let coord = [action.location, adjacentCells[i]]
         sortedCoord = sortCoord(coord)
-        console.log('sorted Coord', sortedCoord)
-        console.log('adjacentCells[i]')
         doorToDestroy.push(sortedCoord.toString())
       } else if (action.actionCellDangerStatus ==='fire' && adjBoundary === 'intact wall') {
-        console.log('explosion happened, intact wall was damaged', adjacentCells[i])
         sortedCoord = sortCoord([action.location, adjacentCells[i]])
         wallToDamage.push(sortedCoord.toString())
       } else if (action.actionCellDangerStatus ==='fire' && adjBoundary === 'damaged wall') {
-        console.log('explosion happened, damaged wall was destroyed', adjacentCells[i])
         sortedCoord = sortCoord([action.location, adjacentCells[i]])
         wallToDestroy.push(sortedCoord.toString())
+      } else if (action.actionCellDangerStatus === 'fire') {
+
+
       }
     }
     console.log('doorToDestroy', doorToDestroy)
