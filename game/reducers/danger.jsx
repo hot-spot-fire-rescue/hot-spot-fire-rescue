@@ -217,21 +217,18 @@ const dangerReducer = (state = initial, action) => {
 
     if (checkCellDangerStatus(state, action.location) !== 'fire') {
       if (checkCellDangerStatus(state, action.location) === 'smoke') {
-        console.log('test1')
         return state.set(action.location, fromJS({
           location: action.location,
           kind: 'fire',
           status: 1
         }))
       } else if (checkCellDangerStatus(state, action.location) === undefined && hasAdjacentFire(state, action.location) === true) {
-        console.log('test2')
         return state.set(action.location, fromJS({
           location: action.location,
           kind: 'fire',
           status: 1
         }))
       } else {
-        console.log('test3')
         return state.set(action.location, fromJS({
           location: action.location,
           kind: 'smoke',
@@ -318,14 +315,16 @@ const dangerReducer = (state = initial, action) => {
     console.log('cellsToSetFire', toSetFire)
     let newState
     for (var j = 0; j < toSetFire.length; j++) {
-      console.log('explosion happened, fire is spreading in cell:', toSetFire[j])
-      newState = state.set(toSetFire[i], fromJS({
+      console.log('toSetFire', typeof (Number(toSetFire[i])))
+      let fireLoc = Number(toSetFire[i])
+      console.log('fireLoc', fireLoc)
+      newState = state.set(fireLoc, fromJS({
         location: toSetFire[i],
         kind: 'fire',
         status: 1
       }))
     }
-    console.log('newState', newState)
+    console.log('newState', newState.toObject())
     return newState
   }
 

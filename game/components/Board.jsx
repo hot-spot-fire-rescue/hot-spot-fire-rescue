@@ -108,7 +108,6 @@ class Board extends React.Component {
 
     // always check if there is explosion, trigger explosion if target cell is already on fire
     if (cellDangerStatus(locationToAddSmoke) === 'fire') {
-      console.log('going to dispatch explosion!')
       this.props.explode(actionCellDangerStatus, locationToAddSmoke, boundariesObj)
     }
 
@@ -129,24 +128,18 @@ class Board extends React.Component {
     this.props.checkFireDamage(fireLocations.toArray())
     // add new POI only if < 3 are on board
     const poiStatusCount = this.props.victims.countBy(poi => poi.status)
-    console.log('if works1', this.props.danger.getIn([14, 'kind']))
     if ((poiStatusCount.get(0, 0) + poiStatusCount.get(1, 0)) < 3) {
-      console.log('if works2', this.props.danger.getIn([14, 'kind']))
       let locationToAddPoi = 0
       const hasPoiOrCharacter = (location) => (
         Boolean(this.props.players.find(player => player.location === location) ||
                 this.props.victims.find(victim => victim.location === location))
       )
-      console.log('if works3', this.props.danger.getIn([14, 'kind']))
       while (!(isValid(locationToAddPoi) &&
              !hasPoiOrCharacter(locationToAddPoi))) {
         locationToAddPoi = Math.floor(Math.random() * 79) + 1
       }
-      console.log('if works4', this.props.danger.getIn([14, 'kind']))
       this.props.removeDanger(locationToAddPoi) // clear fire and smoke
-      console.log('if works5', this.props.danger.getIn([14, 'kind']))
       this.props.addPoi(locationToAddPoi)
-      console.log('if works6', this.props.danger.getIn([14, 'kind']))
     }
   }
 
@@ -250,7 +243,6 @@ class Board extends React.Component {
     }
 
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
-    console.log('before return', danger.getIn([14, 'kind']))
     return (
       <div>
         <br></br>
