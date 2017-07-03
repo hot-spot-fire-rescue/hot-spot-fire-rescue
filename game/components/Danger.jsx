@@ -52,8 +52,7 @@ class Danger extends React.Component {
     if (kind === 'fire' && status === 1) {
       return (
         <div>
-          <div className='fire'
-            id={location} style={{backgroundColor: 'red'}} onClick={this.handleClick}/>
+          <img src='/images/fire.gif' className='fire' onClick={this.handleClick}/>
           <Popover
           open={this.state.open}
           anchorEl={this.state.anchorEl}
@@ -62,37 +61,36 @@ class Danger extends React.Component {
           onRequestClose={this.handleRequestClose}
         >
           <Menu>
-            <MenuItem primaryText="Change To Smoke" onClick={()=> fireToSmoke(location, nextBoundary)}/>
+            <MenuItem primaryText="Change To Smoke" onClick={() => fireToSmoke(location, nextBoundary)}/>
             <MenuItem primaryText="Extinguish Fire" onClick={() => removeFire(location, nextBoundary)}/>
           </Menu>
         </Popover>
       </div>
       )
-      } else if (kind === 'smoke' && status === 1) {
-        return (
-          <div>
-            <div className='fire'
-              id={location} style={{backgroundColor: 'grey'}} onClick={this.handleClick}/>
-            <Popover
-            open={this.state.open}
-            anchorEl={this.state.anchorEl}
-            anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-            targetOrigin={{horizontal: 'left', vertical: 'top'}}
-            onRequestClose={this.handleRequestClose}
-          >
-            <Menu>
-              <MenuItem primaryText="Change To Fire" onClick={()=> smokeToFire(location, nextBoundary)}/>
-              <MenuItem primaryText="Extinguish Smoke" onClick={() => removeSmoke(location, nextBoundary)}/>
-            </Menu>
-          </Popover>
-        </div>
-        )
-      } else {
-        return (
+    } else if (kind === 'smoke' && status === 1) {
+      return (
         <div>
-        </div>
-        )
-      }
+          <img src='/images/smoke.gif' className={'fire smoke'} onClick={this.handleClick}/>
+          <Popover
+          open={this.state.open}
+          anchorEl={this.state.anchorEl}
+          anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+          targetOrigin={{horizontal: 'left', vertical: 'top'}}
+          onRequestClose={this.handleRequestClose}
+        >
+          <Menu>
+            <MenuItem primaryText="Change To Fire" onClick={() => smokeToFire(location, nextBoundary)}/>
+            <MenuItem primaryText="Extinguish Smoke" onClick={() => removeSmoke(location, nextBoundary)}/>
+          </Menu>
+        </Popover>
+      </div>
+      )
+    } else {
+      return (
+      <div>
+      </div>
+      )
+    }
   }
 }
 
