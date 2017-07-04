@@ -7,6 +7,49 @@
   margin: 20px
 }
 
+.homepage-background {
+  background-image: url('/images/homepage_background.jpg');
+  background-size: cover;
+  height: 100vh
+}
+
+.panel {
+  position: relative;
+  left: 630px;
+  right: 80px;
+  top: 380px;
+  width: 680px;
+  color: lightgray;
+  font-size: x-large;
+  font-family: fantasy;
+  margin-bottom: 20px;
+  border-radius: 20px;
+  background: rgba(46, 51, 56, 0.7)!important;
+  border-color: rgba(46, 51, 56, 0.9)!important;
+}
+
+.panel-heading {
+  font-size: xx-large;
+  color: lightgray;
+  text-align: center;
+  background: rgba(46, 51, 56, 0.8)!important;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px
+}
+
+.form-group {
+  position: relative;
+  left: 45px;
+  margin-bottom: 12px;
+}
+
+.signup {
+  font-family: fantasy;
+  font-size: xx-large;
+  color: lightgray;
+  background-color: rgba(46, 51, 56, 0.8);
+}
+
 .gameboard {
   background-image: url('/images/board.jpg');
   background-size: 900px 720px;

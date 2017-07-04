@@ -69,7 +69,7 @@ export default class Signup extends Component {
 
   render() {
     return (
-      <div>
+      <div className = 'signup-background'>
         <Form horizontal onSubmit={this.handleSubmit}>
 
           <FormGroup controlId="formName">
@@ -101,7 +101,7 @@ export default class Signup extends Component {
 
           <FormGroup>
             <Col smOffset={4} sm={10}>
-              <Button type="submit" value="Signup">
+              <Button className='signup' type="submit" value="Signup">
                 Sign Up
               </Button>
             </Col>

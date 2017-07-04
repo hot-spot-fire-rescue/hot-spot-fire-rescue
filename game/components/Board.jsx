@@ -190,7 +190,7 @@ class Board extends React.Component {
       // Building collapsed!
       console.info(`GAME OVER: The building collapsed`)
     }
-    if (this.lostVictimCount() > 4) {
+    if (this.lostVictimCount() > 3) {
       // Defeat - 4 victims were lost
       console.info(`GAME OVER: 4 victims were lost`)
     }
