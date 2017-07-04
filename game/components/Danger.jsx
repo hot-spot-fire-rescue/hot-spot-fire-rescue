@@ -3,6 +3,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {fireToSmoke, smokeToFire, removeFire, removeSmoke} from '../reducers/danger'
 import {sortCoord} from '../reducers/boundary'
+import RaisedButton from 'material-ui/RaisedButton'
 import Popover from 'material-ui/Popover'
 import Menu from 'material-ui/Menu'
 import MenuItem from 'material-ui/MenuItem'
@@ -11,7 +12,6 @@ class Danger extends React.Component {
   constructor(props) {
     super(props)
     this.state={
-      anchorE1: null,
       open: false
     }
     this.handleClick = this.handleClick.bind(this)
@@ -24,6 +24,7 @@ class Danger extends React.Component {
       open: true,
       anchorE1: event.currentTarget
     })
+    console.log('~~~~~', this.state.anchorE1)
   }
 
   handleRequestClose() {
@@ -52,17 +53,19 @@ class Danger extends React.Component {
     if (kind === 'fire' && status === 1) {
       return (
         <div>
-          <img src='/images/fire.gif' className='fire' onClick={this.handleClick}/>
-          <Popover
+          
+          <img src='/images/fire.gif' className='fire' onTouchTap = {this.handleClick}/>}
+          
+          <Popover 
           open={this.state.open}
           anchorEl={this.state.anchorEl}
-          anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+          anchorOrigin={{horizontal: 'middle', vertical: 'bottom'}}
           targetOrigin={{horizontal: 'left', vertical: 'top'}}
           onRequestClose={this.handleRequestClose}
         >
           <Menu>
-            <MenuItem primaryText="Change To Smoke" onClick={() => fireToSmoke(location, nextBoundary)}/>
-            <MenuItem primaryText="Extinguish Fire" onClick={() => removeFire(location, nextBoundary)}/>
+            <MenuItem primaryText="Change To Smoke" onTouchTap={() => fireToSmoke(location, nextBoundary)}/>
+            <MenuItem primaryText="Extinguish Fire" onTouchTap={() => removeFire(location, nextBoundary)}/>
           </Menu>
         </Popover>
       </div>
@@ -70,7 +73,7 @@ class Danger extends React.Component {
     } else if (kind === 'smoke' && status === 1) {
       return (
         <div>
-          <img src='/images/smoke.gif' className={'fire smoke'} onClick={this.handleClick}/>
+          <img src='/images/smoke.gif' className={'fire smoke'} onTouchTap = {this.handleClick}/>
           <Popover
           open={this.state.open}
           anchorEl={this.state.anchorEl}
@@ -79,8 +82,8 @@ class Danger extends React.Component {
           onRequestClose={this.handleRequestClose}
         >
           <Menu>
-            <MenuItem primaryText="Change To Fire" onClick={() => smokeToFire(location, nextBoundary)}/>
-            <MenuItem primaryText="Extinguish Smoke" onClick={() => removeSmoke(location, nextBoundary)}/>
+            <MenuItem primaryText="Change To Fire" onTouchTap={() => smokeToFire(location, nextBoundary)}/>
+            <MenuItem primaryText="Extinguish Smoke" onTouchTap={() => removeSmoke(location, nextBoundary)}/>
           </Menu>
         </Popover>
       </div>

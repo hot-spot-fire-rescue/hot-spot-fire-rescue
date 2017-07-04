@@ -9,6 +9,9 @@ import NotFound from './components/NotFound'
 import firebase from 'APP/fire'
 
 import Game from 'APP/game'
+import injectTapEventPlugin from 'react-tap-event-plugin'
+
+injectTapEventPlugin()
 
 // Get the auth API from Firebase.
 const auth = firebase.auth()
