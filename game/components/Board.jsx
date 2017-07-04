@@ -31,6 +31,7 @@ import {
 } from '../reducers/danger'
 import reducer from '../reducers/'
 import Chatroom from './Chatroom'
+import GameEnd from './GameEnd'
 
 import firebase from 'APP/fire'
 const fbAuth = firebase.auth()
@@ -186,18 +187,24 @@ class Board extends React.Component {
   }
 
   didGameEnd() {
+    const results = [['YOU WON', 'Great job! You rescued 7 victims from the burning buliding'],['GAME OVER', 'The building collapsed'],['GAME OVER', '4 victims were lost']],
+    let info
     if (this.damageCount() > 23) {
       // Building collapsed!
       console.info(`GAME OVER: The building collapsed`)
+      info = results[1]
     }
     if (this.lostVictimCount() > 4) {
       // Defeat - 4 victims were lost
       console.info(`GAME OVER: 4 victims were lost`)
+      info = results[2]
     }
     if (this.rescuedVictimCount > 6) {
       // Victory - 7 victims were rescued!
       console.info(`YOU WON! You rescued 7 victims from the burning buliding`)
+      info = results[0]
     }
+    return info
   }
 
   onPlayerSubmit(event) {
@@ -234,6 +241,7 @@ class Board extends React.Component {
     let handleEndTurnClick = this.handleEndTurnClick
     let handlePoiClick = this.handlePoiClick
     let damageCount = this.damageCount
+    let didGameEnd = this.didGameEnd
     let rescuedVictimCount = this.rescuedVictimCount
     let lostVictimCount = this.lostVictimCount
     let condition
@@ -319,6 +327,9 @@ class Board extends React.Component {
             </ul>
             {
               (!this.state.gameStarted && !spectating)?<button onClick={() => this.setState({gameStarted: true})}>Start the Game</button>:<div></div>
+            }
+            {
+              didGameEnd() ? <GameEnd info={didGameEnd()} /> : null
             }
 
             <br></br>
