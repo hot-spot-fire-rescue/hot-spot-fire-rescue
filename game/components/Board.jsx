@@ -359,7 +359,7 @@ class Board extends React.Component {
                   const poi = victims.find((val) => val.location === cell.cellNum)
                   const fire = danger.get(cell.cellNum)
                   return (
-                    <div key={cell.cellNum}
+                    <div key={cell.cellNum} id={cell.cellNum}
                       className={isLegalCell(cell) ? 'cell-highlighted' : 'cell'}
                       onClick={(evt) => handleCellClick(evt, cell)}>
                       {
