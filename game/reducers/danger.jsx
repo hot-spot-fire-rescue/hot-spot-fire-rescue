@@ -81,11 +81,9 @@ export const flashOver = (boundaries) => ({
   boundaries
 })
 
-
 // -- // -- // State // -- // -- //
 
 const initial = List()
-
 
 // -- // -- // Helper // -- // -- //
 const sortCoord = (location, adjLocation) => {
@@ -137,7 +135,6 @@ export const openBoundary = (location, adjLocation, boundaries) => {
   return true
 }
 
-
 const hasAdjacentFire = (danger, location, boundaries) => {
   if (openBoundary(location, location + 10, boundaries) && checkCellDangerStatus(danger, location + 10) === 'fire') {
     return true
@@ -175,7 +172,6 @@ const nextAdj = (i) => {
     return -1
   }
 }
-
 
 const findSmoke = (danger) => {
   const dangerList = danger.toObject()

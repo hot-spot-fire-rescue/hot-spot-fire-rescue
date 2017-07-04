@@ -2,6 +2,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import {Grid, Row, Col, Clearfix, Image} from 'react-bootstrap'
+import Alert from 'react-s-alert'
 
 import { setupBoard } from '../utils/setup'
 import {
@@ -65,6 +66,7 @@ class Board extends React.Component {
       if (!snapshot.exists()) this.props.fetchInitialData()
     })
   }
+
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
@@ -72,6 +74,18 @@ class Board extends React.Component {
       }
     })
   }
+
+  componentWillReceiveProps(nextProps) {
+    const popup = nextProps.victimsPopup
+    if (popup.event === 'lost') {
+      Alert.error(popup.message)
+    } else if (popup.event === 'success') {
+      Alert.success(popup.message)
+    } else if (popup.event === 'info') {
+      Alert.info(popup.message)
+    }
+  }
+
   handleWallDamage(event, wall) {
     event.stopPropagation()
     this.props.changeWallStatus(wall)
@@ -376,7 +390,7 @@ class Board extends React.Component {
                         && <div className={`poi poi-unrevealed`}/>
                       }
                       {
-                        poi && poi.status === 1 && !poi.carriedBy
+                        poi && poi.status === 1 && (poi.carriedBy === null)
                         && <div className={`poi poi-${poi.type}`}
                           onClick={(evt) => handlePoiClick(evt, poi, player)} />
                       }
@@ -471,6 +485,7 @@ const mapState = ({ board, boundary, player, victim, danger }) => ({
   boundaries: boundary,
   players: player.players,
   victims: victim.poi,
+  victimsPopup: victim.popup,
   currentPlayerId: player.currentId,
   danger: danger
 })
