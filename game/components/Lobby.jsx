@@ -7,7 +7,7 @@ let added = false
 const gamesArray = [1, 2, 3, 4, 5]
 const Lobby = (props) => {
   return (
-    <div>
+    <div className='lobby-background'>
       <h1>Lobby</h1>
       {/*console.log('PROPS', props)*/}
       {/*console.log(this)*/}
@@ -28,7 +28,7 @@ const Lobby = (props) => {
           gamesArray.push(n)
           // console.log('HIIIIII', gamesArray)
           return gamesArray
-        } }> Click here to add an array</button>
+        } }> Add Lobby</button>
       {/*console.log(gamesArray)*/}
     </div>
   )

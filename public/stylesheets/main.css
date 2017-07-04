@@ -21,15 +21,20 @@
 }
 
 .homepage-background {
-  background-image: url('/images/homepage_background.jpg');
+  background-image: url('/images/homepage_bg.jpg');
   background-size: cover;
   height: 100vh
 }
 
 #golobby {
   top: 120;
-  font-family: fantasy;
-  color: lightgray;
+  font-family: abadi MT condensed;
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+#gorule {
+  font-family: abadi MT condensed;
   font-size: xx-large;
   font-weight: bold;
 }
@@ -42,7 +47,7 @@
   width: 680px;
   color: lightgray;
   font-size: x-large;
-  font-family: fantasy;
+  font-family: abadi MT condensed;
   margin-bottom: 20px;
   border-radius: 20px;
   background: rgba(46, 51, 56, 0.7)!important;
@@ -56,7 +61,7 @@
 }
 
 .signup {
-  font-family: fantasy;
+  font-family: abadi MT condensed;
   font-size: xx-large;
   color: lightgray;
   background-color: rgba(46, 51, 56, 0.8);
@@ -90,9 +95,13 @@
   width: 70%;
   height: 70%;
   z-index: 15;
-  background-color: rgba(0, 0, 128, 0.7);
+  background-color: rgba(46, 51, 56, 0.8);
   border: 6px #23527c;
   border-radius: 25px 25px 25px 25px;
+}
+
+.whoami {
+  color: white
 }
 
 .rule-title {
@@ -104,7 +113,7 @@
 }
 
 .rulecontent {
-  font-family: fantasy;
+  font-family: abadi MT condensed;
   color: white;
   text-align: center;
 }
@@ -114,7 +123,17 @@
   top: 60px;
   left: 830px;
   font-size: xx-large;
-  font-family: fantasy
+  font-family: abadi MT condensed
+}
+
+.homepage-nav {
+  background-color: black
+}
+
+.lobby-background {
+  background-image: url('images/lobby-bg.jpg');
+  height: 100vh;
+  background-size: cover
 }
 
 .row {
