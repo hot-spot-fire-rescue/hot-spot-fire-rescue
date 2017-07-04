@@ -13,6 +13,7 @@
   margin: 0;
   line-height: 0px;
   width: 900px;
+  height: 720px;
   z-index: -1;
 }
 
@@ -22,7 +23,39 @@
 }
 
 .cell {
-  border: 1px solid black;
+  /*border: 1px solid black;*/
+  width: 90px;
+  height: 90px;
+  display: inline-block;
+  position: relative;
+}
+
+@-webkit-keyframes pulse {
+  0% {
+    background: hsla(55, 48%, 57%, 0.2);
+  }
+  50% {
+    background: hsla(55, 48%, 57%, 0.6);
+  }
+  100% {
+    background: transparent;
+  }
+}
+@keyframes pulse {
+  0% {
+    background: hsla(55, 48%, 57%, 0.2);
+  }
+  50% {
+    background: hsla(55, 48%, 57%, 0.6);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+.cell-highlighted {
+  -webkit-animation: pulse 1.6s ease-in-out infinite alternate;
+  animation: pulse 1.6s ease-in-out infinite alternate;
   width: 90px;
   height: 90px;
   display: inline-block;
@@ -36,7 +69,7 @@
 /* Walls */
 
 .horizontal-wall {
-  background-color: black;
+  /*background-color: black;*/
   width: 90px;
   height: 15px;
   top: 78px;
@@ -45,7 +78,7 @@
 }
 
 .vertical-wall {
-  background-color: black;
+  /*background-color: black;*/
   width: 15px;
   height: 90px;
   left: 78px;
@@ -86,7 +119,7 @@
 
 .door {
   background-size: 44px;
-  border: 1px solid black;
+  /*border: 1px solid black;*/
   border-radius: 46px;
   width: 46px;
   height: 46px;

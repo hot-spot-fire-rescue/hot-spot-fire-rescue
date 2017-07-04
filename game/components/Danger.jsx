@@ -1,35 +1,36 @@
 'use strict'
 import React from 'react'
 import {connect} from 'react-redux'
-import {fireToSmoke, smokeToFire, removeFire, removeSmoke} from '../reducers/danger'
-import {sortCoord} from '../reducers/boundary'
 import RaisedButton from 'material-ui/RaisedButton'
 import Popover from 'material-ui/Popover'
 import Menu from 'material-ui/Menu'
 import MenuItem from 'material-ui/MenuItem'
 
+import {fireToSmoke, smokeToFire, removeFire, removeSmoke} from '../reducers/danger'
+import {sortCoord} from '../reducers/boundary'
+
 class Danger extends React.Component {
   constructor(props) {
     super(props)
-    this.state={
+    this.state = {
       open: false
     }
   }
 
   handleTouchTap = (event) => {
     // This prevents ghost click.
-    event.preventDefault();
+    event.preventDefault()
 
     this.setState({
       open: true,
       anchorEl: event.currentTarget,
-    });
+    })
   };
 
   handleRequestClose = () => {
     this.setState({
       open: false,
-    });
+    })
   };
 
   render() {
@@ -52,18 +53,16 @@ class Danger extends React.Component {
     if (kind === 'fire' && status === 1) {
       return (
         <div>
-          
-          <img src='/images/fire.gif' className='fire' onTouchTap = {this.handleTouchTap}/>}
-          
-          <Popover 
-          open={this.state.open}
-          anchorEl={this.state.anchorEl}
-          anchorOrigin={{horizontal: 'middle', vertical: 'bottom'}}
-          targetOrigin={{horizontal: 'left', vertical: 'top'}}
-          onRequestClose={this.handleRequestClose}
-        >
+          <img src='/images/fire.gif' className='fire' onTouchTap={this.handleTouchTap}/>
+          <Popover
+            open={this.state.open}
+            anchorEl={this.state.anchorEl}
+            anchorOrigin={{horizontal: 'middle', vertical: 'bottom'}}
+            targetOrigin={{horizontal: 'left', vertical: 'top'}}
+            onRequestClose={this.handleRequestClose}
+            >
           <Menu>
-            <MenuItem primaryText="Change To Smoke" onTouchTap={() => fireToSmoke(location, nextBoundary)}/>
+            <MenuItem primaryText="Extinguish To Smoke" onTouchTap={() => fireToSmoke(location, nextBoundary)}/>
             <MenuItem primaryText="Extinguish Fire" onTouchTap={() => removeFire(location, nextBoundary)}/>
           </Menu>
         </Popover>
@@ -72,7 +71,7 @@ class Danger extends React.Component {
     } else if (kind === 'smoke' && status === 1) {
       return (
         <div>
-          <img src='/images/smoke.gif' className={'fire smoke'} onTouchTap = {this.handleTouchTap}/>
+          <img src='/images/smoke.gif' className={'fire smoke'} onTouchTap={this.handleTouchTap}/>
           <Popover
           open={this.state.open}
           anchorEl={this.state.anchorEl}
@@ -81,7 +80,6 @@ class Danger extends React.Component {
           onRequestClose={this.handleRequestClose}
         >
           <Menu>
-            <MenuItem primaryText="Change To Fire" onTouchTap={() => smokeToFire(location, nextBoundary)}/>
             <MenuItem primaryText="Extinguish Smoke" onTouchTap={() => removeSmoke(location, nextBoundary)}/>
           </Menu>
         </Popover>
