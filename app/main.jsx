@@ -23,7 +23,7 @@ const App = ({children}) => (
         <WhoAmI auth={auth}/>
       </nav>
       {children}
-      <Alert stack={{limit: 3}} position='bottom-right' effect='slide'/>
+      <Alert stack={{limit: 1}} position='bottom-right' effect='slide'/>
     </div>
   </MuiThemeProvider>
 )
