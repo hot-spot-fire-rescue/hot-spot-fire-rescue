@@ -1,6 +1,6 @@
 'use strict'
 import React from 'react'
-import {Route, IndexRedirect, IndexRoute, Link} from 'react-router'
+import { Route, IndexRedirect, IndexRoute, Link } from 'react-router'
 
 let n = 5
 let added = false
@@ -12,15 +12,18 @@ const Lobby = (props) => {
       {/*console.log('PROPS', props)*/}
       {/*console.log(this)*/}
       {/*console.log(gamesArray)*/}
-      <h2><Link to='/home'>Home</Link></h2>
-      <h2><Link to= '/rules'>GAME RULE</Link></h2>
+      <h2><Link to='/home'>HOME</Link></h2>
+      <h2><Link to='/rules'>GAME RULE</Link></h2>
       <h2><Link to='/game/test'>START GAME</Link></h2>
-      <p>
-        Our preliminary board for Hot Spot
+      <div className = 'onfire-image'></div>
+      <div className= 'game-name'></div>
+      <div className='lobby-list'>
+        <p className='choose-lobby'>
+          CHOOSE A LOBBY
       </p>
         <div>
           {
-            gamesArray.map((game) => (<h2><Link to={`/game/${game}`}>START ANOTHER GAME: {game}</Link></h2>))
+            gamesArray.map((game) => (<h2><Link className='lobby-link' to={`/game/${game}`}>GAME LOBBY: {game}</Link></h2>))
           }
         </div>
         <button onClick={() => {
@@ -28,8 +31,9 @@ const Lobby = (props) => {
           gamesArray.push(n)
           // console.log('HIIIIII', gamesArray)
           return gamesArray
-        } }> Add Lobby</button>
-      {/*console.log(gamesArray)*/}
+        }}> Add Lobby</button>
+        {/*console.log(gamesArray)*/}
+      </div>
     </div>
   )
 }
