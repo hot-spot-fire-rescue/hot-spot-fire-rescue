@@ -14,24 +14,23 @@ class Danger extends React.Component {
     this.state={
       open: false
     }
-    this.handleClick = this.handleClick.bind(this)
-    this.handleRequestClose = this.handleRequestClose.bind(this)
   }
 
-  handleClick(event) {
-    event.preventDefault()
+  handleTouchTap = (event) => {
+    // This prevents ghost click.
+    event.preventDefault();
+
     this.setState({
       open: true,
-      anchorE1: event.currentTarget
-    })
-    console.log('~~~~~', this.state.anchorE1)
-  }
+      anchorEl: event.currentTarget,
+    });
+  };
 
-  handleRequestClose() {
+  handleRequestClose = () => {
     this.setState({
       open: false,
-    })
-  }
+    });
+  };
 
   render() {
     const {
@@ -54,7 +53,7 @@ class Danger extends React.Component {
       return (
         <div>
           
-          <img src='/images/fire.gif' className='fire' onTouchTap = {this.handleClick}/>}
+          <img src='/images/fire.gif' className='fire' onTouchTap = {this.handleTouchTap}/>}
           
           <Popover 
           open={this.state.open}
@@ -73,7 +72,7 @@ class Danger extends React.Component {
     } else if (kind === 'smoke' && status === 1) {
       return (
         <div>
-          <img src='/images/smoke.gif' className={'fire smoke'} onTouchTap = {this.handleClick}/>
+          <img src='/images/smoke.gif' className={'fire smoke'} onTouchTap = {this.handleTouchTap}/>
           <Popover
           open={this.state.open}
           anchorEl={this.state.anchorEl}
