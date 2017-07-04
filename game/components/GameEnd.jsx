@@ -6,8 +6,9 @@ import FlatButton from 'material-ui/FlatButton'
 import RaisedButton from 'material-ui/RaisedButton'
 
 const customContentStyle = {
-  width: '100%',
-  maxWidth: 'none',
+  // width: '100%',
+  // maxWidth: 'none',
+  backgroundImage: "url('/images/board.jpg')",
 }
 
 export class GameEnd extends React.Component {
@@ -45,6 +46,7 @@ export class GameEnd extends React.Component {
           modal={true}
           contentStyle={customContentStyle}
           open={this.state.open}
+          style={{backgroundImage:"url('/images/board.jpg')" }}
         >
           {this.props.info[1]}
         </Dialog>

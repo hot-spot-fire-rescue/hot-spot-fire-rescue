@@ -202,14 +202,14 @@ class Board extends React.Component {
   }
 
   didGameEnd() {
-    const results = [['YOU WON', 'Great job! You rescued 7 victims from the burning buliding'],['GAME OVER', 'The building collapsed'],['GAME OVER', '4 victims were lost']],
+    const results = [['YOU WON', 'Great job! You rescued 7 victims from the burning buliding'],['GAME OVER', 'The building collapsed'],['GAME OVER', '4 victims were lost']]
     let info
-    if (this.damageCount() > 23) {
+    if (this.damageCount() > 1) {
       // Building collapsed!
       console.info(`GAME OVER: The building collapsed`)
       info = results[1]
     }
-    if (this.lostVictimCount() > 4) {
+    if (this.lostVictimCount() > 3) {
       // Defeat - 4 victims were lost
       console.info(`GAME OVER: 4 victims were lost`)
       info = results[2]
