@@ -7,7 +7,6 @@ import Signup from 'APP/app/components/Signup'
 import Lobby from './components/Lobby'
 import GamePageWrapper from './GamePageWrapper'
 
-// TODO: Show sign in component if not signed in, else show list of lobbies
 const HomePage = ({children}) => <div>
   <h1>Home Page</h1>
   <h2><Link to='/lobby/test'>Go to Test Lobby</Link></h2>

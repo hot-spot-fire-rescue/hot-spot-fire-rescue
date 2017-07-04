@@ -61,7 +61,6 @@ const initialPoiList = [
   [4, 0, 58]
 ]
 
-// create rest of 12 POIs here with status -1
 // TODO: randomize every game
 const hiddenPoiList = () => {
   const poiIdList = [3, 7, 1, 8, 5, 10, 14, 6, 9, 2, 13, 12]

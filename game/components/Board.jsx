@@ -17,7 +17,8 @@ import {
   endTurn,
   updatePlayer,
   pickUpOrDropVictim,
-  checkForFireDamage
+  checkForFireDamage,
+  isValidNextCell
 } from '../reducers/player'
 import {
   addNextPoi
@@ -46,6 +47,7 @@ class Board extends React.Component {
       userIsPlaying: false,
       gameStarted: false
     }
+    this.isLegalCell = this.isLegalCell.bind(this)
     this.handleCellClick = this.handleCellClick.bind(this)
     this.handleDoorSwitch = this.handleDoorSwitch.bind(this)
     this.handleWallDamage = this.handleWallDamage.bind(this)
@@ -147,15 +149,28 @@ class Board extends React.Component {
     }
   }
 
+  isLegalCell(cell) {
+    let currentP = this.props.players.get(this.props.currentPlayerId)
+    if (currentP) {
+      let sortedCoords = sortCoord([cell.cellNum, currentP.location])
+      let nextCellDangerKind = this.props.danger.getIn([cell.cellNum, 'kind'], '')
+      let nextBoundary = this.props.boundaries.get(sortedCoords.toString(), '')
+
+      return isValidNextCell(cell, nextCellDangerKind, nextBoundary, currentP)
+    } else {
+      return false
+    }
+  }
+
   handleCellClick(event, cell) {
     event.stopPropagation()
 
-    if (event.target.className === 'cell') {
-      const sortedCoords = sortCoord([cell.cellNum,
+    if (event.target.className.includes('cell')) {
+      let sortedCoords = sortCoord([cell.cellNum,
         this.props.players.get(this.props.currentPlayerId).location])
-      const nextCell = this.props.cells.get(cell.cellNum)
-      const nextBoundary = this.props.boundaries.get(sortedCoords.toString(), '')
-      const nextCellDangerKind = this.props.danger.getIn([cell.cellNum, 'kind'], '')
+      let nextCell = this.props.cells.get(cell.cellNum)
+      let nextBoundary = this.props.boundaries.get(sortedCoords.toString(), '')
+      let nextCellDangerKind = this.props.danger.getIn([cell.cellNum, 'kind'], '')
 
       this.props.move(this.props.currentPlayerId,
         nextCell,
@@ -235,6 +250,7 @@ class Board extends React.Component {
       boundaries,
       fetchInitialData } = this.props
 
+    let isLegalCell = this.isLegalCell
     let handleCellClick = this.handleCellClick
     let handleDoorSwitch = this.handleDoorSwitch
     let handleWallDamage = this.handleWallDamage
@@ -354,8 +370,8 @@ class Board extends React.Component {
                   const poi = victims.find((val) => val.location === cell.cellNum)
                   const fire = danger.get(cell.cellNum)
                   return (
-                    <div key={cell.cellNum}
-                      className="cell"
+                    <div key={cell.cellNum} id={cell.cellNum}
+                      className={isLegalCell(cell) ? 'cell-highlighted' : 'cell'}
                       onClick={(evt) => handleCellClick(evt, cell)}>
                       {
                         fire
