@@ -361,8 +361,6 @@ class Board extends React.Component {
                   return (
                     <div key={cell.cellNum}
                       className={isLegalCell(cell) ? 'cell-highlighted' : 'cell'}
-                      // isLegalMove(nextCell, nextDangerKind, nextBoundary, currentPlayer
-                      // className='cell'
                       onClick={(evt) => handleCellClick(evt, cell)}>
                       {
                         fire
