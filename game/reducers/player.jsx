@@ -97,6 +97,22 @@ const isBoundaryAdjacent = (boundaryLocation, playerLocation) => {
           boundaryLocation[1] === playerLocation)
 }
 
+const isValidStartingCell = (location) => {
+  return location % 10 === 0 || (location + 1) % 10 === 0 ||
+         location < 10 || location > 70
+}
+
+export const isValidNextCell = (nextCell, nextDangerKind, nextBoundary, currentPlayer) => {
+  const ap = findMoveApCost(currentPlayer, nextCell, nextDangerKind)
+
+  return (currentPlayer.location === -1 && isValidStartingCell(nextCell)) ||
+         (nextCell.cellNum !== currentPlayer.location &&
+         isAdjacent(nextCell.cellNum, currentPlayer.location) &&
+         isPassable(nextBoundary) &&
+         hasEnoughAp(currentPlayer, ap) &&
+         !(nextDangerKind === 'fire' && currentPlayer.carriedVictim))
+}
+
 // -- // -- // State // -- // -- //
 
 const initial = {
@@ -151,9 +167,8 @@ const playerReducer = (state = initial, action) => {
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
     apCost = findMoveApCost(currentPlayer, nextCell, nextDangerKind)
-    const validStartingCell= nextCellNum%10===0 || (nextCellNum+1)%10===0 || (nextCellNum)<10 || nextCellNum > 70
-
-    if ((currentPlayer.location=== -1 && validStartingCell) || (nextCellNum !== currentPlayerLocation &&
+    if ((currentPlayer.location === -1 && isValidStartingCell(nextCellNum)) ||
+        (nextCellNum !== currentPlayerLocation &&
         isAdjacent(nextCellNum, currentPlayerLocation) &&
         isPassable(nextBoundary) &&
         hasEnoughAp(currentPlayer, apCost) &&

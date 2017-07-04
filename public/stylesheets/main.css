@@ -29,6 +29,15 @@
   position: relative;
 }
 
+.cell-highlighted {
+  border: 1px solid green;
+  background-color: hsla(55, 48%, 57%, 0.6);
+  width: 90px;
+  height: 90px;
+  display: inline-block;
+  position: relative;
+}
+
 /* Walls */
 
 .horizontal-wall {
