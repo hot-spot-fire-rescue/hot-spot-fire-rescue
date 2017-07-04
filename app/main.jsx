@@ -9,6 +9,9 @@ import NotFound from './components/NotFound'
 import firebase from 'APP/fire'
 
 import Game from 'APP/game'
+import injectTapEventPlugin from 'react-tap-event-plugin'
+
+injectTapEventPlugin()
 
 const auth = firebase.auth()
 auth.onAuthStateChanged(user => user || auth.signInAnonymously())

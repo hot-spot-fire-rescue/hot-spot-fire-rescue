@@ -61,6 +61,10 @@
   position: relative;
 }
 
+.popover {
+  top: 100px;
+}
+
 /* Walls */
 
 .horizontal-wall {
