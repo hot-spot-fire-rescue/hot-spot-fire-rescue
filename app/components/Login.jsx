@@ -29,7 +29,7 @@ export default ({ auth }) => (
   // signInWithPopup will try to open a login popup, and if it's blocked, it'll
   // redirect. If you prefer, you can signInWithRedirect, which always
   // redirects.
-  <div>
+  <div className ='login'>
     <button className='google login'
             onClick={() => auth.signInWithPopup(google)}>Login with Google</button>
     <button className='facebook login' onClick={() => auth.signInWithPopup(facebook)}>Login with Facebook</button>

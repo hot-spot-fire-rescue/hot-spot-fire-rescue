@@ -12,7 +12,8 @@ const Lobby = (props) => {
       {/*console.log('PROPS', props)*/}
       {/*console.log(this)*/}
       {/*console.log(gamesArray)*/}
-      <h2><Link to='/game/test'>Start Game</Link></h2>
+      <h2><Link to='/game/test'>START GAME</Link></h2>
+      <h2><Link to= '/rules'>GAME RULE</Link></h2>
       <p>
         Our preliminary board for Hot Spot
       </p>
