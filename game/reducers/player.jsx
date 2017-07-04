@@ -105,7 +105,7 @@ const isValidStartingCell = (location) => {
 export const isValidNextCell = (nextCell, nextDangerKind, nextBoundary, currentPlayer) => {
   const ap = findMoveApCost(currentPlayer, nextCell, nextDangerKind)
 
-  return (currentPlayer.location === -1 && isValidStartingCell(nextCell)) ||
+  return currentPlayer.location !== -1 &&
          (nextCell.cellNum !== currentPlayer.location &&
          isAdjacent(nextCell.cellNum, currentPlayer.location) &&
          isPassable(nextBoundary) &&
