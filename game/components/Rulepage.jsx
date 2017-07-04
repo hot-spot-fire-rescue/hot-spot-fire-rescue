@@ -1,13 +1,15 @@
 'use strict'
 import React from 'react'
-import {Route, IndexRedirect, IndexRoute, Link} from 'react-router'
+import { Route, IndexRedirect, IndexRoute, Link } from 'react-router'
 
 const RulePage = () => {
   return (
-    <div className = 'rule-background'>
-      <h1>THIS IS THE RULE OF GAME </h1>
-      <p>This is the detail of rules .. pls read before start</p>
-      <h1><Link to='/lobby/test'>BACK TO LOBBY</Link></h1>
+    <div className='rule-background'>
+      <h1 className ='rule-lobby'><Link to='/lobby/test'>BACK TO LOBBY</Link></h1>
+      <div id='gamerule'>
+        <h1 className='rulecontent rule-title'>This is the Rules of the game</h1>
+        <p className='rulecontent rule-paragraph'>Please read before starting the game !</p>
+      </div>
     </div>
   )
 }

@@ -74,13 +74,47 @@
   line-height: 0px;
   width: 900px;
   z-index: -1;
+  border-radius: 20px
 }
 
 .rule-background {
-
   background-image: url('/images/rules.jpg');
   background-size: cover;
   height: 100vh
+}
+
+#gamerule {
+  position: absolute;
+  top: 200px;
+  left: 290px;
+  width: 70%;
+  height: 70%;
+  z-index: 15;
+  background-color: rgba(0, 0, 128, 0.7);
+  border: 6px #23527c;
+  border-radius: 25px 25px 25px 25px;
+}
+
+.rule-title {
+  font-size: xxx-large;
+}
+
+.rule-paragraph {
+  font-size: large
+}
+
+.rulecontent {
+  font-family: fantasy;
+  color: white;
+  text-align: center;
+}
+
+.rule-lobby {
+  position: absolute;
+  top: 60px;
+  left: 830px;
+  font-size: xx-large;
+  font-family: fantasy
 }
 
 .row {
