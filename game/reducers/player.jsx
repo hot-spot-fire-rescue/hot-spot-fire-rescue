@@ -9,12 +9,12 @@ import {findClosestAmbulance} from '../utils/functions'
 // -- // -- // Actions // -- // -- //
 
 export const CREATE_PLAYER = 'CREATE_PLAYER'
-export const createPlayer = (id, ap, location, color, username) => ({
+export const createPlayer = (id, ap, location, avatar, username) => ({
   type: CREATE_PLAYER,
   id,
   ap,
   location,
-  color,
+  avatar,
   username
 })
 
@@ -123,7 +123,7 @@ const playerReducer = (state = initial, action) => {
         id: action.id,
         ap: action.ap,
         location: action.location,
-        color: action.color,
+        avatar: action.avatar,
         username: action.username,
         carriedVictim: null,
         uid: null,

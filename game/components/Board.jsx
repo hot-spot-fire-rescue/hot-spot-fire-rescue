@@ -42,8 +42,9 @@ class Board extends React.Component {
     this.state= {
       currentUserId: '',
       currentUsername: '',
-      userIsPlaying: false,
-      gameStarted: false
+      userIsPlaying: true,
+      gameStarted: false,
+      value: ''
     }
     this.handleCellClick = this.handleCellClick.bind(this)
     this.handleDoorSwitch = this.handleDoorSwitch.bind(this)
@@ -56,6 +57,8 @@ class Board extends React.Component {
     this.didGameEnd = this.didGameEnd.bind(this)
     this.onPlayerSubmit = this.onPlayerSubmit.bind(this)
     this.removePlayerCallback = this.removePlayerCallback.bind(this)
+    this.handleGameStatusChange=this.handleGameStatusChange.bind(this)
+    this.handleChange= this.handleChange.bind(this)
   }
 
   componentWillMount() {
@@ -69,6 +72,15 @@ class Board extends React.Component {
         this.setState({ currentUserId: user.uid, currentUsername: user.displayName })
       }
     })
+    console.log('GAME STATUS IN MOUNT YAYAYAYAYAWWAHAHAHAHHA', this.state.gameStarted)
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value})
+    console.log(event.target.value)
+  }
+  handleGameStatusChange() {
+    this.setState({gameStarted: true})
   }
   handleWallDamage(event, wall) {
     event.stopPropagation()
@@ -206,9 +218,10 @@ class Board extends React.Component {
       id: this.state.currentUserId,
       ap: 5,
       location: -1,
-      color: event.target.color.value,
+      avatar: event.target.avatar.value,
       username: this.state.currentUsername
     }
+    console.log('TESTING AVATAR', playerInfo)
     this.props.createAPlayer(playerInfo)
     this.setState({userIsPlaying: true})
   }
@@ -237,15 +250,15 @@ class Board extends React.Component {
     let rescuedVictimCount = this.rescuedVictimCount
     let lostVictimCount = this.lostVictimCount
     let condition
-
+    let gameHasStarted= this.state.gameStarted
     if (players.size > 0) {
       condition = players.get(currentPlayerId).id !== this.state.currentUserId
     }
 
-    let tooManyPlayers = players.size > 6
+    let tooManyPlayers = players.size > 5
     let notEnoughPlayers = players.size < 2
     let spectating = this.state.userIsPlaying === false
-    let doNotShowTheBoard = notEnoughPlayers && !spectating
+    let doNotShowTheBoard = (notEnoughPlayers && !spectating) || gameHasStarted ===false
     if (condition || spectating || this.state.gameStarted === false) {
       handleCellClick = () => (console.log('It is not your turn yet.  Have patience, padawan'))
       handleDoorSwitch = () => (console.log('It is not your turn yet.  Have patience, padawan'))
@@ -259,12 +272,25 @@ class Board extends React.Component {
       { doNotShowTheBoard
         ? (
           <div>
+            <h1>WDFFFFF HAS BEEN UPDATED</h1>
+            {console.log('DID GAME START HUHHHHHHH', this.state.gameStarted)}
           <h1>Add a Player</h1>
             <div className="row col-lg-4">
               <form onSubmit={this.onPlayerSubmit}>
               <div className="form-group">
-                <label htmlFor="color"></label>
-                <input className="form-control" type="color" id="color"/>
+                <label htmlFor="avatar"></label>
+                  <img className='player' src= {this.state.value} style={{display: 'block', position: 'inherit'}}/>
+                  <select id="avatar" onChange={this.handleChange} value={this.state.value}>
+                    <option value="--">Select One</option>
+                    <option value="/images/avatars/Jing.png">Jing</option>
+                    <option value="/images/avatars/Dalmatian.png">Dalmatian</option>
+                    <option value='/images/avatars/Firewoman.png'>Firewoman</option>
+                    <option value='/images/avatars/Sarah.png'>Schubsman</option>
+                    <option value='/images/avatars/YellowPuppy.png'>Golden Retriever Puppy</option>
+                    <option value='/images/avatars/FirefightingPotato.png'>Firefighting Potato</option>
+                    <option value='/images/avatars/Octocat.png'>Octocat</option>
+
+                  </select>
               </div>
                 <button className="btn btn-default" type="submit" disabled={tooManyPlayers}>Add New Player</button>
               </form>
@@ -273,14 +299,19 @@ class Board extends React.Component {
               {
                 players.map((player) => {
                   let idx = players.indexOf(player)
+                  let left='0px'
+                  if (idx === currentPlayerId) left='20px'
                   return (
                     <div key={idx}>
-                      <li style={{color: `${player.color}`}}> <p style={{color: `${player.color}`}}>{player.username} </p></li><button id={idx} onClick= {this.removePlayerCallback} disabled={player.id!==this.state.currentUserId}>X</button>
+                      <li><img className='player' src= {player.avatar} style={{paddingLeft: {left}, display: 'block', position: 'inherit'}}/><p>{player.username} </p></li><button id={idx} onClick= {this.removePlayerCallback} disabled={player.id!==this.state.currentUserId}>X</button>
                     </div>
                   )
                 })
               }
             </ul>
+            {
+              <button onClick={this.handleGameStatusChange}>Start/Resume the Game</button>
+            }
             <button disabled={players.size<1} onClick= {() => {
               this.setState({userIsPlaying: false})
             }}> Just Spectating</button>
@@ -290,43 +321,32 @@ class Board extends React.Component {
           </div>
         ) : (
           <div>
-            <div>
-              {spectating &&
-                <div>
-                <h1>Join the Game!</h1>
-                    <div className="row col-lg-4">
-                      <form onSubmit={this.onPlayerSubmit}>
-                      <div className="form-group">
-                        <label htmlFor="color"></label>
-                        <input className="form-control" type="color" id="color"/>
-                      </div>
-                        <button className="btn btn-default" type="submit" disabled={tooManyPlayers}>Add New Player</button>
-                      </form>
-                    </div>
-                </div>
-              }
-            </div>
-            <ul>
+            <ul className='playerList'>
               {
                 players.map((player) => {
+                  let idx = players.indexOf(player)
+                  let size='0px'
+                  if (idx === currentPlayerId) {
+                    size='20px'
+                  }
                   return (
-                    <div>
-                      <li key= {`${player.color}`} style={{color: `${player.color}`}}> <p style={{color: `${player.color}`}}>{player.username} </p></li>
+                    <div style={{paddingLeft: size}} id='wrapper2'>
+                      <img className='listPlayer' src= {player.avatar} /><p></p>
+                      <div style={{paddingBottom: '20px'}} ></div>
                     </div>
+
                   )
                 })
               }
             </ul>
-            {
-              (!this.state.gameStarted && !spectating)?<button onClick={() => this.setState({gameStarted: true})}>Start the Game</button>:<div></div>
-            }
-
-            <br></br>
             <button disabled={condition} onClick={handleEndTurnClick}>End Turn</button>
-            <h4>Player {currentPlayerId} has {remainingAp} AP left</h4>
-            <h5>Number of saved victims: {rescuedVictimCount()}</h5>
-            <h5>Number of lost victims: {lostVictimCount()}</h5>
-            <h5>Total damage to building: {damageCount()}</h5>
+            <br></br>
+              <div className='playerAP'><h4 >Player {currentPlayerId} has {remainingAp} AP left</h4></div>
+              <div className='scoreBoard' id="wrapper">
+                <img src='/images/hospital.png' style={{width: '100px', height: '100px', position: 'relative', left: '30px'}} /><h5 className="text"> {rescuedVictimCount()}/10 <p className='text2'>People Saved</p></h5>
+                <img src='/images/skull.png' style={{width: '100px', height: '100px'}} /><h5 className="text"> {lostVictimCount()}/4 <p className='text2'>People Lost</p></h5>
+                <img src='/images/building_on_fire.svg' style={{width: '100px', height: '100px'}} /><h5 className="text"> {damageCount()}/24 <p className='text2'>Building Damage</p></h5>
+              </div>
           <Row>
             <Col sm={9}>
             <div className='gameboard'>
@@ -352,8 +372,8 @@ class Board extends React.Component {
                       }
                       {
                         player
-                        && <div className='player'
-                          style={{ backgroundColor: player.color }} />
+                        && <img className='player'
+                          src={player.avatar } />
                       }
                       {
                         poi && poi.status === 0
@@ -497,7 +517,7 @@ const mapDispatch = dispatch => ({
     dispatch(flashOver(boundaries))
   },
   createAPlayer: (playerInfo) => {
-    dispatch(createPlayer(playerInfo.id, playerInfo.ap, playerInfo.location, playerInfo.color, playerInfo.username))
+    dispatch(createPlayer(playerInfo.id, playerInfo.ap, playerInfo.location, playerInfo.avatar, playerInfo.username))
   },
   removeAPlayer: (player) => {
     dispatch(removePlayer(player))
