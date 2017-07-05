@@ -4,7 +4,7 @@ import {createPlayer, updatePlayer} from '../reducers/player'
 import {createDanger} from '../reducers/danger'
 import {createPoi} from '../reducers/victim'
 import firebase from 'APP/fire'
-import {loadPlayers, sendPlayersToFirebase} from '../components/promises'
+import {loadPlayers, sendPlayersToFirebase} from './promises'
 
 `
 Legend for Cells:

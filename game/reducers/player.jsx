@@ -3,18 +3,19 @@ import {List} from 'immutable'
 import {DAMAGE_WALL,
         SWITCH_DOOR} from './boundary'
 import {REMOVE_FIRE, REMOVE_SMOKE, FIRE_TO_SMOKE} from './danger'
+import {CLEAR_POPUPS} from './victim'
 import {AP_COSTS} from '../utils/constants'
 import {findClosestAmbulance} from '../utils/functions'
 
 // -- // -- // Actions // -- // -- //
 
 export const CREATE_PLAYER = 'CREATE_PLAYER'
-export const createPlayer = (id, ap, location, color, username) => ({
+export const createPlayer = (id, ap, location, avatar, username) => ({
   type: CREATE_PLAYER,
   id,
   ap,
   location,
-  color,
+  avatar,
   username
 })
 
@@ -63,7 +64,14 @@ export const checkForFireDamage = (fireLocations) => ({
 // -- // -- // Helpers // -- // -- //
 
 const isAdjacent = (next, current) => {
-  const adjCells = [current + 1, current - 1, current - 10, current + 10]
+  let adjCells
+  if (current % 10 === 0) {
+    adjCells = [current + 1, current - 10, current + 10]
+  } else if (current % 10 === 9) {
+    adjCells = [current - 1, current - 10, current + 10]
+  } else {
+    adjCells = [current - 1, current + 1, current - 10, current + 10]
+  }
   return adjCells.includes(next)
 }
 
@@ -118,7 +126,8 @@ export const isValidNextCell = (nextCell, nextDangerKind, nextBoundary, currentP
 
 const initial = {
   players: List(),
-  currentId: 0
+  currentId: 0,
+  popups: List()
 }
 
 // -- // -- // Reducer // -- // -- //
@@ -131,7 +140,8 @@ const playerReducer = (state = initial, action) => {
     nextPlayerId,
     errorMessage,
     victim,
-    closestAmbulanceLocation
+    closestAmbulanceLocation,
+    message
 
   switch (action.type) {
   case CREATE_PLAYER:
@@ -140,7 +150,7 @@ const playerReducer = (state = initial, action) => {
         id: action.id,
         ap: action.ap,
         location: action.location,
-        color: action.color,
+        avatar: action.avatar,
         username: action.username,
         carriedVictim: null,
         uid: null,
@@ -427,23 +437,38 @@ const playerReducer = (state = initial, action) => {
     }
 
   case CHECK_FOR_FIRE_DAMAGE:
+    state = {...state,
+      popups: List()
+    }
     state.players.forEach((player, idx) => {
       closestAmbulanceLocation = findClosestAmbulance(player.location)
       if (action.fireLocations[player.location]) {
-        console.info(`Player #${idx + 1} was knocked down by the explosion!`)
+        message = `Player #${idx + 1} was knocked down by an explosion!`
+        console.info(`Player #${idx + 1} was knocked down by an explosion!`)
         state = {...state,
           players: state.players.set(idx, {
             ...state.players.get(idx),
             location: closestAmbulanceLocation,
             carriedVictim: null
+          }),
+          popups: state.popups.push({
+            event: 'lost',
+            message
           })
         }
       }
     })
     return state
+
+  case CLEAR_POPUPS:
+    return {...state,
+      popups: List()
+    }
   }
 
-  return state
+  return {...state,
+    popups: List()
+  }
 }
 
 export default playerReducer

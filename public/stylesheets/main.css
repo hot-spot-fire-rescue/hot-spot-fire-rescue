@@ -4,11 +4,18 @@
 
 .main-grid {
   margin: 0;
-  display: inline
+  display: inline;
 }
 
+.gamePage {
+  background-image: url("/images/lightblur.jpg");
+  background-size: cover;
+}
+
+
+
 .play-area {
-  margin: 20px
+  margin: 20px;
 }
 
 .panel-heading {
@@ -101,6 +108,7 @@
   line-height: 0px;
   width: 900px;
   height: 720px;
+<<<<<<< HEAD
   z-index: -1;
   border-radius: 20px
 }
@@ -256,11 +264,18 @@
   color: white;
   font-size: xx-large;
   font-weight: bold;
+=======
+  z-index: 0;
+  position: relative;
+  top: 0;
+  left: 5em;
+>>>>>>> master
 }
 
 .row {
   margin: 0;
   line-height: 0px;
+
 }
 
 .cell {
@@ -334,8 +349,8 @@
   background-repeat: no-repeat;
   width: 40px;
   height: 48px;
-  top: 68px;
-  left: 26px;
+  top: 26px;
+  left: 68px;
   z-index: 2
 }
 
@@ -405,16 +420,19 @@
 }
 
 
-/* Players */
+/*
+s */
 
 .player {
-  width: 20px;
-  height: 20px;
   border-radius: 20px;
-  background-color: green;
+  background-image: url('/images/avatars/Jing.png');
   position: absolute;
   top: 20px;
   left: 20px;
+  max-width:40px;
+  max-height:40px;
+  width: auto;
+  height: auto;
 }
 
 /* POIs and victims */
@@ -501,3 +519,70 @@
   left: 25px;
 }
 
+.playerList {
+  position: absolute;
+  bottom: 10px;
+  left: -20px;
+  z-index: 1;
+}
+
+.listPlayer {
+    max-height: 70px;
+    max-width: 70px;
+    background-size: cover;
+    width: auto;
+    height: auto;
+    border-radius: 50px;
+    border-width: medium;
+    border-style: outset;
+    background-color: snow;
+}
+
+.scoreBoard {
+  display:flex;
+  position:relative;
+  float:right;
+  bottom: -51em;
+}
+
+.playerAP {
+  float:left;
+  position: relative;
+  bottom: -62px;
+  left: 54px;
+}
+
+
+
+#wrapper .text {
+  color: black;
+  visibility: visible;
+  position: relative;
+  right: 55px;
+  bottom: -3em;
+  font-size: x-large;
+}
+
+#wrapper .text2 {
+  visibility: hidden;
+  position: absolute;
+  right: -42px;
+  font-size: small
+}
+
+#wrapper:hover .text2 {
+  color: black;
+  visibility: visible;
+  position: absolute;
+  right: -42px;
+  font-size: small;
+}
+
+#wrapper2 .text {
+  visibility: hidden;
+}
+
+#wrapper2:hover .text {
+  color: white;
+  visibility: visible;
+}
