@@ -46,6 +46,7 @@ class Board extends React.Component {
       gameStarted: false,
       value: ''
     }
+    this.isLegalCell = this.isLegalCell.bind(this)
     this.handleCellClick = this.handleCellClick.bind(this)
     this.handleDoorSwitch = this.handleDoorSwitch.bind(this)
     this.handleWallDamage = this.handleWallDamage.bind(this)
@@ -66,22 +67,23 @@ class Board extends React.Component {
       if (!snapshot.exists()) this.props.fetchInitialData()
     })
   }
+
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.setState({ currentUserId: user.uid, currentUsername: user.displayName })
       }
     })
-    console.log('GAME STATUS IN MOUNT YAYAYAYAYAWWAHAHAHAHHA', this.state.gameStarted)
   }
 
   handleChange(event) {
     this.setState({value: event.target.value})
-    console.log(event.target.value)
   }
+
   handleGameStatusChange() {
     this.setState({gameStarted: true})
   }
+
   handleWallDamage(event, wall) {
     event.stopPropagation()
     this.props.changeWallStatus(wall)
@@ -221,7 +223,6 @@ class Board extends React.Component {
       avatar: event.target.avatar.value,
       username: this.state.currentUsername
     }
-    console.log('TESTING AVATAR', playerInfo)
     this.props.createAPlayer(playerInfo)
     this.setState({userIsPlaying: true})
   }
@@ -272,8 +273,6 @@ class Board extends React.Component {
       { doNotShowTheBoard
         ? (
           <div>
-            <h1>WDFFFFF HAS BEEN UPDATED</h1>
-            {console.log('DID GAME START HUHHHHHHH', this.state.gameStarted)}
           <h1>Add a Player</h1>
             <div className="row col-lg-4">
               <form onSubmit={this.onPlayerSubmit}>
@@ -289,7 +288,6 @@ class Board extends React.Component {
                     <option value='/images/avatars/YellowPuppy.png'>Golden Retriever Puppy</option>
                     <option value='/images/avatars/FirefightingPotato.png'>Firefighting Potato</option>
                     <option value='/images/avatars/Octocat.png'>Octocat</option>
-
                   </select>
               </div>
                 <button className="btn btn-default" type="submit" disabled={tooManyPlayers}>Add New Player</button>
