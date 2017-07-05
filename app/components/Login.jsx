@@ -32,6 +32,6 @@ export default ({ auth }) => (
   <div className ='login'>
     <button className='google login'
             onClick={() => auth.signInWithPopup(google)}>Login with Google</button>
-    <button className='facebook login' onClick={() => auth.signInWithPopup(facebook)}>Login with Facebook</button>
+  {/*<button className='facebook login' onClick={() => auth.signInWithPopup(facebook)}>Login with Facebook</button>*/}
   </div>
 )

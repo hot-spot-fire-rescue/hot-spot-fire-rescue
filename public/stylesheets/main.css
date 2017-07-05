@@ -40,10 +40,10 @@
 }
 
 .panel {
+  text-align:center;
   position: relative;
-  left: 630px;
-  right: 80px;
-  top: 380px;
+  left: 370px;
+  top: 220px;
   width: 680px;
   color: lightgray;
   font-size: x-large;
@@ -62,7 +62,7 @@
 
 .signup {
   font-family: abadi MT condensed;
-  font-size: xx-large;
+  font-size: x-large;
   color: lightgray;
   background-color: rgba(46, 51, 56, 0.8);
 }
@@ -91,18 +91,19 @@
 
 #gamerule {
   position: absolute;
-  top: 200px;
-  left: 290px;
+  top: 160px;
+  left: 225px;
   width: 70%;
   height: 70%;
   z-index: 15;
-  background-color: rgba(46, 51, 56, 0.8);
+  background-color: rgba(85, 107, 47, 0.8);
   border: 6px #23527c;
   border-radius: 25px 25px 25px 25px;
 }
 
 .whoami {
-  color: white
+  background-color:#556B2F;
+  height: 45px
 }
 
 .rule-title {
@@ -133,7 +134,9 @@
 }
 
 .choose-lobby {
-  top: 20px;
+  position: absolute;
+  top: 30px;
+  left: 80px;
   font-family: abadi MT condensed;
   font-size: x-large;
   color: lightgray;
@@ -141,29 +144,15 @@
   top: 20px
 }
 
-.game-name {
-  position: absolute;
-  bottom: 0px;
-  right: 0px;
-  left: 10px;
-  width: 98.5%;
-  height: 15%;
-  z-index: 15;
-  background-image: url('/images/fire-fighter.jpg');
-  background-repeat: no-repeat;
-  border: 6px #23527c;
-  border-radius: 25px 25px 25px 25px;
-}
-
 .lobby-list {
   position: absolute;
-  top: 300px;
+  top: 500px;
   left: 300px;
   width: 20%;
   height: 60%;
   z-index: 15;
-  background-color: rgba(46, 51, 56, 0.9);
-  border: 6px #23527c;
+  font-family: abadi MT condensed;
+  background-color: rgba(46, 51, 56, 0.8);
   border-radius: 25px 25px 25px 25px;
 }
 
@@ -181,6 +170,18 @@
   background-image: url('/images/lobby-background.jpg');
   background-size: cover
 }
+
+.add-lobby {
+  position: absolute;
+  font-family: abadi MT condensed;
+  font-size: x-large;
+  color: lightgray;
+  background-color: rgba(46, 51, 56, 0.8);
+  bottom: 80px;
+  left: 120px;
+  border-radius: 20px 20px 20px 20px;
+}
+
 
 .row {
   margin: 0;

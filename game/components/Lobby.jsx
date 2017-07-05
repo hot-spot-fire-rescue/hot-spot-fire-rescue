@@ -26,10 +26,9 @@ const Lobby = (props) => {
             gamesArray.map((game) => (<h2><Link className='lobby-link' to={`/game/${game}`}>GAME LOBBY: {game}</Link></h2>))
           }
         </div>
-        <button onClick={() => {
+        <button className='add-lobby' type="button" class="btn btn-warning" onClick={() => {
           n = n + 1
           gamesArray.push(n)
-          // console.log('HIIIIII', gamesArray)
           return gamesArray
         }}> Add Lobby</button>
         {/*console.log(gamesArray)*/}

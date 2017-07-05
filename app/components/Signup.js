@@ -101,7 +101,7 @@ export default class Signup extends Component {
 
           <FormGroup>
             <Col smOffset={4} sm={10}>
-              <Button className='signup' type="submit" value="Signup">
+              <Button type="button" className='signup btn btn-warning' type="submit" value="Signup">
                 Sign Up
               </Button>
             </Col>
