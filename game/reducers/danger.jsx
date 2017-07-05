@@ -103,26 +103,6 @@ const CheckcellDangerStatus = (danger, location) => {
   return undefined
 }
 
-
-//  helper function - to check the type of boundary
-// export const openBoundary = (location, adjLocation, boundaries) => {
-//   const boundaryFound = boundaries[sortCoord(location, adjLocation)]
-//   if (boundaryFound === undefined) {
-//     return true
-//   } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 0) {
-//     return false
-//   } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 1) {
-//     return true
-//   } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 2) {
-//     return true
-//   } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 0) {
-//     return false
-//   } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 1) {
-//     return false
-//   } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 2) {
-//     return true
-//   }
-// }
 export const openBoundary = (location, adjLocation, boundaries) => {
   const boundaryFound = boundaries[sortCoord(location, adjLocation)]
   if (boundaryFound === undefined) {
@@ -306,3 +286,4 @@ const dangerReducer = (state = initial, action) => {
 }
 
 export default dangerReducer
+

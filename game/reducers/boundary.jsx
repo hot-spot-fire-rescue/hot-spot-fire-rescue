@@ -1,5 +1,4 @@
-import {Map} from 'immutable'
-import {EXPLODE, nextAdj} from './danger'
+import { Map } from 'immutable'
 
 `
 Legend for Boundaries:
@@ -30,11 +29,12 @@ export const damageWall = (boundary) => ({
   boundary
 })
 
-export const explode = (actionCellDangerStatus, location, boundaries) => ({
-  type: EXPLODE,
+export const EXPLODE_BOUNDARIES = 'EXPLODE_BOUNDARIES'
+export const explodeBoundaries = (actionCellDangerStatus, location, danger) => ({
+  type: EXPLODE_BOUNDARIES,
   actionCellDangerStatus,
   location,
-  boundaries
+  danger
 })
 
 // -- // -- // Helpers // -- // -- //
@@ -45,24 +45,68 @@ export const sortCoord = (coord) => {
   return first > second ? [second, first] : [first, second]
 }
 
+// helper function used to calculate the next adjacent cell
+const nextAdj = (i) => {
+  if (i === 0) {
+    return -10
+  } else if (i === 1) {
+    return 10
+  } else if (i === 2) {
+    return 1
+  } else if (i === 3) {
+    return -1
+  }
+}
+
 //  helper function - to check the type of boundary
 export const boundaryType = (location, adjLocation, boundaries) => {
-  const boundaryFound = boundaries[sortCoord([location, adjLocation])]
-  if (boundaryFound === undefined) {
+  let boundaryKind
+  let boundaryStatus
+  const boundrayFound = boundaries.get(sortCoord([location, adjLocation]).toString())
+  if (boundrayFound !== undefined) {
+    boundaryKind = boundrayFound.kind
+    boundaryStatus = boundrayFound.status
+  } else {
     return undefined
-  } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 0) {
+  }
+
+  if (boundaryKind === 'door' && boundaryStatus === 0) {
     return 'closed door'
-  } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 1) {
+  } else if (boundaryKind === 'door' && boundaryStatus === 1) {
     return 'opened door'
-  } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 2) {
+  } else if (boundaryKind === 'door' && boundaryStatus === 2) {
     return 'destroyed door'
-  } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 0) {
+  } else if (boundaryKind === 'wall' && boundaryStatus === 0) {
     return 'intact wall'
-  } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 1) {
+  } else if (boundaryKind === 'wall' && boundaryStatus === 1) {
     return 'damaged wall'
-  } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 2) {
+  } else if (boundaryKind === 'wall' && boundaryStatus === 2) {
     return 'destroyed wall'
   }
+}
+
+const CheckcellDangerStatus = (danger, location) => {
+  let dangerKind
+  let dangerStatus
+  for (var i = 0; i < danger.length; i++) {
+    if (danger[i]['location'] === location) {
+      dangerKind = danger[i]['kind']
+      dangerStatus = danger[i]['status']
+    }
+    if (dangerKind === 'fire' && dangerStatus === 1) {
+      return 'fire'
+    } else if (dangerStatus === 'smoke' && dangerStatus === 1) {
+      return 'smoke'
+    }
+  }
+}
+
+// helper function to destroy door
+
+const destroyDoor = (current, next, doorToDestroy) => {
+  const coord = [current, next]
+  const sortedCoord = sortCoord(coord)
+  doorToDestroy.push(sortedCoord.toString())
 }
 
 // -- // -- //  State  // -- // -- //
@@ -104,33 +148,57 @@ const boundaryReducer = (state = initial, action) => {
       status: newStatus
     })
 
-  case EXPLODE:
+  case EXPLODE_BOUNDARIES:
     console.log('check if boundary is exploded at Cell:', action.location)
-    const adjacentCells = [action.location - 10, action.location + 10, action.location + 1, action.location - 1]
     const doorToDestroy = []
     const wallToDamage = []
     const wallToDestroy = []
 
-    for (var i = 0; i < adjacentCells.length; i++) {
-      const adjBoundary = boundaryType(action.location, adjacentCells[i], action.boundaries)
-      const adjCellKind = state.getIn([adjacentCells[i], 'kind'])
-      const adjCellStatus = state.getIn([adjacentCells[i], 'status'])
+    for (var i = 0; i < 4; i++) {
+      let current = action.location
+      let adjust = nextAdj(i)
+      let next = current + adjust
+      let currentCellDangerStatus = CheckcellDangerStatus(action.danger, current)
+      let nextCellDangerStatus = CheckcellDangerStatus(action.danger, next)
+      let adjBoundary = boundaryType(current, next, state)
+      while (true) {
+        // Always break the opened door
+        if (adjBoundary === 'opened door') {
+          sortedCoord = sortCoord([current, next])
+          doorToDestroy.push(sortedCoord)
+          break
+        }
 
-      if (action.actionCellDangerStatus ==='fire' && (adjBoundary === 'closed door' || adjBoundary === 'opened door')) {
-        let coord = [action.location, adjacentCells[i]]
-        sortedCoord = sortCoord(coord)
-        doorToDestroy.push(sortedCoord.toString())
-      } else if (action.actionCellDangerStatus ==='fire' && adjBoundary === 'intact wall') {
-        sortedCoord = sortCoord([action.location, adjacentCells[i]])
-        wallToDamage.push(sortedCoord.toString())
-      } else if (action.actionCellDangerStatus ==='fire' && adjBoundary === 'damaged wall') {
-        sortedCoord = sortCoord([action.location, adjacentCells[i]])
-        wallToDestroy.push(sortedCoord.toString())
-      } else if (action.actionCellDangerStatus === 'fire') {
+        // Handle the obstacles that finishes the loop.
+        if (adjBoundary === 'closed door') {
+          sortedCoord = sortCoord([current, next])
+          doorToDestroy.push(sortedCoord)
+          break
+        }
+        if (adjBoundary === 'intact wall') {
+          sortedCoord = sortCoord([current, next])
+          wallToDamage.push(sortedCoord)
+          break
+        }
+        if (adjBoundary === 'damaged wall') {
+          sortedCoord = sortCoord([current, next])
+          wallToDestroy.push(sortedCoord)
+          break
+        }
 
+        if (nextCellDangerStatus !== 'fire') {
+          break
+        }
 
+        // If the loops is not broken yet.
+        current = next
+        next = current + adjust
+        currentCellDangerStatus= CheckcellDangerStatus(action.danger, current)
+        adjBoundary = boundaryType(current, next, state)
+        nextCellDangerStatus = CheckcellDangerStatus(action.danger, next)
       }
     }
+
     console.log('doorToDestroy', doorToDestroy)
     console.log('wallToDamage', wallToDamage)
     console.log('wallToDestroy', wallToDestroy)
@@ -145,8 +213,8 @@ const boundaryReducer = (state = initial, action) => {
       state = newState
     }
 
-    for (var k = 0; k < wallToDestroy.length; k++) {
-      newState = state.set(sortedCoord.toString(), {
+    for (var k = 0; k < wallToDamage.length; k++) {
+      newState = state.set((wallToDamage[k]).toString(), {
         kind: 'wall',
         status: 1,
         coord: wallToDamage[k]
@@ -155,14 +223,15 @@ const boundaryReducer = (state = initial, action) => {
     }
 
     for (var l = 0; l < wallToDestroy.length; l++) {
-      newState = state.set(sortedCoord.toString(), {
+      newState = state.set((wallToDestroy[l]).toString(), {
         kind: 'wall',
         status: 2,
-        coord: wallToDamage[l]
+        coord: wallToDestroy[l]
       })
       state = newState
     }
-    return newState === undefined ? state: newState
+
+    return newState === undefined ? state : newState
   }
 
   return state

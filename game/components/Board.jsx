@@ -7,7 +7,8 @@ import { setupBoard } from '../utils/setup'
 import {
   sortCoord,
   switchDoor,
-  damageWall
+  damageWall,
+  explodeBoundaries
 } from '../reducers/boundary'
 import Danger from '../components/Danger'
 import {
@@ -92,11 +93,10 @@ class Board extends React.Component {
     let locationToAddSmoke = 0
     while (!isValid(locationToAddSmoke)) {
       locationToAddSmoke = Math.floor(Math.random() * 79) + 1
-      // locationToAddSmoke = 12
+      // locationToAddSmoke = 33
     }
 
     const boundariesObj = this.props.boundaries.toObject()
-
     // helper function - to check the danger status of a cell
     const cellDangerStatus = (location) => {
       const targetCellKind = this.props.danger.getIn([location, 'kind'])
@@ -113,8 +113,17 @@ class Board extends React.Component {
     actionCellDangerStatus = (actionCellDangerStatus === undefined) ? 'no status' : actionCellDangerStatus
 
     // always check if there is explosion, trigger explosion if target cell is already on fire
+    const currentDanger =[]
     if (cellDangerStatus(locationToAddSmoke) === 'fire') {
+      const dangerObj = this.props.danger.toObject()
+      for (var key in dangerObj) {
+        if (dangerObj.hasOwnProperty(key) && dangerObj[key] !== undefined) {
+          currentDanger.push(dangerObj[key].toObject())
+        }
+      }
+
       this.props.explode(actionCellDangerStatus, locationToAddSmoke, boundariesObj)
+      this.props.explodeBoundaries(actionCellDangerStatus, locationToAddSmoke, currentDanger)
     }
 
     // After dealing with explosion, endTurn will calculate loss and damages
@@ -499,6 +508,9 @@ const mapDispatch = dispatch => ({
   },
   explode: (actionCellDangerStatus, explosionLocation, boundariesObj) => {
     dispatch(explode(actionCellDangerStatus, explosionLocation, boundariesObj))
+  },
+  explodeBoundaries: (actionCellDangerStatus, explosionLocation, danger) => {
+    dispatch(explodeBoundaries(actionCellDangerStatus, explosionLocation, danger))
   },
   addPoi: (location) => {
     dispatch(addNextPoi(location))
