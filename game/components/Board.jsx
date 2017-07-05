@@ -234,7 +234,7 @@ class Board extends React.Component {
       ['GAME OVER', 'The building collapsed'],
       ['GAME OVER', '4 victims were lost']]
     let info
-    if (this.damageCount() > 1) {
+    if (this.damageCount() > 23) {
       // Building collapsed!
       // console.info(`GAME OVER: The building collapsed`)
       info = results[1]
