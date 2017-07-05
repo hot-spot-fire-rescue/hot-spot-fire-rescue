@@ -2,6 +2,8 @@
 import React from 'react'
 import { Route, IndexRedirect, IndexRoute, Link } from 'react-router'
 import { PanelGroup, Panel } from 'react-bootstrap'
+import WelcomePage from 'APP/app/components/WelcomePage'
+import AboutPage from 'APP/app/components/AboutPage'
 
 import Signup from 'APP/app/components/Signup'
 import Lobby from './components/Lobby'
@@ -13,7 +15,10 @@ const HomePage = ({ children }) => <div className='homepage-background'>
 </div>
 
 export default <Route path="/home" component={({ children }) => children}>
-  <IndexRoute component={HomePage} />
+  <IndexRoute component={WelcomePage} />
+   <Route path='/welcome' component={WelcomePage} />
+   <Route path='/home' component={HomePage} />
+  <Route path='/aboutus' component={AboutPage} />
   <Route path='/lobby' component={Lobby} />
   <Route path='/rules' component={RulePage} />
   <Route path='/game/:id' component={GamePageWrapper} />

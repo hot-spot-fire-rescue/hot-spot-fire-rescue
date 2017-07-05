@@ -20,14 +20,15 @@ const NavbarComp = ({ auth }) => {
         <Nav>
           <NavItem className='navItem' eventKey={1} ><Link to="/home" activeClassName="active">Home</Link></NavItem>
           <NavItem className='navItem' eventKey={2} ><Link to="/rules" activeClassName="active">Game Rules</Link></NavItem>
-          <NavItem className='navItem' eventKey={1} ><Link to="/lobby" activeClassName="active">Lobby</Link></NavItem>
+          <NavItem className='navItem' eventKey={3} ><Link to="/lobby" activeClassName="active">Lobby</Link></NavItem>
+          <NavItem className='navItem' eventKey={4} ><Link to="/aboutus" activeClassName="active">About Us</Link></NavItem>
         </Nav>
         <Nav pullRight>
-          <NavItem>
+          {/*<NavItem>
             <div className="login-navbar">
               <WhoAmI auth={auth} />
             </div>
-          </NavItem>
+          </NavItem>*/}
         </Nav>
       </Navbar.Collapse>
     </Navbar>
