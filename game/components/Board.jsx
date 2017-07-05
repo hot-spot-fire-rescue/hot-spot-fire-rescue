@@ -184,6 +184,7 @@ class Board extends React.Component {
       let nextCell = this.props.cells.get(cell.cellNum)
       let nextBoundary = this.props.boundaries.get(sortedCoords.toString(), '')
       let nextCellDangerKind = this.props.danger.getIn([cell.cellNum, 'kind'], '')
+      // TODO - check if status is 1 too
 
       this.props.move(this.props.currentPlayerId,
         nextCell,
