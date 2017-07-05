@@ -67,7 +67,7 @@ export default class extends React.Component {
 
     return <Provider store={store}>
       <Grid className="main-grid">
-        <IconButton tooltip="SVG Icon" onClick={this.clear} style={{top: '6px'}}>
+        <IconButton tooltip="Click to Clear" onClick={this.clear} style={{top: '6px'}}>
           <Clear />
         </IconButton>
         <span>Clear The Board</span>
