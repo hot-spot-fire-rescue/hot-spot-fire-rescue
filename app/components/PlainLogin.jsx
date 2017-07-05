@@ -72,7 +72,7 @@ export default class PlainLogin extends Component {
 
           <FormGroup>
             <Col smOffset={4} sm={10}>
-              <Button type="submit" value="PlainLogin">
+              <Button className='login btn btn-warning btn-defaut' type="submit" value="PlainLogin">
                 Log In
               </Button>
             </Col>

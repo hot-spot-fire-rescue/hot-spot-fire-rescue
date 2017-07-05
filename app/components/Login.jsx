@@ -30,8 +30,8 @@ export default ({ auth }) => (
   // redirect. If you prefer, you can signInWithRedirect, which always
   // redirects.
   <div className ='login'>
-    <button className='google login'
-            onClick={() => auth.signInWithPopup(google)}>Login with Google</button>
+    <button className='google-login btn btn-warning btn-defaut'
+            onClick={() => auth.signInWithPopup(google)}>GOOGLE  LOGIN</button>
   {/*<button className='facebook login' onClick={() => auth.signInWithPopup(facebook)}>Login with Facebook</button>*/}
   </div>
 )

@@ -24,9 +24,9 @@ const NavbarComp = ({ auth }) => {
         </Nav>
         <Nav pullRight>
           <NavItem>
-            {/*<div className="login-navbar">
+            <div className="login-navbar">
               <WhoAmI auth={auth} />
-            </div>*/}
+            </div>
           </NavItem>
         </Nav>
       </Navbar.Collapse>

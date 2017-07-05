@@ -28,7 +28,6 @@
 
 #golobby {
   top: 180;
-  font-family: abadi MT condensed;
   font-size: xx-large;
   font-weight: bold;
 }
@@ -41,7 +40,6 @@
   width: 680px;
   color: lightgray;
   font-size: x-large;
-  font-family: abadi MT condensed;
   margin-bottom: 20px;
   border-radius: 20px;
   /*background-color: rgba(85, 107, 47, 0.8);*/
@@ -56,10 +54,25 @@
 }
 
 .signup {
-  font-family: abadi MT condensed;
   font-size: x-large;
   color: lightgray;
   background-color: rgba(46, 51, 56, 0.8);
+  cursor: pointer;
+}
+
+.login {
+  width: 130px;
+  font-size: x-large;
+  color: lightgray;
+  background-color: rgba(46, 51, 56, 0.8);
+  cursor: pointer;
+}
+
+.google-login {
+  font-size: regular;
+  color: lightgray;
+  background-color: rgba(46, 51, 56, 0.8);
+  cursor: pointer;
 }
 
 .play-area {
@@ -129,10 +142,6 @@
   height: 25px;
   right: 0px;
   display: inline-block;
-}
-
-.login {
-  height: 20px;
 }
 
 .rule-title {
@@ -208,6 +217,7 @@
   bottom: 50px;
   left: 38%;
   border-radius: 20px 20px 20px 20px;
+  cursor: pointer;
 }
 
 .onfire-image {
