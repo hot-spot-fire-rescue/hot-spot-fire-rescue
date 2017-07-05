@@ -23,7 +23,8 @@ import {
   isValidNextCell
 } from '../reducers/player'
 import {
-  addNextPoi
+  addNextPoi,
+  clearPopups
 } from '../reducers/victim'
 import {
   createDanger,
@@ -88,14 +89,14 @@ class Board extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const popup = nextProps.victimsPopup
-    if (popup.event === 'lost') {
-      Alert.error(popup.message)
-    } else if (popup.event === 'success') {
-      Alert.success(popup.message)
-    } else if (popup.event === 'info') {
-      Alert.info(popup.message)
-    }
+    const popups = nextProps.victimsPopups.concat(nextProps.playerPopups)
+    // also check player knockdown and explosions
+    popups.forEach(popup => {
+      if (popup.event === 'lost') Alert.error(popup.message)
+      if (popup.event === 'success') Alert.success(popup.message)
+      if (popup.event === 'info') Alert.info(popup.message)
+    })
+    clearPopups()
   }
 
   handleWallDamage(event, wall) {
@@ -512,8 +513,9 @@ const mapState = ({ board, boundary, player, victim, danger }) => ({
   cells: board,
   boundaries: boundary,
   players: player.players,
+  playerPopups: player.popups,
   victims: victim.poi,
-  victimsPopup: victim.popup,
+  victimsPopups: victim.popups,
   currentPlayerId: player.currentId,
   danger: danger
 })
@@ -563,6 +565,9 @@ const mapDispatch = dispatch => ({
   },
   removeAPlayer: (player) => {
     dispatch(removePlayer(player))
+  },
+  clearPopups: () => {
+    dispatch(clearPopups())
   }
 })
 
