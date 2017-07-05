@@ -81,11 +81,9 @@ export const flashOver = (boundaries) => ({
   boundaries
 })
 
-
 // -- // -- // State // -- // -- //
 
 const initial = List()
-
 
 // -- // -- // Helper // -- // -- //
 const sortCoord = (location, adjLocation) => {
@@ -103,26 +101,6 @@ const CheckcellDangerStatus = (danger, location) => {
   return undefined
 }
 
-
-//  helper function - to check the type of boundary
-// export const openBoundary = (location, adjLocation, boundaries) => {
-//   const boundaryFound = boundaries[sortCoord(location, adjLocation)]
-//   if (boundaryFound === undefined) {
-//     return true
-//   } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 0) {
-//     return false
-//   } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 1) {
-//     return true
-//   } else if (boundaryFound['kind'] === 'door' && boundaryFound['status'] === 2) {
-//     return true
-//   } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 0) {
-//     return false
-//   } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 1) {
-//     return false
-//   } else if (boundaryFound['kind'] === 'wall' && boundaryFound['status'] === 2) {
-//     return true
-//   }
-// }
 export const openBoundary = (location, adjLocation, boundaries) => {
   const boundaryFound = boundaries[sortCoord(location, adjLocation)]
   if (boundaryFound === undefined) {
@@ -136,7 +114,6 @@ export const openBoundary = (location, adjLocation, boundaries) => {
   }
   return true
 }
-
 
 const hasAdjacentFire = (danger, location, boundaries) => {
   if (openBoundary(location, location + 10, boundaries) && checkCellDangerStatus(danger, location + 10) === 'fire') {
@@ -175,7 +152,6 @@ const nextAdj = (i) => {
     return -1
   }
 }
-
 
 const findSmoke = (danger) => {
   const dangerList = danger.toObject()
@@ -306,3 +282,4 @@ const dangerReducer = (state = initial, action) => {
 }
 
 export default dangerReducer
+

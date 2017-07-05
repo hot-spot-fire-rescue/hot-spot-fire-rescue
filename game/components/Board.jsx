@@ -2,12 +2,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import {Grid, Row, Col, Clearfix, Image} from 'react-bootstrap'
+import Alert from 'react-s-alert'
 
 import { setupBoard } from '../utils/setup'
 import {
   sortCoord,
   switchDoor,
-  damageWall
+  damageWall,
+  explodeBoundaries
 } from '../reducers/boundary'
 import Danger from '../components/Danger'
 import {
@@ -17,7 +19,8 @@ import {
   endTurn,
   updatePlayer,
   pickUpOrDropVictim,
-  checkForFireDamage
+  checkForFireDamage,
+  isValidNextCell
 } from '../reducers/player'
 import {
   addNextPoi
@@ -84,6 +87,17 @@ class Board extends React.Component {
     this.setState({gameStarted: true})
   }
 
+  componentWillReceiveProps(nextProps) {
+    const popup = nextProps.victimsPopup
+    if (popup.event === 'lost') {
+      Alert.error(popup.message)
+    } else if (popup.event === 'success') {
+      Alert.success(popup.message)
+    } else if (popup.event === 'info') {
+      Alert.info(popup.message)
+    }
+  }
+
   handleWallDamage(event, wall) {
     event.stopPropagation()
     this.props.changeWallStatus(wall)
@@ -104,11 +118,10 @@ class Board extends React.Component {
     let locationToAddSmoke = 0
     while (!isValid(locationToAddSmoke)) {
       locationToAddSmoke = Math.floor(Math.random() * 79) + 1
-      // locationToAddSmoke = 12
+      // locationToAddSmoke = 33
     }
 
     const boundariesObj = this.props.boundaries.toObject()
-
     // helper function - to check the danger status of a cell
     const cellDangerStatus = (location) => {
       const targetCellKind = this.props.danger.getIn([location, 'kind'])
@@ -125,8 +138,17 @@ class Board extends React.Component {
     actionCellDangerStatus = (actionCellDangerStatus === undefined) ? 'no status' : actionCellDangerStatus
 
     // always check if there is explosion, trigger explosion if target cell is already on fire
+    const currentDanger =[]
     if (cellDangerStatus(locationToAddSmoke) === 'fire') {
+      const dangerObj = this.props.danger.toObject()
+      for (var key in dangerObj) {
+        if (dangerObj.hasOwnProperty(key) && dangerObj[key] !== undefined) {
+          currentDanger.push(dangerObj[key].toObject())
+        }
+      }
+
       this.props.explode(actionCellDangerStatus, locationToAddSmoke, boundariesObj)
+      this.props.explodeBoundaries(actionCellDangerStatus, locationToAddSmoke, currentDanger)
     }
 
     // After dealing with explosion, endTurn will calculate loss and damages
@@ -160,15 +182,32 @@ class Board extends React.Component {
     }
   }
 
+  isLegalCell(cell) {
+    let currentP = this.props.players.get(this.props.currentPlayerId)
+    if (currentP) {
+      let sortedCoords = sortCoord([cell.cellNum, currentP.location])
+      let nextCellDangerKind = (this.props.danger.getIn([cell.cellNum, 'status']) === 1)
+        ? this.props.danger.getIn([cell.cellNum, 'kind'], '')
+        : ''
+      let nextBoundary = this.props.boundaries.get(sortedCoords.toString(), '')
+
+      return isValidNextCell(cell, nextCellDangerKind, nextBoundary, currentP)
+    } else {
+      return false
+    }
+  }
+
   handleCellClick(event, cell) {
     event.stopPropagation()
 
-    if (event.target.className === 'cell') {
-      const sortedCoords = sortCoord([cell.cellNum,
+    if (event.target.className.includes('cell')) {
+      let sortedCoords = sortCoord([cell.cellNum,
         this.props.players.get(this.props.currentPlayerId).location])
-      const nextCell = this.props.cells.get(cell.cellNum)
-      const nextBoundary = this.props.boundaries.get(sortedCoords.toString(), '')
-      const nextCellDangerKind = this.props.danger.getIn([cell.cellNum, 'kind'], '')
+      let nextCell = this.props.cells.get(cell.cellNum)
+      let nextBoundary = this.props.boundaries.get(sortedCoords.toString(), '')
+      let nextCellDangerKind = (this.props.danger.getIn([cell.cellNum, 'status']) === 1)
+        ? this.props.danger.getIn([cell.cellNum, 'kind'], '')
+        : ''
 
       this.props.move(this.props.currentPlayerId,
         nextCell,
@@ -204,7 +243,7 @@ class Board extends React.Component {
       // Building collapsed!
       console.info(`GAME OVER: The building collapsed`)
     }
-    if (this.lostVictimCount() > 4) {
+    if (this.lostVictimCount() > 3) {
       // Defeat - 4 victims were lost
       console.info(`GAME OVER: 4 victims were lost`)
     }
@@ -242,6 +281,7 @@ class Board extends React.Component {
       boundaries,
       fetchInitialData } = this.props
 
+    let isLegalCell = this.isLegalCell
     let handleCellClick = this.handleCellClick
     let handleDoorSwitch = this.handleDoorSwitch
     let handleWallDamage = this.handleWallDamage
@@ -361,8 +401,8 @@ class Board extends React.Component {
                   const poi = victims.find((val) => val.location === cell.cellNum)
                   const fire = danger.get(cell.cellNum)
                   return (
-                    <div key={cell.cellNum}
-                      className="cell"
+                    <div key={cell.cellNum} id={cell.cellNum}
+                      className={isLegalCell(cell) ? 'cell-highlighted' : 'cell'}
                       onClick={(evt) => handleCellClick(evt, cell)}>
                       {
                         fire
@@ -378,7 +418,7 @@ class Board extends React.Component {
                         && <div className={`poi poi-unrevealed`}/>
                       }
                       {
-                        poi && poi.status === 1 && !poi.carriedBy
+                        poi && poi.status === 1 && (poi.carriedBy === null)
                         && <div className={`poi poi-${poi.type}`}
                           onClick={(evt) => handlePoiClick(evt, poi, player)} />
                       }
@@ -473,6 +513,7 @@ const mapState = ({ board, boundary, player, victim, danger }) => ({
   boundaries: boundary,
   players: player.players,
   victims: victim.poi,
+  victimsPopup: victim.popup,
   currentPlayerId: player.currentId,
   danger: danger
 })
@@ -501,6 +542,9 @@ const mapDispatch = dispatch => ({
   },
   explode: (actionCellDangerStatus, explosionLocation, boundariesObj) => {
     dispatch(explode(actionCellDangerStatus, explosionLocation, boundariesObj))
+  },
+  explodeBoundaries: (actionCellDangerStatus, explosionLocation, danger) => {
+    dispatch(explodeBoundaries(actionCellDangerStatus, explosionLocation, danger))
   },
   addPoi: (location) => {
     dispatch(addNextPoi(location))

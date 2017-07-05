@@ -17,9 +17,10 @@
 .gameboard {
   background-image: url('/images/board.jpg');
   background-size: 900px 720px;
-  margin:0;
+  margin: 0;
   line-height: 0px;
   width: 900px;
+  height: 720px;
   z-index: 0;
   position: relative;
   top: 0;
@@ -33,17 +34,53 @@
 }
 
 .cell {
-  border: 1px solid black;
+  /*border: 1px solid black;*/
   width: 90px;
   height: 90px;
   display: inline-block;
   position: relative;
 }
 
+@-webkit-keyframes pulse {
+  0% {
+    background: hsla(55, 48%, 57%, 0.2);
+  }
+  50% {
+    background: hsla(55, 48%, 57%, 0.6);
+  }
+  100% {
+    background: transparent;
+  }
+}
+@keyframes pulse {
+  0% {
+    background: hsla(55, 48%, 57%, 0.2);
+  }
+  50% {
+    background: hsla(55, 48%, 57%, 0.6);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+.cell-highlighted {
+  -webkit-animation: pulse 1.6s ease-in-out infinite alternate;
+  animation: pulse 1.6s ease-in-out infinite alternate;
+  width: 90px;
+  height: 90px;
+  display: inline-block;
+  position: relative;
+}
+
+.popover {
+  top: 100px;
+}
+
 /* Walls */
 
 .horizontal-wall {
-  background-color: black;
+  /*background-color: black;*/
   width: 90px;
   height: 15px;
   top: 78px;
@@ -52,7 +89,7 @@
 }
 
 .vertical-wall {
-  background-color: black;
+  /*background-color: black;*/
   width: 15px;
   height: 90px;
   left: 78px;
@@ -67,8 +104,8 @@
   background-repeat: no-repeat;
   width: 40px;
   height: 48px;
-  top: 68px;
-  left: 26px;
+  top: 26px;
+  left: 68px;
   z-index: 2
 }
 
@@ -93,7 +130,7 @@
 
 .door {
   background-size: 44px;
-  border: 1px solid black;
+  /*border: 1px solid black;*/
   border-radius: 46px;
   width: 46px;
   height: 46px;
@@ -237,14 +274,14 @@ s */
   left: 25px;
 }
 
-.playerList{
+.playerList {
   position: absolute;
   bottom: 10px;
   left: -20px;
   z-index: 1;
 }
 
-.listPlayer{
+.listPlayer {
     max-height: 70px;
     max-width: 70px;
     background-size: cover;
@@ -256,14 +293,14 @@ s */
     background-color: snow;
 }
 
-.scoreBoard{
+.scoreBoard {
   display:flex;
   position:relative;
   float:right;
   bottom: -51em;
 }
 
-.playerAP{
+.playerAP {
   float:left;
   position: relative;
   bottom: -62px;
@@ -272,7 +309,7 @@ s */
 
 
 
-#wrapper .text{
+#wrapper .text {
   color: black;
   visibility: visible;
   position: relative;
@@ -281,13 +318,14 @@ s */
   font-size: x-large;
 }
 
-#wrapper .text2{
+#wrapper .text2 {
   visibility: hidden;
   position: absolute;
   right: -42px;
   font-size: small
 }
-#wrapper:hover .text2{
+
+#wrapper:hover .text2 {
   color: black;
   visibility: visible;
   position: absolute;
@@ -295,13 +333,11 @@ s */
   font-size: small;
 }
 
-#wrapper2 .text{
-
-visibility: hidden;
+#wrapper2 .text {
+  visibility: hidden;
 }
 
-#wrapper2:hover .text{
-
+#wrapper2:hover .text {
   color: white;
-visibility:visible;
+  visibility: visible;
 }

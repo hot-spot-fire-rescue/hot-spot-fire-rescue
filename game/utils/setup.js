@@ -4,7 +4,7 @@ import {createPlayer, updatePlayer} from '../reducers/player'
 import {createDanger} from '../reducers/danger'
 import {createPoi} from '../reducers/victim'
 import firebase from 'APP/fire'
-import {loadPlayers, sendPlayersToFirebase} from '../components/promises'
+import {loadPlayers, sendPlayersToFirebase} from './promises'
 
 `
 Legend for Cells:
@@ -61,7 +61,6 @@ const initialPoiList = [
   [4, 0, 58]
 ]
 
-// create rest of 12 POIs here with status -1
 // TODO: randomize every game
 const hiddenPoiList = () => {
   const poiIdList = [3, 7, 1, 8, 5, 10, 14, 6, 9, 2, 13, 12]

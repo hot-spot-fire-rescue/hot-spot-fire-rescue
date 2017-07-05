@@ -63,7 +63,14 @@ export const checkForFireDamage = (fireLocations) => ({
 // -- // -- // Helpers // -- // -- //
 
 const isAdjacent = (next, current) => {
-  const adjCells = [current + 1, current - 1, current - 10, current + 10]
+  let adjCells
+  if (current % 10 === 0) {
+    adjCells = [current + 1, current - 10, current + 10]
+  } else if (current % 10 === 9) {
+    adjCells = [current - 1, current - 10, current + 10]
+  } else {
+    adjCells = [current - 1, current + 1, current - 10, current + 10]
+  }
   return adjCells.includes(next)
 }
 
@@ -95,6 +102,23 @@ const hasEnoughAp = (currentPlayer, cost) => {
 const isBoundaryAdjacent = (boundaryLocation, playerLocation) => {
   return (boundaryLocation[0] === playerLocation ||
           boundaryLocation[1] === playerLocation)
+}
+
+const isValidStartingCell = (location) => {
+  return location % 10 === 0 || (location + 1) % 10 === 0 ||
+         location < 10 || location > 70
+}
+
+export const isValidNextCell = (nextCell, nextDangerKind, nextBoundary, currentPlayer) => {
+  const ap = findMoveApCost(currentPlayer, nextCell, nextDangerKind)
+
+  return currentPlayer.location !== -1 &&
+         (nextCell.cellNum !== currentPlayer.location &&
+         isAdjacent(nextCell.cellNum, currentPlayer.location) &&
+         isPassable(nextBoundary) &&
+         hasEnoughAp(currentPlayer, ap) &&
+         !(nextDangerKind === 'fire' && currentPlayer.carriedVictim) &&
+         !(nextDangerKind === 'fire' && currentPlayer.ap <= AP_COSTS.moveToFireCell))
 }
 
 // -- // -- // State // -- // -- //
@@ -151,13 +175,13 @@ const playerReducer = (state = initial, action) => {
     currentPlayer = state.players.get(state.currentId)
     currentPlayerLocation = currentPlayer.location
     apCost = findMoveApCost(currentPlayer, nextCell, nextDangerKind)
-    const validStartingCell= nextCellNum%10===0 || (nextCellNum+1)%10===0 || (nextCellNum)<10 || nextCellNum > 70
-
-    if ((currentPlayer.location=== -1 && validStartingCell) || (nextCellNum !== currentPlayerLocation &&
+    if ((currentPlayer.location === -1 && isValidStartingCell(nextCellNum)) ||
+        (nextCellNum !== currentPlayerLocation &&
         isAdjacent(nextCellNum, currentPlayerLocation) &&
         isPassable(nextBoundary) &&
         hasEnoughAp(currentPlayer, apCost) &&
-        !(nextDangerKind === 'fire' && currentPlayer.carriedVictim))) {
+        !(nextDangerKind === 'fire' && currentPlayer.carriedVictim) &&
+        !(nextDangerKind === 'fire' && currentPlayer.ap <= AP_COSTS.moveToFireCell))) {
       return {...state,
         players: state.players.set(action.id, {
           ...state.players.get(action.id),
@@ -179,6 +203,8 @@ const playerReducer = (state = initial, action) => {
         errorMessage = `You can't pass through this intact wall`
       } else if (!hasEnoughAp(currentPlayer, apCost)) {
         errorMessage = `You don't have enough AP to move here`
+      } else if (nextDangerKind === 'fire' && currentPlayer.ap <= AP_COSTS.moveToFireCell) {
+        errorMessage = `You can't end your turn on a fire`
       }
       console.error(errorMessage)
       return {...state,

@@ -57,7 +57,8 @@ const isOutsideWalls = (location) => {
 
 const initial = {
   poi: List(),
-  nextPoiId: 3 // since first 3 POIs are created during setup
+  nextPoiId: 3, // since first 3 POIs are created during setup
+  popup: {}
 }
 
 // -- // -- // Reducer // -- // -- //
@@ -71,7 +72,8 @@ const victimReducer = (state = initial, action) => {
     nextLocation,
     currentVictim,
     currentlyCarriedVictim,
-    currentlyCarriedVictimIdx
+    currentlyCarriedVictimIdx,
+    message
 
   switch (action.type) {
   case CREATE_POI:
@@ -80,7 +82,7 @@ const victimReducer = (state = initial, action) => {
         location: action.location,
         status: action.status,
         type: VICTIM_LEGEND[action.id],
-        carriedBy: null
+        carriedBy: null,
       })
     }
 
@@ -92,7 +94,8 @@ const victimReducer = (state = initial, action) => {
         location: action.location,
         status: 0
       }),
-      nextPoiId: state.nextPoiId + 1
+      nextPoiId: state.nextPoiId + 1,
+      popup: {}
     }
 
   case MOVE_PLAYER:
@@ -107,44 +110,61 @@ const victimReducer = (state = initial, action) => {
       ? nextCellPoi.type === 'falseAlarm'
       : false
 
+    // reset popup message
+    state = {...state,
+      popup: {}
+    }
+
     if (isPlayerMovingIntoFalseAlarm) {
-      console.info(`You did not find any victims at this POI`) // TODO: move into message box since this is logged even when player throws an error
+      message = `You did not find any victims at this POI`
       state = {...state,
-        poi: state.poi.delete(nextPoiIndex)
+        poi: state.poi.delete(nextPoiIndex),
+        popup: {
+          event: 'info',
+          message
+        }
       }
     } else if (nextCellPoi && nextCellPoi.status === 0) {
-      console.info(`You found a victim!`)
+      message = `You found a victim at this POI`
       state = {...state,
         poi: state.poi.set(nextPoiIndex, {
           ...nextCellPoi,
           status: 1
-        })
+        }),
+        popup: {
+          event: 'info',
+          message
+        }
       }
     }
 
     currentlyCarriedVictim = state.poi.find(victim => (
       victim.carriedBy === action.id
     ))
-    // if there is a victim carried by current player, move victim along too
     if (currentlyCarriedVictim) {
       currentlyCarriedVictimIdx = state.poi.findIndex(victim => (
         victim.carriedBy === action.id
       ))
       if (isOutsideWalls(nextLocation)) {
-        console.info(`You saved a victim!`)
+        message = `You rescued a victim from the burning building!`
         return {...state,
           poi: state.poi.set(currentlyCarriedVictimIdx, {
             ...currentlyCarriedVictim,
             status: 2,
-            carriedBy: null
-          })
+            carriedBy: null,
+          }),
+          popup: {
+            event: 'success',
+            message
+          }
         }
       } else {
         return {...state,
           poi: state.poi.set(currentlyCarriedVictimIdx, {
             ...currentlyCarriedVictim,
-            location: nextLocation
-          })
+            location: nextLocation,
+          }),
+          popup: {}
         }
       }
     } else {
@@ -161,38 +181,52 @@ const victimReducer = (state = initial, action) => {
       return {...state,
         poi: state.poi.set(victimIndex, {
           ...currentVictim,
-          carriedBy: action.playerId
-        })
+          carriedBy: action.playerId,
+        }),
+        popup: {}
       }
     // drop victim
     } else {
       return {...state,
         poi: state.poi.set(victimIndex, {
           ...currentVictim,
-          carriedBy: null
-        })
+          carriedBy: null,
+        }),
+        popup: {}
       }
     }
 
   case CHECK_FOR_FIRE_DAMAGE:
+    // reset popup message
+    state = {...state,
+      popup: {}
+    }
     state.poi.forEach((poi, idx) => {
       if (action.fireLocations[poi.location]) {
         if (poi.type !== 'falseAlarm') {
-          console.info(`A victim was lost due to the explosion`)
+          message = `A victim was lost in the fire due to the explosion...`
           state = {...state,
             poi: state.poi.set(idx, {
               ...state.poi.get(idx),
               status: 3,
-              carriedBy: null
-            })
+              carriedBy: null,
+            }),
+            popup: {
+              event: 'lost',
+              message
+            }
           }
         } else {
-          console.info(`A POI was revealed to be a false alarm by the explosion`)
+          message = `A POI was revealed to be a false alarm after the explosion`
           state = {...state,
             poi: state.poi.set(idx, {
               ...state.poi.get(idx),
               status: -1
-            })
+            }),
+            popup: {
+              event: 'info',
+              message
+            }
           }
         }
       }
@@ -200,7 +234,9 @@ const victimReducer = (state = initial, action) => {
     return state
   }
 
-  return state
+  return {...state,
+    popup: {}
+  }
 }
 
 export default victimReducer
