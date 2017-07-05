@@ -1,5 +1,6 @@
 'use strict'
 import React from 'react'
+import {Link} from 'react-router'
 import {connect} from 'react-redux'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
@@ -25,15 +26,17 @@ export class GameEnd extends React.Component {
   render() {
     const actions = [
       <FlatButton
-        label="Confirm"
+        label="Game Page"
         primary={true}
         onTouchTap={this.handleClose}
       />,
-      <FlatButton
-        label="Cancel"
-        primary={true}
-        onTouchTap={this.handleClose}
-      />,
+      <Link to={`/home`}>
+        <FlatButton
+          label="Home Page"
+          primary={true}
+          onTouchTap={this.handleClose}
+        />
+      </Link>,
     ]
 
     const image = (this.props.info[0] === 'GAME OVER' ) ? '/images/gameover.jpg' : '/images/win.jpg'
