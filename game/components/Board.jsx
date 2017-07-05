@@ -2,6 +2,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import {Grid, Row, Col, Clearfix, Image} from 'react-bootstrap'
+import Alert from 'react-s-alert'
 
 import { setupBoard } from '../utils/setup'
 import {
@@ -66,6 +67,7 @@ class Board extends React.Component {
       if (!snapshot.exists()) this.props.fetchInitialData()
     })
   }
+
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
@@ -73,6 +75,18 @@ class Board extends React.Component {
       }
     })
   }
+
+  componentWillReceiveProps(nextProps) {
+    const popup = nextProps.victimsPopup
+    if (popup.event === 'lost') {
+      Alert.error(popup.message)
+    } else if (popup.event === 'success') {
+      Alert.success(popup.message)
+    } else if (popup.event === 'info') {
+      Alert.info(popup.message)
+    }
+  }
+
   handleWallDamage(event, wall) {
     event.stopPropagation()
     this.props.changeWallStatus(wall)
@@ -161,7 +175,9 @@ class Board extends React.Component {
     let currentP = this.props.players.get(this.props.currentPlayerId)
     if (currentP) {
       let sortedCoords = sortCoord([cell.cellNum, currentP.location])
-      let nextCellDangerKind = this.props.danger.getIn([cell.cellNum, 'kind'], '')
+      let nextCellDangerKind = (this.props.danger.getIn([cell.cellNum, 'status']) === 1)
+        ? this.props.danger.getIn([cell.cellNum, 'kind'], '')
+        : ''
       let nextBoundary = this.props.boundaries.get(sortedCoords.toString(), '')
 
       return isValidNextCell(cell, nextCellDangerKind, nextBoundary, currentP)
@@ -178,7 +194,9 @@ class Board extends React.Component {
         this.props.players.get(this.props.currentPlayerId).location])
       let nextCell = this.props.cells.get(cell.cellNum)
       let nextBoundary = this.props.boundaries.get(sortedCoords.toString(), '')
-      let nextCellDangerKind = this.props.danger.getIn([cell.cellNum, 'kind'], '')
+      let nextCellDangerKind = (this.props.danger.getIn([cell.cellNum, 'status']) === 1)
+        ? this.props.danger.getIn([cell.cellNum, 'kind'], '')
+        : ''
 
       this.props.move(this.props.currentPlayerId,
         nextCell,
@@ -214,7 +232,7 @@ class Board extends React.Component {
       // Building collapsed!
       console.info(`GAME OVER: The building collapsed`)
     }
-    if (this.lostVictimCount() > 4) {
+    if (this.lostVictimCount() > 3) {
       // Defeat - 4 victims were lost
       console.info(`GAME OVER: 4 victims were lost`)
     }
@@ -385,7 +403,7 @@ class Board extends React.Component {
                         && <div className={`poi poi-unrevealed`}/>
                       }
                       {
-                        poi && poi.status === 1 && !poi.carriedBy
+                        poi && poi.status === 1 && (poi.carriedBy === null)
                         && <div className={`poi poi-${poi.type}`}
                           onClick={(evt) => handlePoiClick(evt, poi, player)} />
                       }
@@ -480,6 +498,7 @@ const mapState = ({ board, boundary, player, victim, danger }) => ({
   boundaries: boundary,
   players: player.players,
   victims: victim.poi,
+  victimsPopup: victim.popup,
   currentPlayerId: player.currentId,
   danger: danger
 })

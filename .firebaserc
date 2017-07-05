@@ -1,6 +1,5 @@
 {
   "projects": {
-    "firebones": "hot-spot-fire-rescue-7ae18",
-    "testing": "hot-spot-fire-rescue-7ae18"
+    "hot-spot": "hot-spot-fire-rescue-7ae18"
   }
 }
