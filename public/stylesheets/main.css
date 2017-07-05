@@ -1,3 +1,7 @@
+* {
+  font-family: 'Libre Franklin', sans-serif;
+}
+
 .main-grid {
   margin: 0;
   display: inline;
@@ -14,6 +18,89 @@
   margin: 20px;
 }
 
+.panel-heading {
+  font-size: xx-large;
+  color: lightgray;
+  text-align: center;
+  background: rgba(46, 51, 56, 0.8)!important;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px
+}
+
+.homepage-background {
+  background-image: url('/images/homepage_bg.jpg');
+  background-size: cover;
+  height: 100vh
+}
+
+.welcome-page {
+  background-image: url('/images/homepage_bg.jpg');
+  background-size: cover;
+  height: 100vh
+}
+
+#golobby {
+  top: 180;
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+.panel {
+  text-align:center;
+  position: relative;
+  left: 370px;
+  top: 220px;
+  width: 680px;
+  color: lightgray;
+  font-size: x-large;
+  margin-bottom: 20px;
+  border-radius: 20px;
+  /*background-color: rgba(85, 107, 47, 0.8);*/
+  background: rgba(46, 51, 56, 0.7)!important;
+  border-color: rgba(46, 51, 56, 0.9)!important;
+}
+
+.form-group {
+  position: relative;
+  left: 45px;
+  margin-bottom: 12px;
+}
+
+.signup {
+  font-size: x-large;
+  color: lightgray;
+  background-color: rgba(46, 51, 56, 0.8);
+  cursor: pointer;
+}
+
+.login {
+  width: 130px;
+  font-size: x-large;
+  color: lightgray;
+  background-color: rgba(46, 51, 56, 0.8);
+  cursor: pointer;
+}
+
+.enter-game {
+  display: center;
+  font-size: x-large;
+  color: lightgray;
+  background-color: rgba(46, 51, 56, 0.8);
+  cursor: pointer;
+}
+
+.google-login {
+  font-size: regular;
+  color: lightgray;
+  background-color: rgba(46, 51, 56, 0.8);
+  cursor: pointer;
+}
+
+.play-area {
+  background-image: url('/images/game-page-background.jpeg');
+  background-size: cover
+}
+
 .gameboard {
   background-image: url('/images/board.jpg');
   background-size: 900px 720px;
@@ -21,6 +108,161 @@
   line-height: 0px;
   width: 900px;
   height: 720px;
+  z-index: -1;
+  border-radius: 20px
+}
+
+.rule-background {
+  background-image: url('/images/rules.jpg');
+  background-size: cover;
+  height: 100vh;
+  background-repeat: repeat-y;
+}
+
+#gamerule {
+  position: absolute;
+  top: 160px;
+  left: 225px;
+  width: 70%;
+  height: 70%;
+  z-index: 15;
+  background-color: rgba(85, 107, 47, 0.8);
+  border: 6px #23527c;
+  border-radius: 25px 25px 25px 25px;
+  overflow-y:auto;
+  color: white
+}
+
+.rule-content {
+  margin: 40px;
+}
+
+#gorule {
+  font-family: abadi MT condensed;
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+.rule-title-h1 {
+  font-size: regular;
+}
+
+.rule-title-h2 {
+  font-size: large;
+}
+
+.rule-title-h1 {
+  font-size: x-large;
+}
+
+.userName {
+  display: inline-block;
+}
+
+.google-oauth {
+  height: 25px;
+  right: 0px;
+  display: inline-block;
+}
+
+.rule-title {
+  font-size: xxx-large;
+}
+
+.rule-paragraph {
+  font-size: large
+}
+
+.rulecontent {
+  font-family: abadi MT condensed;
+  color: white;
+  text-align: center;
+}
+
+.rule-lobby {
+  position: absolute;
+  top: 60px;
+  left: 200px;
+  font-size: xx-large;
+  font-family: abadi MT condensed;
+  color: lightgray
+}
+
+.homepage-nav {
+  background-color: black;
+}
+
+.navbar {
+  margin: 0px;
+}
+
+.choose-lobby {
+  font-size: x-large;
+  color: white;
+  margin-top: 40px;
+  font-size: 2.5em;
+}
+
+.lobby-list-box {
+  position: absolute;
+  top: 150px;
+  left: 130px;
+  width: 26%;
+  height: 700px;
+  z-index: 15;
+  font-family: abadi MT condensed;
+  background-color: rgba(85, 107, 47, 0.8);
+  border-radius: 25px 25px 25px 25px;
+}
+
+.lobby-list {
+  position: relative;
+  top: 80px;
+  font-size: large;
+}
+
+.lobby-link {
+  text-align: center;
+  font-size:large;
+  color: 	white;
+  margin: 30px;
+}
+
+.add-lobby {
+  text-align: center;
+  position: absolute;
+  font-size: x-large;
+  font-family: 'Libre Franklin', sans-serif;
+  color: lightgray;
+  background-color: rgba(46, 51, 56, 0.8);
+  bottom: 50px;
+  left: 38%;
+  border-radius: 20px 20px 20px 20px;
+  cursor: pointer;
+}
+
+.onfire-image {
+  position: absolute;
+  left: 0px;
+  width: 100%;
+  height: 88%;
+  z-index: 15;
+  background-image: url('/images/lobby-background.jpg');
+  background-size: cover
+}
+
+.navItem {
+  color: white;
+  font-size: large;
+  font-weight: bold;
+  padding: 0px;
+  top: 18px;
+}
+
+.game-title {
+  color: white;
+  font-size: xx-large;
+  font-weight: bold;
   z-index: 0;
   position: relative;
   top: 0;

@@ -10,6 +10,8 @@ import WhoAmI from './components/WhoAmI'
 import NotFound from './components/NotFound'
 import firebase from 'APP/fire'
 import Game from 'APP/game'
+import injectTapEventPlugin from 'react-tap-event-plugin'
+import NavbarComp from 'APP/game/components/Navbar'
 
 injectTapEventPlugin()
 
@@ -19,9 +21,10 @@ auth.onAuthStateChanged(user => user || auth.signInAnonymously())
 const App = ({children}) => (
   <MuiThemeProvider>
     <div>
-      <nav>
+      {/*<nav>
         <WhoAmI auth={auth}/>
-      </nav>
+      </nav>*/}
+      <NavbarComp auth={auth}/>
       {children}
       <Alert stack={{limit: 3}} position='bottom-right' effect='slide'/>
     </div>
@@ -31,7 +34,7 @@ const App = ({children}) => (
 render(
   <Router history={browserHistory}>
     <Route path="/" component={App}>
-      <IndexRedirect to="home"/>
+      <IndexRedirect to="welcome"/>
       {Game}
     </Route>
     <Route path='*' component={NotFound}/>
