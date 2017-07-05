@@ -3,13 +3,13 @@ import React from 'react'
 import {Router, Route, Link, IndexRedirect, browserHistory} from 'react-router'
 import {render} from 'react-dom'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import injectTapEventPlugin from 'react-tap-event-plugin'
+import Alert from 'react-s-alert'
+
 import WhoAmI from './components/WhoAmI'
 import NotFound from './components/NotFound'
-
 import firebase from 'APP/fire'
-
 import Game from 'APP/game'
-import injectTapEventPlugin from 'react-tap-event-plugin'
 import NavbarComp from 'APP/game/components/Navbar'
 
 injectTapEventPlugin()
@@ -25,6 +25,7 @@ const App = ({children}) => (
       </nav>*/}
       <NavbarComp auth={auth}/>
       {children}
+      <Alert stack={{limit: 1}} position='bottom-right' effect='slide'/>
     </div>
   </MuiThemeProvider>
 )
