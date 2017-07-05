@@ -1,3 +1,7 @@
+* {
+  font-family: Oswald
+}
+
 .main-grid {
   margin: 0;
   display: inline
@@ -5,10 +9,6 @@
 
 .play-area {
   margin: 20px
-}
-
-.login {
-  background-image: url('/images/gametitle.jpg')
 }
 
 .panel-heading {
@@ -27,7 +27,7 @@
 }
 
 #golobby {
-  top: 120;
+  top: 180;
   font-family: abadi MT condensed;
   font-size: xx-large;
   font-weight: bold;
@@ -50,6 +50,7 @@
   font-family: abadi MT condensed;
   margin-bottom: 20px;
   border-radius: 20px;
+  /*background-color: rgba(85, 107, 47, 0.8);*/
   background: rgba(46, 51, 56, 0.7)!important;
   border-color: rgba(46, 51, 56, 0.9)!important;
 }
@@ -101,9 +102,18 @@
   border-radius: 25px 25px 25px 25px;
 }
 
-.whoami {
-  background-color:#556B2F;
-  height: 45px
+.userName {
+  display: inline-block;
+}
+
+.google-oauth {
+  height: 25px;
+  right: 0px;
+  display: inline-block;
+}
+
+.login {
+  height: 20px;
 }
 
 .rule-title {
@@ -135,8 +145,8 @@
 
 .choose-lobby {
   position: absolute;
-  top: 30px;
-  left: 80px;
+  top: 130px;
+  left: 100px;
   font-family: abadi MT condensed;
   font-size: x-large;
   color: lightgray;
@@ -144,23 +154,42 @@
   top: 20px
 }
 
-.lobby-list {
+.lobby-list-box {
   position: absolute;
-  top: 500px;
-  left: 300px;
-  width: 20%;
-  height: 60%;
+  top: 300px;
+  left: 200px;
+  width: 30%;
+  height: 600px;
   z-index: 15;
   font-family: abadi MT condensed;
-  background-color: rgba(46, 51, 56, 0.8);
+  background-color: rgba(85, 107, 47, 0.8);
   border-radius: 25px 25px 25px 25px;
 }
 
+.lobby-list {
+  position: relative;
+  top: 80px;
+
+}
+
 .lobby-link {
+  text-align: center;
   font-size:large;
   color: lightgray;
   margin: 30px
 }
+
+.add-lobby {
+  position: absolute;
+  font-family: abadi MT condensed;
+  font-size: x-large;
+  color: lightgray;
+  background-color: rgba(46, 51, 56, 0.8);
+  bottom: 50px;
+  left: 140px;
+  border-radius: 20px 20px 20px 20px;
+}
+
 .onfire-image {
   position: absolute;
   left: 0px;
@@ -170,18 +199,6 @@
   background-image: url('/images/lobby-background.jpg');
   background-size: cover
 }
-
-.add-lobby {
-  position: absolute;
-  font-family: abadi MT condensed;
-  font-size: x-large;
-  color: lightgray;
-  background-color: rgba(46, 51, 56, 0.8);
-  bottom: 80px;
-  left: 120px;
-  border-radius: 20px 20px 20px 20px;
-}
-
 
 .row {
   margin: 0;

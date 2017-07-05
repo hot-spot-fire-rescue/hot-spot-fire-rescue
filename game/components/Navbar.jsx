@@ -1,41 +1,37 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import Login from './Login'
-import WhoAmI from './WhoAmI'
+import Login from 'APP/app/components/Login'
+import WhoAmI from 'APP/app/components/WhoAmI'
+import { NavItem, Navbar, Nav } from 'react-bootstrap'
 
 /* -----------------    COMPONENT     ------------------ */
 
-const Navbar = () => {
+const NavbarComp = ({ auth }) => {
   return (
-    <nav className="navbar navbar-default">
-      <div className="container">
-        <div className="navbar-header">
-          <button
-            type="button"
-            className="navbar-toggle collapsed"
-            data-toggle="collapse"
-            data-target=".navbar-collapse">
-            <span className="icon-bar" />
-            <span className="icon-bar" />
-            <span className="icon-bar" />
-          </button>
-          <Link className="navbar-brand" to="/">Home</Link>
-        </div>
-        <div className="collapse navbar-collapse">
-          <ul className="nav navbar-nav">
-            <li>
-              <Link to="/lobby/test" activeClassName="active">Lobby</Link>
-            </li>
-            <li>
-              <Link to="/rules" activeClassName="active">Game Rules</Link>
-            </li>
-          </ul>
-          {/*<div className="login-navbar">
-            {user ? <WhoAmI/> : <Login/>}
-          </div>*/}
-        </div>
-      </div>
-    </nav>
+    <Navbar inverse collapseOnSelect>
+      <Navbar.Header>
+        <Navbar.Brand>
+          <h3 >HOT SPOT</h3>
+        </Navbar.Brand>
+        <Navbar.Toggle />
+      </Navbar.Header>
+      <Navbar.Collapse>
+        <Nav>
+          <NavItem eventKey={1} >Home</NavItem>
+          <NavItem eventKey={2} >Game Rules</NavItem>
+          <NavItem eventKey={1} >Lobby</NavItem>
+        </Nav>
+        <Nav pullRight>
+          <NavItem>
+            <div className="login-navbar">
+              <WhoAmI auth={auth} />
+            </div>
+          </NavItem>
+        </Nav>
+      </Navbar.Collapse>
+    </Navbar>
   )
 }
+
+export default NavbarComp

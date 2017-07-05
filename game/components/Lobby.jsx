@@ -8,25 +8,22 @@ const gamesArray = [1, 2, 3, 4, 5]
 const Lobby = (props) => {
   return (
     <div className='lobby-background'>
-      <h1>Lobby</h1>
       {/*console.log('PROPS', props)*/}
       {/*console.log(this)*/}
       {/*console.log(gamesArray)*/}
-      <h2><Link to='/home'>HOME</Link></h2>
-      <h2><Link to='/rules'>GAME RULE</Link></h2>
-      <h2><Link to='/game/test'>START GAME</Link></h2>
+      {/*<h2><Link to='/game/test'>START GAME</Link></h2>*/}
       <div className = 'onfire-image'></div>
       <div className= 'game-name'></div>
-      <div className='lobby-list'>
-        <p className='choose-lobby'>
+      <div className='lobby-list-box'>
+        <p className='choose-lobby text-center'>
           CHOOSE A LOBBY
       </p>
-        <div>
+        <div className ='lobby-list text-center'>
           {
             gamesArray.map((game) => (<h2><Link className='lobby-link' to={`/game/${game}`}>GAME LOBBY: {game}</Link></h2>))
           }
         </div>
-        <button className='add-lobby' type="button" class="btn btn-warning" onClick={() => {
+        <button className='add-lobby' type="button" class="btn btn-warning text-center" onClick={() => {
           n = n + 1
           gamesArray.push(n)
           return gamesArray

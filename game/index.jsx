@@ -10,8 +10,8 @@ import GamePageWrapper from './GamePageWrapper'
 
 // TODO: Show sign in component if not signed in, else show list of lobbies
 const HomePage = ({ children }) => <div className='homepage-background'>
-  <h2 id='golobby'><Link to='/lobby/test'>GO TO LOBBY</Link></h2>
-  <h2 id='gorule'><Link to='/rules'>GAME RULES</Link></h2>
+  {/*<h2 id='golobby'><Link to='/lobby/test'>GO TO LOBBY</Link></h2>*/}
+  {/*<h2 id='gorule'><Link to='/rules'>GAME RULES</Link></h2>*/}
   <Panel header="Sign up" ><Signup /></Panel>
 </div>
 

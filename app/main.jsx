@@ -10,6 +10,7 @@ import firebase from 'APP/fire'
 
 import Game from 'APP/game'
 import injectTapEventPlugin from 'react-tap-event-plugin'
+import NavbarComp from 'APP/game/components/Navbar'
 
 injectTapEventPlugin()
 
@@ -19,9 +20,10 @@ auth.onAuthStateChanged(user => user || auth.signInAnonymously())
 const App = ({children}) => (
   <MuiThemeProvider>
     <div>
-      <nav>
+      {/*<nav>
         <WhoAmI auth={auth}/>
-      </nav>
+      </nav>*/}
+      <NavbarComp auth={auth}/>
       {children}
     </div>
   </MuiThemeProvider>
