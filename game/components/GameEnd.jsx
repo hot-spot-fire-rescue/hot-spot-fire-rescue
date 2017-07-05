@@ -26,20 +26,21 @@ export class GameEnd extends React.Component {
   render() {
     const actions = [
       <FlatButton
-        label="Game Page"
+        label="Go Back To Game"
         primary={true}
         onTouchTap={this.handleClose}
       />,
       <Link to={`/home`}>
         <FlatButton
-          label="Home Page"
+          label="Go To Home Page"
           primary={true}
           onTouchTap={this.handleClose}
         />
       </Link>,
     ]
 
-    const image = (this.props.info[0] === 'GAME OVER' ) ? '/images/gameover.jpg' : '/images/win.jpg'
+    const image = (this.props.info[0] === 'GAME OVER' ) ? '/images/gameover.jpg' : '/images/source.gif'
+    console.log(this.props.info)
     const customContentStyle = {
       backgroundImage: `url(${image})`,
       backgrounRepeat: "no-repeat",
