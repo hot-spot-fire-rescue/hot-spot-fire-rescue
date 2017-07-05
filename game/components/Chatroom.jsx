@@ -22,9 +22,9 @@ export function Chatroom(props) {
 
   return (
     <div>
-      <MobileTearSheet>
-        <List>
-          <Subheader>Recent Messages</Subheader>
+      <MobileTearSheet style={{borderRadius: '20px'}}>
+        <List style={{backgroundColor: 'rgba(85, 107, 47, 0.8)', borderRadius: '20px'}}>
+          <Subheader style={{color: 'black'}}>Recent Messages</Subheader>
           {
             messages && messages.slice(-6).map(message => {
               let key = messages.indexOf(message)
@@ -50,10 +50,9 @@ export function Chatroom(props) {
         }
         </List>
       </MobileTearSheet>
-        <form onSubmit = {handleSubmit}>
+        <form onSubmit = {handleSubmit } style={{color: 'black'}}>
           <fieldset>
-            {/*<legend>{formTitle}</legend>*/}
-            <div className='form-group'>
+            <div className='form-group' style= {{backgroundColor: 'snow', opacity: '0.5', textAligment: 'center', borderRadius: '20px'}}>
              <TextField
                 hintText = 'Type your message here'
                 value = {text}
