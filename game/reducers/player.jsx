@@ -63,7 +63,14 @@ export const checkForFireDamage = (fireLocations) => ({
 // -- // -- // Helpers // -- // -- //
 
 const isAdjacent = (next, current) => {
-  const adjCells = [current + 1, current - 1, current - 10, current + 10]
+  let adjCells
+  if (current % 10 === 0) {
+    adjCells = [current + 1, current - 10, current + 10]
+  } else if (current % 10 === 9) {
+    adjCells = [current - 1, current - 10, current + 10]
+  } else {
+    adjCells = [current - 1, current + 1, current - 10, current + 10]
+  }
   return adjCells.includes(next)
 }
 
