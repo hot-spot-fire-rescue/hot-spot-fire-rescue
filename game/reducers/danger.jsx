@@ -171,6 +171,10 @@ const findSmoke = (danger) => {
   return allSmoke
 }
 
+const isRealAdj = (current, next) => {
+  return (Math.floor(current/10) === Math.floor(next/10) || current%10 === next%10)
+}
+
 // -- // -- // Reducer // -- // -- //
 const dangerReducer = (state = initial, action) => {
   switch (action.type) {
@@ -201,6 +205,7 @@ const dangerReducer = (state = initial, action) => {
     }
 
   case END_TURN:
+    console.log('location to add smoke', action.location)
     if (checkCellDangerStatus(state, action.location) !== 'fire') {
       if (checkCellDangerStatus(state, action.location) === 'smoke') {
         return state.set(action.location, fromJS({
@@ -246,21 +251,29 @@ const dangerReducer = (state = initial, action) => {
     return state
 
   case EXPLODE:
+    console.log('fire explosion location', action.location)
     const adjacentCells = [action.location - 10, action.location + 10, action.location + 1, action.location - 1]
 
     const toSetFire = []
     for (var i = 0; i < adjacentCells.length; i++) {
       const isBoundaryOpen = openBoundary(action.location, adjacentCells[i], action.boundaries)
-
       // no adjacent boundary and empty adjacent space - add a fire to adj
       if (isBoundaryOpen && checkCellDangerStatus(state, adjacentCells[i]) === undefined) {
+        if (!isRealAdj(action.location, adjacentCells[i])) {
+          break
+        }
         toSetFire.push(adjacentCells[i])
       } else if (isBoundaryOpen && checkCellDangerStatus(state, adjacentCells[i])==='fire') {
         const locAdjust = nextAdj(i)
         let currentLoc = adjacentCells[i]
         let adjToCheckSpread = currentLoc + locAdjust
-
+        if (!isRealAdj(currentLoc, adjToCheckSpread)) {
+          break
+        }
         while (openBoundary(currentLoc, adjToCheckSpread, action.boundaries) && (checkCellDangerStatus(state, adjToCheckSpread) ==='fire')) {
+          if (!isRealAdj(currentLoc, adjToCheckSpread)) {
+            break
+          }
           currentLoc = adjToCheckSpread
           adjToCheckSpread = adjToCheckSpread + locAdjust
         }

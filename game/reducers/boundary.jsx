@@ -162,6 +162,10 @@ const boundaryReducer = (state = initial, action) => {
       let nextCellDangerStatus = CheckcellDangerStatus(action.danger, next)
       let adjBoundary = boundaryType(current, next, state)
       while (true) {
+        if (Math.floor(current/10)!== Math.floor(next/10) && current%10 !== next%10) {
+          break
+        }
+
         // Always break the opened door
         if (adjBoundary === 'opened door') {
           sortedCoord = sortCoord([current, next])
