@@ -5,11 +5,7 @@ import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 import RaisedButton from 'material-ui/RaisedButton'
 
-const customContentStyle = {
-  // width: '100%',
-  // maxWidth: 'none',
-  backgroundImage: "url('/images/board.jpg')",
-}
+
 
 export class GameEnd extends React.Component {
   state = {
@@ -23,6 +19,8 @@ export class GameEnd extends React.Component {
   handleClose = () => {
     this.setState({open: false})
   }
+
+  
 
   render() {
     const actions = [
@@ -38,15 +36,22 @@ export class GameEnd extends React.Component {
       />,
     ]
 
+    const image = (this.props.info[0] === 'GAME OVER' ) ? '/images/gameover.jpg' : '/images/win.jpg'
+    const customContentStyle = {
+      backgroundImage: `url(${image})`,
+      backgrounRepeat: "no-repeat",
+      backgroundSize: "cover",
+    }
+
     return (
       <div>
         <Dialog
           title={this.props.info[0]}
           actions={actions}
           modal={true}
-          contentStyle={customContentStyle}
+          overlayStyle={customContentStyle}
           open={this.state.open}
-          style={{backgroundImage:"url('/images/board.jpg')" }}
+          // style={{backgroundImage:"url('/images/board.jpg')" }}
         >
           {this.props.info[1]}
         </Dialog>
