@@ -34,6 +34,17 @@ import {
 } from '../reducers/danger'
 import reducer from '../reducers/'
 import Chatroom from './Chatroom'
+import MobileTearSheet from './MobileTearSheet'
+import Avatar from 'material-ui/Avatar'
+import {List, ListItem} from 'material-ui/List'
+import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors'
+import Subheader from 'material-ui/Subheader'
+import Divider from 'material-ui/Divider'
+import DeleteIcon from 'material-ui/svg-icons/action/delete'
+import FontIcon from 'material-ui/FontIcon'
+import IconButton from 'material-ui/IconButton'
+import PersonAdd from 'material-ui/svg-icons/social/person-add'
+import FlatButton from 'material-ui/FlatButton'
 
 import firebase from 'APP/fire'
 const fbAuth = firebase.auth()
@@ -266,9 +277,9 @@ class Board extends React.Component {
     this.setState({userIsPlaying: true})
   }
 
-  removePlayerCallback(event) {
+  removePlayerCallback(index) {
     const removeAPlayer = this.props.removeAPlayer
-    this.props.removeAPlayer(event.target.id)
+    removeAPlayer(index)
   }
 
   render() {
@@ -313,14 +324,14 @@ class Board extends React.Component {
       { doNotShowTheBoard
         ? (
           <div>
-          <h1>Add a Player</h1>
-            <div className="row col-lg-4">
+          <h4>Add a Player</h4>
+            <div className="row col-lg-4 col-lg-offset-4">
               <form onSubmit={this.onPlayerSubmit}>
-              <div className="form-group">
+              <div className="form-group" style={{display: 'inline-block'}}>
                 <label htmlFor="avatar"></label>
                   <img className='player' src= {this.state.value} style={{display: 'block', position: 'inherit'}}/>
                   <select id="avatar" onChange={this.handleChange} value={this.state.value}>
-                    <option value="--">Select One</option>
+                    <option value="--">Select Your Avatar</option>
                     <option value="/images/avatars/Jing.png">Jing</option>
                     <option value="/images/avatars/Dalmatian.png">Dalmatian</option>
                     <option value='/images/avatars/Firewoman.png'>Firewoman</option>
@@ -330,29 +341,36 @@ class Board extends React.Component {
                     <option value='/images/avatars/Octocat.png'>Octocat</option>
                   </select>
               </div>
-                <button className="btn btn-default" type="submit" disabled={tooManyPlayers}>Add New Player</button>
+                <IconButton tooltip="SVG Icon" type='submit' disabled={tooManyPlayers} style={{top:'6px'}}>
+                  <PersonAdd />
+                </IconButton>
               </form>
             </div>
-            <ul>
-              {
+            <MobileTearSheet style={{position: 'absolute', right: '100px'}}>
+              <List>
+                <Subheader>Current Players</Subheader>
+                {
                 players.map((player) => {
                   let idx = players.indexOf(player)
-                  let left='0px'
-                  if (idx === currentPlayerId) left='20px'
                   return (
-                    <div key={idx}>
-                      <li><img className='player' src= {player.avatar} style={{paddingLeft: {left}, display: 'block', position: 'inherit'}}/><p>{player.username} </p></li><button id={idx} onClick= {this.removePlayerCallback} disabled={player.id!==this.state.currentUserId}>X</button>
+                    <div key={idx} >
+                      <ListItem
+                        primaryText={player.username}
+                        leftAvatar={<Avatar src={player.avatar} />}
+                        rightIcon={<DeleteIcon onClick= {()=> this.removePlayerCallback(idx)} disabled={player.id!==this.state.currentUserId }/>}
+                      />
                     </div>
                   )
                 })
               }
-            </ul>
-            {
-              <button onClick={this.handleGameStatusChange}>Start/Resume the Game</button>
-            }
-            <button disabled={players.size<1} onClick= {() => {
+              </List>
+            </MobileTearSheet>
+            <FlatButton disabled={players.size<2} onClick={this.handleGameStatusChange}>
+              Start/Resume the Game</FlatButton>
+            <br />
+            <FlatButton disabled={players.size<1} onClick= {() => {
               this.setState({userIsPlaying: false})
-            }}> Just Spectating</button>
+            }}> Just Spectating</FlatButton>
             {
               (players.size < 1)?<p>You cannot spectate an empty game</p>: null
             }

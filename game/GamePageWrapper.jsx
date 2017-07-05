@@ -7,6 +7,6 @@ import GamePage from './components/GamePage'
 
 export default ({params: {id}}) =>
     <div className='gamePage'>
-      <h1>ID: {id}</h1>
+      {/*<h1>ID: {id}</h1>*/}
       <GamePage fireRef={db.ref('board').child(id)} gameId={id}/>
   </div>
