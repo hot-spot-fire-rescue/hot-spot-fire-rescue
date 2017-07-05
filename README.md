@@ -1,8 +1,8 @@
 # Hot Spot: Fire Rescue
 
-An online adaptation of the popular board game **Flash Point: Fire Rescue**, a coooperative game where 2-6 players play as firefighters attempting to rescue 7 victims out of a burning building before the flames get out of control. The current version implements the family/basic version of the game.
+An online adaptation of the popular board game **Flash Point: Fire Rescue**, a fully cooperative game where 2-6 players play as firefighters attempting to rescue 7 victims out of a burning building before the flames get out of control. The current version implements the family/basic version of the game.
 
-Live deployment link
+Live deployment link: TODO
 
 ## Technologies used
 

@@ -197,6 +197,10 @@ const victimReducer = (state = initial, action) => {
     }
 
   case CHECK_FOR_FIRE_DAMAGE:
+    // reset popup message
+    state = {...state,
+      popup: {}
+    }
     state.poi.forEach((poi, idx) => {
       if (action.fireLocations[poi.location]) {
         if (poi.type !== 'falseAlarm') {

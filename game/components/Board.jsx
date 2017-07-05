@@ -166,7 +166,9 @@ class Board extends React.Component {
     let currentP = this.props.players.get(this.props.currentPlayerId)
     if (currentP) {
       let sortedCoords = sortCoord([cell.cellNum, currentP.location])
-      let nextCellDangerKind = this.props.danger.getIn([cell.cellNum, 'kind'], '')
+      let nextCellDangerKind = (this.props.danger.getIn([cell.cellNum, 'status']) === 1)
+        ? this.props.danger.getIn([cell.cellNum, 'kind'], '')
+        : ''
       let nextBoundary = this.props.boundaries.get(sortedCoords.toString(), '')
 
       return isValidNextCell(cell, nextCellDangerKind, nextBoundary, currentP)
@@ -183,8 +185,9 @@ class Board extends React.Component {
         this.props.players.get(this.props.currentPlayerId).location])
       let nextCell = this.props.cells.get(cell.cellNum)
       let nextBoundary = this.props.boundaries.get(sortedCoords.toString(), '')
-      let nextCellDangerKind = this.props.danger.getIn([cell.cellNum, 'kind'], '')
-      // TODO - check if status is 1 too
+      let nextCellDangerKind = (this.props.danger.getIn([cell.cellNum, 'status']) === 1)
+        ? this.props.danger.getIn([cell.cellNum, 'kind'], '')
+        : ''
 
       this.props.move(this.props.currentPlayerId,
         nextCell,
