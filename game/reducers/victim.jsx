@@ -46,6 +46,11 @@ export const addNextPoi = (location) => ({
   location
 })
 
+export const CLEAR_POPUPS = 'CLEAR_VICTIM_POPUPS'
+export const clearPopups = () => ({
+  type: CLEAR_POPUPS
+})
+
 // -- // -- // Helpers // -- // -- //
 
 const isOutsideWalls = (location) => {
@@ -58,7 +63,7 @@ const isOutsideWalls = (location) => {
 const initial = {
   poi: List(),
   nextPoiId: 3, // since first 3 POIs are created during setup
-  popup: {}
+  popups: List()
 }
 
 // -- // -- // Reducer // -- // -- //
@@ -95,7 +100,7 @@ const victimReducer = (state = initial, action) => {
         status: 0
       }),
       nextPoiId: state.nextPoiId + 1,
-      popup: {}
+      popups: List()
     }
 
   case MOVE_PLAYER:
@@ -110,19 +115,18 @@ const victimReducer = (state = initial, action) => {
       ? nextCellPoi.type === 'falseAlarm'
       : false
 
-    // reset popup message
     state = {...state,
-      popup: {}
+      popups: List()
     }
 
     if (isPlayerMovingIntoFalseAlarm) {
       message = `You did not find any victims at this POI`
       state = {...state,
         poi: state.poi.delete(nextPoiIndex),
-        popup: {
+        popups: state.popups.push({
           event: 'info',
           message
-        }
+        })
       }
     } else if (nextCellPoi && nextCellPoi.status === 0) {
       message = `You found a victim at this POI`
@@ -131,10 +135,10 @@ const victimReducer = (state = initial, action) => {
           ...nextCellPoi,
           status: 1
         }),
-        popup: {
+        popups: state.popups.push({
           event: 'info',
           message
-        }
+        })
       }
     }
 
@@ -153,18 +157,17 @@ const victimReducer = (state = initial, action) => {
             status: 2,
             carriedBy: null,
           }),
-          popup: {
+          popups: state.popups.push({
             event: 'success',
             message
-          }
+          })
         }
       } else {
         return {...state,
           poi: state.poi.set(currentlyCarriedVictimIdx, {
             ...currentlyCarriedVictim,
             location: nextLocation,
-          }),
-          popup: {}
+          })
         }
       }
     } else {
@@ -183,7 +186,7 @@ const victimReducer = (state = initial, action) => {
           ...currentVictim,
           carriedBy: action.playerId,
         }),
-        popup: {}
+        popups: List()
       }
     // drop victim
     } else {
@@ -192,14 +195,13 @@ const victimReducer = (state = initial, action) => {
           ...currentVictim,
           carriedBy: null,
         }),
-        popup: {}
+        popups: List()
       }
     }
 
   case CHECK_FOR_FIRE_DAMAGE:
-    // reset popup message
     state = {...state,
-      popup: {}
+      popups: List()
     }
     state.poi.forEach((poi, idx) => {
       if (action.fireLocations[poi.location]) {
@@ -211,10 +213,10 @@ const victimReducer = (state = initial, action) => {
               status: 3,
               carriedBy: null,
             }),
-            popup: {
+            popups: state.popups.push({
               event: 'lost',
               message
-            }
+            })
           }
         } else {
           message = `A POI was revealed to be a false alarm after the explosion`
@@ -223,19 +225,25 @@ const victimReducer = (state = initial, action) => {
               ...state.poi.get(idx),
               status: -1
             }),
-            popup: {
+            popups: state.popups.push({
               event: 'info',
               message
-            }
+            })
           }
         }
       }
     })
+
     return state
+
+  case CLEAR_POPUPS:
+    return {...state,
+      popups: List()
+    }
   }
 
   return {...state,
-    popup: {}
+    popups: List()
   }
 }
 

@@ -5,6 +5,8 @@ import {Provider} from 'react-redux'
 import createLogger from 'redux-logger'
 import thunkMiddleware from 'redux-thunk'
 import {Grid, Row, Col, Clearfix} from 'react-bootstrap'
+import IconButton from 'material-ui/IconButton'
+import Clear from 'material-ui/svg-icons/content/clear'
 
 import reducer from '../reducers'
 import Board from './Board'
@@ -65,7 +67,10 @@ export default class extends React.Component {
 
     return <Provider store={store}>
       <Grid className="main-grid">
-        <button onClick={this.clear}>clear</button>
+        <IconButton tooltip="SVG Icon" onClick={this.clear} style={{top: '6px'}}>
+          <Clear />
+        </IconButton>
+        <span>Clear The Board</span>
         <Board fireRef={this.props.fireRef}/>
       </Grid>
     </Provider>
