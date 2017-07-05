@@ -12,21 +12,21 @@ const NavbarComp = ({ auth }) => {
     <Navbar inverse collapseOnSelect>
       <Navbar.Header>
         <Navbar.Brand>
-          <h3 >HOT SPOT</h3>
+          <h3 className='game-title'><Link to="/home" activeClassName="active">HOT SPOT</Link></h3>
         </Navbar.Brand>
         <Navbar.Toggle />
       </Navbar.Header>
       <Navbar.Collapse>
         <Nav>
-          <NavItem eventKey={1} >Home</NavItem>
-          <NavItem eventKey={2} >Game Rules</NavItem>
-          <NavItem eventKey={1} >Lobby</NavItem>
+          <NavItem className='navItem' eventKey={1} ><Link to="/home" activeClassName="active">Home</Link></NavItem>
+          <NavItem className='navItem' eventKey={2} ><Link to="/rules" activeClassName="active">Game Rules</Link></NavItem>
+          <NavItem className='navItem' eventKey={1} ><Link to="/lobby" activeClassName="active">Lobby</Link></NavItem>
         </Nav>
         <Nav pullRight>
           <NavItem>
-            <div className="login-navbar">
+            {/*<div className="login-navbar">
               <WhoAmI auth={auth} />
-            </div>
+            </div>*/}
           </NavItem>
         </Nav>
       </Navbar.Collapse>
