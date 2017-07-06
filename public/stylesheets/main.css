@@ -42,10 +42,11 @@
 }
 
 .panel {
-  text-align:center;
+  /*text-align:center;*/
   position: relative;
-  left: 370px;
-  top: 220px;
+  /*left: 370px;*/
+  left: 30%;
+  top: 150px;
   width: 680px;
   color: lightgray;
   font-size: x-large;

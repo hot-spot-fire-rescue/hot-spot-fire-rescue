@@ -38,7 +38,7 @@ export default class PlainLogin extends Component {
     fbAuth
       .signInWithEmailAndPassword(this.state.email, this.state.password)
       // redirect to timeline on successful log in
-      .then(() => browserHistory.push('/lobby/test'))
+      .then(() => browserHistory.push('/lobby'))
       .catch(error => {
         this.setState({
           showInvalidAlert: true,
