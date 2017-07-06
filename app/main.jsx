@@ -10,11 +10,8 @@ import WhoAmI from './components/WhoAmI'
 import NotFound from './components/NotFound'
 import firebase from 'APP/fire'
 import Game from 'APP/game'
-<<<<<<< HEAD
-import injectTapEventPlugin from 'react-tap-event-plugin'
 import NavbarComp from 'APP/game/components/Navbar'
-=======
->>>>>>> master
+
 
 injectTapEventPlugin()
 
