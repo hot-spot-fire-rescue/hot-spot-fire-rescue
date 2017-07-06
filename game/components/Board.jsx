@@ -103,7 +103,6 @@ class Board extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const popups = nextProps.victimsPopups.concat(nextProps.playerPopups)
-    // also check player knockdown and explosions
     popups.forEach(popup => {
       if (popup.event === 'lost') Alert.error(popup.message)
       if (popup.event === 'success') Alert.success(popup.message)
@@ -132,7 +131,7 @@ class Board extends React.Component {
     let locationToAddSmoke = 0
     while (!isValid(locationToAddSmoke)) {
       locationToAddSmoke = Math.floor(Math.random() * 79) + 1
-      // locationToAddSmoke = 33
+      // locationToAddSmoke = 57
     }
 
     const boundariesObj = this.props.boundaries.toObject()
@@ -325,73 +324,76 @@ class Board extends React.Component {
     let notEnoughPlayers = players.size < 2
     let spectating = this.state.userIsPlaying === false
     let doNotShowTheBoard = (notEnoughPlayers && !spectating) || gameHasStarted ===false
-    if (condition || spectating || this.state.gameStarted === false) {
-      handleCellClick = () => (console.log('It is not your turn yet.  Have patience, padawan'))
-      handleDoorSwitch = () => (console.log('It is not your turn yet.  Have patience, padawan'))
-      handleWallDamage = () => (console.log('It is not your turn yet.  Have patience, padawan'))
-      handleEndTurnClick = () => (console.log('It is not your turn yet.  Have patience, padawan'))
-    }
+    // if (condition || spectating || this.state.gameStarted === false) {
+    //   handleCellClick = () => (console.log('It is not your turn yet.  Have patience, padawan'))
+    //   handleDoorSwitch = () => (console.log('It is not your turn yet.  Have patience, padawan'))
+    //   handleWallDamage = () => (console.log('It is not your turn yet.  Have patience, padawan'))
+    //   handleEndTurnClick = () => (console.log('It is not your turn yet.  Have patience, padawan'))
+    // }
 
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
 
     return <div className="play-area">
       { doNotShowTheBoard
         ? (
-          <div>
-          <h4>Add a Player</h4>
-            <div className="row col-lg-4 col-lg-offset-4">
-              <form onSubmit={this.onPlayerSubmit}>
-              <div className="form-group" style={{display: 'inline-block'}}>
-                <label htmlFor="avatar"></label>
-                  <img className='player' src= {this.state.value} style={{display: 'block', position: 'inherit'}}/>
-                  <select id="avatar" onChange={this.handleChange} value={this.state.value}>
-                    <option value="--">Select Your Avatar</option>
-                    <option value="/images/avatars/Jing.png">Jing</option>
-                    <option value="/images/avatars/Dalmatian.png">Dalmatian</option>
-                    <option value='/images/avatars/Firewoman.png'>Firewoman</option>
-                    <option value='/images/avatars/Sarah.png'>Schubsman</option>
-                    <option value='/images/avatars/YellowPuppy.png'>Golden Retriever Puppy</option>
-                    <option value='/images/avatars/FirefightingPotato.png'>Firefighting Potato</option>
-                    <option value='/images/avatars/Octocat.png'>Octocat</option>
-                  </select>
-              </div>
-                <IconButton tooltip="SVG Icon" type='submit' disabled={tooManyPlayers} style={{top: '6px'}}>
-                  <PersonAdd />
-                </IconButton>
-              </form>
+          <div className="row">
+            <h3 className="text-center">Join the game (Min: 2 players, Max: 6 players)</h3>
+              <div className="col-md-4 col-md-offset-4">
+                <form onSubmit={this.onPlayerSubmit}>
+                  <div className="form-group" style={{display: 'inline-block'}}>
+                      <img className='player' src={this.state.value} style={{display: 'inline-block'}}/>
+                      <select id="avatar" onChange={this.handleChange} value={this.state.value}>
+                        <option value="--">Select Your Avatar</option>
+                        <option value='/images/avatars/Firewoman.png'>Firewoman</option>
+                        <option value="/images/avatars/Dalmatian.png">Dalmatian</option>
+                        <option value="/images/avatars/Jing.png">Jing</option>
+                        <option value='/images/avatars/Sarah.png'>Schubsman</option>
+                        <option value='/images/avatars/YellowPuppy.png'>Golden Retriever Puppy</option>
+                        <option value='/images/avatars/FirefightingPotato.png'>Firefighting Potato</option>
+                        <option value='/images/avatars/Octocat.png'>Octocat</option>
+                      </select>
+                  </div>
+                  <IconButton type='submit' disabled={tooManyPlayers} style={{top: '6px'}}>
+                    <PersonAdd />
+                  </IconButton>
+                </form>
+
+              <MobileTearSheet height={400} style={{position: 'absolute', right: '100px'}}>
+                <div style={{backgroundColor: 'rgba(85, 107, 47, 0.3)'}}>
+                  <List>
+                    <Subheader>Current Players</Subheader>
+                    {
+                    players.map((player) => {
+                      let idx = players.indexOf(player)
+                      return (
+                        <div key={idx} >
+                          <ListItem
+                            primaryText={player.username}
+                            leftAvatar={<Avatar src={player.avatar} />}
+                            rightIcon={<DeleteIcon onClick= {() => this.removePlayerCallback(idx)} disabled={player.id!==this.state.currentUserId }/>}
+                          />
+                        </div>
+                      )
+                    })
+                  }
+                  </List>
+                </div>
+              </MobileTearSheet>
+                <FlatButton disabled={players.size < 2} onClick={this.handleGameStatusChange}>
+                  Start/Resume the Game</FlatButton>
+                <br />
+                <FlatButton disabled={players.size < 1} onClick= {() => {
+                  this.setState({userIsPlaying: false})
+                }}> Just Spectating</FlatButton>
+                { /* {
+                  (players.size < 1)?<p>You cannot spectate an empty game</p>: null
+                } */ }
+
             </div>
-            <MobileTearSheet style={{position: 'absolute', right: '100px'}}>
-              <List>
-                <Subheader>Current Players</Subheader>
-                {
-                players.map((player) => {
-                  let idx = players.indexOf(player)
-                  return (
-                    <div key={idx} >
-                      <ListItem
-                        primaryText={player.username}
-                        leftAvatar={<Avatar src={player.avatar} />}
-                        rightIcon={<DeleteIcon onClick= {() => this.removePlayerCallback(idx)} disabled={player.id!==this.state.currentUserId }/>}
-                      />
-                    </div>
-                  )
-                })
-              }
-              </List>
-            </MobileTearSheet>
-            <FlatButton disabled={players.size<2} onClick={this.handleGameStatusChange}>
-              Start/Resume the Game</FlatButton>
-            <br />
-            <FlatButton disabled={players.size<1} onClick= {() => {
-              this.setState({userIsPlaying: false})
-            }}> Just Spectating</FlatButton>
-            {
-              (players.size < 1)?<p>You cannot spectate an empty game</p>: null
-            }
           </div>
         ) : (
-          <div>
-            <ul className='playerList'>
+          <div className="row">
+            <ul className='col-md-4 col-md-offset-4 playerList'>
               {
                 players.map((player) => {
                   let idx = players.indexOf(player)

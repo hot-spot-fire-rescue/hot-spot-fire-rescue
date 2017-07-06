@@ -8,6 +8,7 @@ import Alert from 'react-s-alert'
 
 import WhoAmI from './components/WhoAmI'
 import NotFound from './components/NotFound'
+import Navbar from './components/Navbar'
 import firebase from 'APP/fire'
 import Game from 'APP/game'
 
@@ -19,9 +20,7 @@ auth.onAuthStateChanged(user => user || auth.signInAnonymously())
 const App = ({children}) => (
   <MuiThemeProvider>
     <div>
-      <nav>
-        <WhoAmI auth={auth}/>
-      </nav>
+      <Navbar auth={auth}/>
       {children}
       <Alert stack={{limit: 3}} position='bottom-right' effect='slide'/>
     </div>
@@ -31,7 +30,7 @@ const App = ({children}) => (
 render(
   <Router history={browserHistory}>
     <Route path="/" component={App}>
-      <IndexRedirect to="home"/>
+      <IndexRedirect to="welcome"/>
       {Game}
     </Route>
     <Route path='*' component={NotFound}/>

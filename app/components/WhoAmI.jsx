@@ -16,11 +16,11 @@ export const name = user => {
 
 export const WhoAmI = ({user, auth}) =>
   <div className="whoami">
-    <span className="whoami-user-name">Hello, {name(user)}</span>
+    <div className="whoami-user-name userName">Hello, {name(user)}</div>
     { // If nobody is logged in, or the current user is anonymous,
       (!user || user.isAnonymous)?
       // ...then show signin links...
-      <div>
+      <div className = 'google-oauth'>
         <Login auth={auth}/>
         <Panel header="Log in"><PlainLogin /></Panel>
       </div>
