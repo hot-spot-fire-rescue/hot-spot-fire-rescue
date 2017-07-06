@@ -7,7 +7,7 @@ const google = new firebase.auth.GoogleAuthProvider()
 export default ({ auth }) => (
 
   <div>
-    <button className='google login'
+    <button type="button" className='google-login btn btn-warning' type="submit" value="google-login"
         onClick={() => auth.signInWithPopup(google)}>Login with Google</button>
   </div>
 )
