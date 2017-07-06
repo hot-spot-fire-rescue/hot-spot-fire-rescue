@@ -206,33 +206,40 @@ const boundaryReducer = (state = initial, action) => {
     console.log('doorToDestroy', doorToDestroy)
     console.log('wallToDamage', wallToDamage)
     console.log('wallToDestroy', wallToDestroy)
+    console.log('end of one round *****************')
 
     let newState
     for (var j = 0; j < doorToDestroy.length; j++) {
+      console.log('door to be destroyed', sortedCoord)
       newState = state.set(sortedCoord.toString(), {
         kind: 'door',
         status: 2,
         coord: doorToDestroy[j]
       })
       state = newState
+      console.log('door destroyed', state.toObject())
     }
 
     for (var k = 0; k < wallToDamage.length; k++) {
+      console.log('wall to be damanged', wallToDamage[k])
       newState = state.set((wallToDamage[k]).toString(), {
         kind: 'wall',
         status: 1,
         coord: wallToDamage[k]
       })
       state = newState
+      console.log('wall demaged', state.toObject())
     }
 
     for (var l = 0; l < wallToDestroy.length; l++) {
+      console.log('wall to be destroyed', wallToDestroy[l])
       newState = state.set((wallToDestroy[l]).toString(), {
         kind: 'wall',
         status: 2,
         coord: wallToDestroy[l]
       })
       state = newState
+      console.log('wall destroyed', wallToDestroy[l])
     }
 
     return newState === undefined ? state : newState

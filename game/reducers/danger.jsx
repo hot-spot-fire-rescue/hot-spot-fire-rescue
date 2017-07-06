@@ -119,13 +119,13 @@ export const openBoundary = (location, adjLocation, boundaries) => {
 
 
 const hasAdjacentFire = (danger, location, boundaries) => {
-  if (openBoundary(location, location + 10, boundaries) && checkCellDangerStatus(danger, location + 10) === 'fire') {
+  if (isRealAdj(location, location + 10) && openBoundary(location, location + 10, boundaries) && checkCellDangerStatus(danger, location + 10) === 'fire') {
     return true
-  } else if (openBoundary(location, location - 10, boundaries) && checkCellDangerStatus(danger, location - 10) === 'fire') {
+  } else if (isRealAdj(location, location - 10) && openBoundary(location, location - 10, boundaries) && checkCellDangerStatus(danger, location - 10) === 'fire') {
     return true
-  } else if (openBoundary(location, location + 1, boundaries) && checkCellDangerStatus(danger, location + 1) === 'fire') {
+  } else if (isRealAdj(location, location + 1) && openBoundary(location, location + 1, boundaries) && checkCellDangerStatus(danger, location + 1) === 'fire') {
     return true
-  } else if (openBoundary(location, location - 1, boundaries) && checkCellDangerStatus(danger, location - 1) === 'fire') {
+  } else if (isRealAdj(location, location - 1) && openBoundary(location, location - 1, boundaries) && checkCellDangerStatus(danger, location - 1) === 'fire') {
     return true
   } else {
     return false
@@ -277,12 +277,15 @@ const dangerReducer = (state = initial, action) => {
           currentLoc = adjToCheckSpread
           adjToCheckSpread = adjToCheckSpread + locAdjust
         }
-        if (openBoundary(currentLoc, adjToCheckSpread, action.boundaries)) {
+        if (openBoundary(currentLoc, adjToCheckSpread, action.boundaries) && isRealAdj(currentLoc, adjToCheckSpread)) {
+          console.log('loopcrrent:', currentLoc)
+          console.log('loopadj', adjToCheckSpread)
           toSetFire.push(adjToCheckSpread)
         }
       }
     }
-
+    console.log('explosion cause fire', toSetFire)
+    console.log('FIRE EXPLOSION DONE ~~~~~~~')
     let newState
     for (var j = 0; j < toSetFire.length; j++) {
       const fireLoc = Number(toSetFire[j])
