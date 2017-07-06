@@ -7,12 +7,18 @@ const AboutPage = () => {
     <div className='about-page'>
       <div className='about-text-box'>
         <div className='about-us-content'>
-          <h1 className ='rule-title-h1'>THE CREATORS</h1>
+          <br /><br /><br /><br />
+          <h1>THE CREATORS</h1>
+          <br />
+          <h3>ANA CALABANO</h3>
+          <h3>LYNNE JIANG</h3>
+          <h3>MARINA HOASHI</h3>
+          <h3>JING WANG</h3>
+          <br /><br /><br /><br /><br />
           <hr />
-        <h4>ANA CALABANO</h4>
-        <h4>LYNNE JIANG</h4>
-        <h4>MARINA HOASHI</h4>
-        <h4>JING WANG</h4>
+          <br /><br />
+          <h4>YOU CAN VISIT OUR GITHUB REPOSITORY BELOW</h4>
+          <h4>github.com/hot-spot-fire-rescue</h4>
         </div>
       </div>
     </div>
