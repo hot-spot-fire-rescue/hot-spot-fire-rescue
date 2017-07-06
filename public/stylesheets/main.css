@@ -42,10 +42,11 @@
 }
 
 .panel {
-  text-align:center;
+  /*text-align:center;*/
   position: relative;
-  left: 370px;
-  top: 220px;
+  /*left: 370px;*/
+  left: 30%;
+  top: 150px;
   width: 680px;
   color: lightgray;
   font-size: x-large;
@@ -416,15 +417,12 @@ s */
 .player {
   border-radius: 20px;
   background-image: url(/images/avatars/Jing.png);
-  /* position: absolute; */
-  /* top: 20px; */
-  /* left: 20px; */
-  /*max-width: 40px;
-  max-height: 40px;*/
+  position: absolute;
+  top: 20px;
   width: 40px;
   height: 40px;
   margin-right: 10px;
-  margin-left: 30px;
+  margin-left: 20px;
 }
 
 /* POIs and victims */
