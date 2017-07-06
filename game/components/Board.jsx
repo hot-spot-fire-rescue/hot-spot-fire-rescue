@@ -358,8 +358,8 @@ class Board extends React.Component {
                   </IconButton>
                 </form>
 
-              <MobileTearSheet height={400} style={{position: 'absolute', right: '100px'}}>
-                <div style={{backgroundColor: 'rgba(85, 107, 47, 0.3)'}}>
+              <MobileTearSheet height={400} style={{position: 'absolute', right: '100px', borderRadius: '20px'}}>
+                <div style={{backgroundColor: 'rgba(85, 107, 47, 0.3)', borderRadius: '20px'}}>
                   <List>
                     <Subheader>Current Players</Subheader>
                     {
