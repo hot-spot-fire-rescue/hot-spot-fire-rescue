@@ -341,7 +341,7 @@ class Board extends React.Component {
               <div className="col-md-4 col-md-offset-4">
                 <form onSubmit={this.onPlayerSubmit}>
                   <div className="form-group" style={{display: 'inline-block'}}>
-                      <img className='player' src={this.state.value} style={{display: 'inline-block'}}/>
+                      <img className='player-select-preview' src={this.state.value} style={{display: 'inline-block'}}/>
                       <select id="avatar" onChange={this.handleChange} value={this.state.value}>
                         <option value="https://images.vexels.com/media/users/3/140260/isolated/preview/d173308adbddefddd5c71c6c59dfdded-firefighter-running-with-axe-by-vexels.png">Select Your Avatar</option>
                         <option value='/images/avatars/Firewoman.png'>Firewoman</option>
