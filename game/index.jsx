@@ -14,10 +14,10 @@ const HomePage = ({ children }) => <div className='homepage-background'>
   <Panel header="Sign up" ><Signup /></Panel>
 </div>
 
-export default <Route path="/home" component={({ children }) => children}>
+export default <Route path="/welcome" component={({ children }) => children}>
   <IndexRoute component={WelcomePage} />
-   <Route path='/welcome' component={WelcomePage} />
-   <Route path='/home' component={HomePage} />
+  <Route path='/welcome' component={WelcomePage} />
+  <Route path='/home' component={HomePage} />
   <Route path='/aboutus' component={AboutPage} />
   <Route path='/lobby' component={Lobby} />
   <Route path='/rules' component={RulePage} />

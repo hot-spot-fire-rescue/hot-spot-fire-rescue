@@ -35,12 +35,6 @@
   height: 100vh
 }
 
-.welcome-page {
-  background-image: url('/images/homepage_bg.jpg');
-  background-size: cover;
-  height: 100vh
-}
-
 #golobby {
   top: 180;
   font-size: xx-large;
@@ -87,8 +81,9 @@
   display: center;
   font-size: x-large;
   color: lightgray;
-  background-color: rgba(46, 51, 56, 0.8);
+  /* background-color: rgba(46, 51, 56, 0.8); */
   cursor: pointer;
+  margin: 22% 45%;
 }
 
 .google-login {
