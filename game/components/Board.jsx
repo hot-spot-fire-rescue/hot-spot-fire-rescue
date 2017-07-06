@@ -444,8 +444,7 @@ class Board extends React.Component {
                   const player = players.find((val) => val.location === cell.cellNum)
                   const poi = victims.find((val) => val.location === cell.cellNum)
                   const fire = danger.get(cell.cellNum)
-                  console.log('CELL NUMMMMMM', cell.cellNum)
-                  console.log(players.get(currentPlayerId).location)
+
                   return (
                     <div key={cell.cellNum} id={cell.cellNum}
                       className={isLegalCell(cell) || (players.get(currentPlayerId).location===-1 && isValidStartingCell(cell.cellNum))? 'cell-highlighted' : 'cell'}
