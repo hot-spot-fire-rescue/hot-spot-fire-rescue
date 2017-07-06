@@ -216,7 +216,6 @@
 
 .lobby-list {
   position: relative;
-  top: 80px;
   font-size: large;
 }
 
@@ -231,8 +230,8 @@
   text-align: center;
   font-size: x-large;
   font-family: 'Libre Franklin', sans-serif;
-  color: lightgray;
-  background-color: rgba(46, 51, 56, 0.8);
+  color: blanchedalmond;
+  background-color: rgb(255, 187, 51);
   bottom: 50px;
   border-radius: 20px 20px 20px 20px;
   margin-top: 1em;
