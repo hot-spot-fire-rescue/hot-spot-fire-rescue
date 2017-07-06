@@ -14,4 +14,11 @@ const WelcomePage = () => {
   )
 }
 
+
+      //<div class='welcome-enter-btn-wrapper'>
+       // <button className='welcome-enter-game btn btn-warning' type="submit" value="enter">
+         // <Link to="/home" activeClassName="active">ENTER GAME</Link>
+        //</button>
+      //</div>
+
 export default WelcomePage
