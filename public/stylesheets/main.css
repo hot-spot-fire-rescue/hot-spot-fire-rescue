@@ -581,12 +581,8 @@ s */
   display: flex;
   position: relative;
   float: right;
-  top: 73em;
-/*   display: flex;
-  position: relative;
-  float: right;
-  bottom: -51em;
- */
+  top: 60em;
+  right: 2em;
 }
 
 .playerAP {
@@ -648,16 +644,16 @@ s */
 }
 
 .endTurnButton {
-  postion: absolute;
+  position: absolute;
   margin-top: 30px;
-  background-color: rgb(255, 187, 51);
+  /* background-color: rgb(255, 187, 51); */
   padding: 0px;
-  position: relative;
   top: 25em;
-  right: 41em;
-  color: rgb(255, 187, 51);
-/*   top: 8em;
-  left: 36em; */
+  /* color: rgb(255, 187, 51); */
+  width: 150px;
+  height: 100px;
+  font-size: x-large;
+  z-index: 10
 }
 
 .about-text-box {
