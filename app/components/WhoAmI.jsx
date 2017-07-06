@@ -25,10 +25,10 @@ export const WhoAmI = ({user, auth}) =>
         {/*<Panel header="Log in"><PlainLogin /></Panel>*/}
       </div>
       /// ...otherwise, show a logout button.
-      : <button className='logout' onClick={() => {
+      : <button type="button" className='logout btn btn-warning' type="submit" value="logout" onClick={() => {
         browserHistory.push('/home')
         return auth.signOut()
-      }}>logout</button> }
+      }}>Log Out</button> }
   </div>
 
 export default class extends React.Component {

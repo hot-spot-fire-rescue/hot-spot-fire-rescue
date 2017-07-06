@@ -690,3 +690,18 @@ s */
   background-color: rgb(85, 107, 47);
   cursor: pointer;
 }
+
+.whoami {
+  margin-top: 15px;
+  color: rgb(255, 187, 51);
+}
+
+.logout {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  margin-left: 10px;
+}
+
+.google-login {
+    margin-left: 10px;
+}
