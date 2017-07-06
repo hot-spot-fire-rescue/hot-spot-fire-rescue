@@ -69,6 +69,25 @@
   cursor: pointer;
 }
 
+.about-enter-game {
+  font-size: x-large;
+  color: lightgray;
+  cursor: pointer;
+}
+
+.welcome-enter-btn-wrapper {
+  text-align: center;
+}
+
+.welcome-enter-game {
+  position: absolute;
+  top:60%;
+  left:50%;
+  font-size: x-large;
+  color: lightgray;
+  cursor: pointer;
+}
+
 .login {
   width: 130px;
   font-size: x-large;
@@ -92,6 +111,8 @@
   background-color: rgba(46, 51, 56, 0.8);
   cursor: pointer;
 }
+
+
 
 .play-area {
   background-image: url('/images/game-page-background.jpeg');
@@ -189,8 +210,16 @@
   background-color: black;
 }
 
+.start-resume-game-btn {
+
+}
+
 .navbar {
   margin: 0px;
+}
+
+.nav-link {
+  color: 	rgb(255, 187, 51)!important
 }
 
 .choose-lobby {
@@ -257,7 +286,7 @@
 }
 
 .game-title {
-  color: white;
+  color: rgb(255, 187, 51)!important;
   font-size: xx-large;
   font-weight: bold;
   z-index: 0;

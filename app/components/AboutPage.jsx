@@ -7,7 +7,7 @@ const AboutPage = () => {
     <div className='welcome-page'>
       <h3>About US</h3>
       <p>xxxxxxxxxxxxxxx</p>
-      <h3><Link to="/home" activeClassName="active">ENTER GAME</Link></h3>
+      <button className='about-enter-game btn btn-warning' type="submit" value="enter"><Link to="/home" activeClassName="active">ENTER GAME</Link></button>
     </div>
   )
 }

@@ -18,10 +18,10 @@ const NavbarComp = ({ auth }) => {
       </Navbar.Header>
       <Navbar.Collapse>
         <Nav>
-          <NavItem className='navItem' eventKey={1} ><Link to="/home" activeClassName="active">Home</Link></NavItem>
-          <NavItem className='navItem' eventKey={2} ><Link to="/rules" activeClassName="active">Game Rules</Link></NavItem>
-          <NavItem className='navItem' eventKey={3} ><Link to="/lobby" activeClassName="active">Lobby</Link></NavItem>
-          <NavItem className='navItem' eventKey={4} ><Link to="/aboutus" activeClassName="active">About Us</Link></NavItem>
+          <NavItem className='navItem' eventKey={1} ><Link className='nav-link' to="/home" activeClassName="active">Home</Link></NavItem>
+          <NavItem className='navItem' eventKey={2} ><Link className='nav-link' to="/rules" activeClassName="active">Game Rules</Link></NavItem>
+          <NavItem className='navItem' eventKey={3} ><Link className='nav-link' to="/lobby" activeClassName="active">Lobby</Link></NavItem>
+          <NavItem className='navItem' eventKey={4} ><Link className='nav-link' to="/aboutus" activeClassName="active">About Us</Link></NavItem>
         </Nav>
         <Nav pullRight>
           {/*<NavItem>

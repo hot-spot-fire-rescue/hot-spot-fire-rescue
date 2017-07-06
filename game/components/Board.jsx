@@ -379,7 +379,7 @@ class Board extends React.Component {
                   </List>
                 </div>
               </MobileTearSheet>
-                <FlatButton disabled={players.size < 2} onClick={this.handleGameStatusChange}>
+                <FlatButton class='start-resume-game-btn' disabled={players.size < 2} onClick={this.handleGameStatusChange}>
                   Start/Resume the Game</FlatButton>
                 <br />
                 <FlatButton disabled={players.size < 1} onClick= {() => {

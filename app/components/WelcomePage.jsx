@@ -5,9 +5,11 @@ import { Route, IndexRedirect, IndexRoute, Link } from 'react-router'
 const WelcomePage = () => {
   return (
     <div className='homepage-background'>
-      <button className='enter-game btn btn-default'>
-        <Link to="/home" activeClassName="active">ENTER GAME</Link>
-      </button>
+      <div class='welcome-enter-btn-wrapper'>
+        <button className='welcome-enter-game btn btn-warning' type="submit" value="enter">
+          <Link to="/home" activeClassName="active">ENTER GAME</Link>
+        </button>
+      </div>
     </div>
   )
 }
