@@ -414,6 +414,17 @@
 /*
 s */
 
+.player-select-preview {
+  border-radius: 20px;
+  background-image: url(/images/avatars/Jing.png);
+  /* position: absolute; */
+  top: 20px;
+  margin-right: 10px;
+  margin-left: 20px;
+  height: 40px;
+  width: 40px;
+}
+
 .player {
   border-radius: 20px;
   background-image: url(/images/avatars/Jing.png);
