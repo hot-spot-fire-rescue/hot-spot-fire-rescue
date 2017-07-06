@@ -7,12 +7,14 @@
   display: inline;
 }
 
+.reset-btn {
+  margin-top: 5em;
+}
+
 .gamePage {
   background-image: url("/images/lightblur.jpg");
   background-size: cover;
 }
-
-
 
 .play-area {
   margin: 20px;
@@ -28,12 +30,6 @@
 }
 
 .homepage-background {
-  background-image: url('/images/homepage_bg.jpg');
-  background-size: cover;
-  height: 100vh
-}
-
-.welcome-page {
   background-image: url('/images/homepage_bg.jpg');
   background-size: cover;
   height: 100vh
@@ -62,7 +58,7 @@
 
 .form-group {
   position: relative;
-  left: 45px;
+  /*left: 45px;*/
   margin-bottom: 12px;
 }
 
@@ -85,8 +81,9 @@
   display: center;
   font-size: x-large;
   color: lightgray;
-  background-color: rgba(46, 51, 56, 0.8);
+  /* background-color: rgba(46, 51, 56, 0.8); */
   cursor: pointer;
+  margin: 22% 45%;
 }
 
 .google-login {
@@ -208,11 +205,12 @@
   top: 150px;
   left: 130px;
   width: 26%;
-  height: 700px;
+  height: 70%;
   z-index: 15;
   font-family: abadi MT condensed;
   background-color: rgba(85, 107, 47, 0.8);
   border-radius: 25px 25px 25px 25px;
+  overflow-y: auto;
 }
 
 .lobby-list {
@@ -230,14 +228,13 @@
 
 .add-lobby {
   text-align: center;
-  position: absolute;
   font-size: x-large;
   font-family: 'Libre Franklin', sans-serif;
   color: lightgray;
   background-color: rgba(46, 51, 56, 0.8);
   bottom: 50px;
-  left: 38%;
   border-radius: 20px 20px 20px 20px;
+  margin-top: 1em;
   cursor: pointer;
 }
 
@@ -266,7 +263,6 @@
   z-index: 0;
   position: relative;
   top: 0;
-  left: 5em;
 }
 
 .row {
@@ -276,7 +272,6 @@
 }
 
 .cell {
-  /*border: 1px solid black;*/
   width: 90px;
   height: 90px;
   display: inline-block;
@@ -322,7 +317,6 @@
 /* Walls */
 
 .horizontal-wall {
-  /*background-color: black;*/
   width: 90px;
   height: 15px;
   top: 78px;
@@ -331,7 +325,6 @@
 }
 
 .vertical-wall {
-  /*background-color: black;*/
   width: 15px;
   height: 90px;
   left: 78px;
@@ -422,14 +415,16 @@ s */
 
 .player {
   border-radius: 20px;
-  background-image: url('/images/avatars/Jing.png');
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  max-width:40px;
-  max-height:40px;
-  width: auto;
-  height: auto;
+  background-image: url(/images/avatars/Jing.png);
+  /* position: absolute; */
+  /* top: 20px; */
+  /* left: 20px; */
+  /*max-width: 40px;
+  max-height: 40px;*/
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  margin-left: 30px;
 }
 
 /* POIs and victims */
