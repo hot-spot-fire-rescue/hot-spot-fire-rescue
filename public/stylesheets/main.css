@@ -650,7 +650,7 @@ s */
   position: absolute;
   text-align: center;
   top: 160px;
-  left: 225px;
+  left: 335px;
   width: 50%;
   height: 70%;
   z-index: 15;
@@ -663,7 +663,7 @@ s */
 
 .about-us-content {
   height: 400px;
-  width: 300px;
+  width: 560px;
   margin-left: 60px;
   margin-top: 50px;
   margin-right: 60px;
