@@ -42,7 +42,7 @@
 }
 
 .panel {
-  text-align:center;
+  text-align: center;
   position: relative;
   left: 370px;
   top: 220px;
@@ -81,8 +81,8 @@
 
 .welcome-enter-game {
   position: absolute;
-  top:60%;
-  left:50%;
+  top: 60%;
+  left: 50%;
   font-size: x-large;
   color: lightgray;
   cursor: pointer;
@@ -111,8 +111,6 @@
   background-color: rgba(46, 51, 56, 0.8);
   cursor: pointer;
 }
-
-
 
 .play-area {
   background-image: url('/images/game-page-background.jpeg');
@@ -147,7 +145,7 @@
   background-color: rgba(85, 107, 47, 0.8);
   border: 6px #23527c;
   border-radius: 25px 25px 25px 25px;
-  overflow-y:auto;
+  overflow-y: auto;
   color: white
 }
 
@@ -211,7 +209,10 @@
 }
 
 .start-resume-game-btn {
-
+  width: 130px;
+  font-size: large;
+  color: lightgray;
+  cursor: pointer;
 }
 
 .navbar {
@@ -219,7 +220,7 @@
 }
 
 .nav-link {
-  color: 	rgb(255, 187, 51)!important
+  color: rgb(255, 187, 51)!important
 }
 
 .choose-lobby {
@@ -250,8 +251,8 @@
 
 .lobby-link {
   text-align: center;
-  font-size:large;
-  color: 	white;
+  font-size: large;
+  color: white;
   margin: 30px;
 }
 
@@ -286,7 +287,7 @@
 }
 
 .game-title {
-  color: rgb(255, 187, 51)!important;
+  color: rgb(255, 187, 51);
   font-size: xx-large;
   font-weight: bold;
   z-index: 0;
@@ -297,7 +298,6 @@
 .row {
   margin: 0;
   line-height: 0px;
-
 }
 
 .cell {
@@ -318,6 +318,7 @@
     background: transparent;
   }
 }
+
 @keyframes pulse {
   0% {
     background: hsla(55, 48%, 57%, 0.2);
@@ -342,6 +343,7 @@
 .popover {
   top: 100px;
 }
+
 
 /* Walls */
 
@@ -456,6 +458,7 @@ s */
   margin-left: 30px;
 }
 
+
 /* POIs and victims */
 
 .poi {
@@ -545,36 +548,33 @@ s */
   top: 25em;
   left: -26px;
   z-index: 1;
-
 }
 
 .listPlayer {
-    max-height: 70px;
-    max-width: 70px;
-    background-size: cover;
-    width: auto;
-    height: auto;
-    border-radius: 50px;
-    border-width: medium;
-    border-style: outset;
-    background-color: snow;
+  max-height: 70px;
+  max-width: 70px;
+  background-size: cover;
+  width: auto;
+  height: auto;
+  border-radius: 50px;
+  border-width: medium;
+  border-style: outset;
+  background-color: snow;
 }
 
 .scoreBoard {
-  display:flex;
-  position:relative;
-  float:right;
+  display: flex;
+  position: relative;
+  float: right;
   bottom: -51em;
 }
 
 .playerAP {
-  float:left;
+  float: left;
   position: relative;
   bottom: -62px;
   left: 54px;
 }
-
-
 
 #wrapper .text {
   color: black;
@@ -612,13 +612,58 @@ s */
   position: relative;
   bottom: 6em;
   background-color: rgba(85, 107, 47, 0.8);
-  font-weight:bold;
+  font-weight: bold;
   background-size: cover;
   border-radius: 5px;
 }
 
+.about-page {
+  background-image: url('/images/about-us.jpeg');
+  background-size: cover;
+  height: 100vh;
+}
+
+.about-enter-game-btn-wrapper {
+  text-align: center;
+}
+
 .endTurnButton {
+  postion: absolute;
+  margin-top: 30px;
+  background-color: rgb(255, 187, 51);
+  padding: 0px;
   position: relative;
   top: 8em;
-  left: 36em}}
+  left: 36em;
+}
+
+.about-text-box {
+  position: absolute;
+  text-align: center;
+  top: 160px;
+  left: 225px;
+  width: 50%;
+  height: 70%;
+  z-index: 15;
+  background-color: rgba(85, 107, 47, 0.8);
+  border: 6px #23527c;
+  border-radius: 25px 25px 25px 25px;
+  overflow-y: auto;
+  color: white
+}
+
+.about-us-content {
+  height: 400px;
+  width: 300px;
+  margin-left: 60px;
+  margin-top: 50px;
+  margin-right: 60px;
+  text-align: center;
+}
+
+.join-game-buttons {
+  font-size: regular;
+  color: lightgray;
+  background-color: rgb(85, 107, 47);
+  cursor: pointer;
 }

@@ -379,12 +379,12 @@ class Board extends React.Component {
                   </List>
                 </div>
               </MobileTearSheet>
-                <FlatButton class='start-resume-game-btn' disabled={players.size < 2} onClick={this.handleGameStatusChange}>
-                  Start/Resume the Game</FlatButton>
+                <button type="button" className='join-game-buttons btn btn-warning' type="submit" value="join-game" disabled={players.size < 2} onClick={this.handleGameStatusChange}>
+                  Start/ Resume Game</button>
                 <br />
-                <FlatButton disabled={players.size < 1} onClick= {() => {
+                <button className='join-game-buttons btn btn-warning' type="submit" value="join-game" disabled={players.size < 1} onClick= {() => {
                   this.setState({userIsPlaying: false})
-                }}> Just Spectating</FlatButton>
+                }}> Just Spectating</button>
                 { /* {
                   (players.size < 1)?<p>You cannot spectate an empty game</p>: null
                 } */ }
@@ -420,7 +420,7 @@ class Board extends React.Component {
 
             <br></br>
             <div >
-              <RaisedButton className='endTurnButton' backgroundColor='red' disabled={condition} onClick={handleEndTurnClick}>End Turn</RaisedButton>
+              <RaisedButton type="button" className='endTurnButton btn btn-warning' type="submit" value="Signup" backgroundColor='red' disabled={condition} onClick={handleEndTurnClick}>End Turn</RaisedButton>
             </div>
             <br></br>
               <div className='playerAP'>{players.get(currentPlayerId).location===-1? <p style={{position: 'relative', bottom: '50px'}}>Hey there, {this.state.currentUsername}! Please choose your starting point outside of the burning house</p>:<h4>Player {currentPlayerId+1} has {remainingAp} AP left</h4>}</div>
