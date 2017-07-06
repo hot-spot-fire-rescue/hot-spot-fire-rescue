@@ -105,7 +105,7 @@ const isBoundaryAdjacent = (boundaryLocation, playerLocation) => {
           boundaryLocation[1] === playerLocation)
 }
 
-const isValidStartingCell = (location) => {
+export const isValidStartingCell = (location) => {
   return location % 10 === 0 || (location + 1) % 10 === 0 ||
          location < 10 || location > 70
 }
