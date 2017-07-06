@@ -23,7 +23,7 @@ const Lobby = (props) => {
             n = n + 1
             gamesArray.push(n)
             return gamesArray
-          }}> Add Lobby</button>
+          }}><img src="/images/avatars/YellowPuppy.png" style={{width: '70px', height: '70px'}}/> Add Lobby</button>
         </div>
       </div>
     </div>
