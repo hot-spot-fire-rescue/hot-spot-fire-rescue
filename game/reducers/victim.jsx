@@ -218,7 +218,7 @@ const victimReducer = (state = initial, action) => {
               message
             })
           }
-        } else {
+        } else if (poi.type === 'falseAlarm') {
           message = `A POI was revealed to be a false alarm after the explosion`
           state = {...state,
             poi: state.poi.set(idx, {
