@@ -50,7 +50,7 @@ export function Chatroom(props) {
       </MobileTearSheet>
         <form onSubmit = {handleSubmit } style={{color: 'black'}}>
           <fieldset>
-            <div className='form-group' style= {{backgroundColor: 'snow', opacity: '0.5', textAligment: 'center', borderRadius: '20px'}}>
+            <div className='form-group' style= {{backgroundColor: 'snow', opacity: '0.5', textAligment: 'center', borderRadius: '20px', width: '360px'}}>
              <TextField
                 hintText = 'Type your message here'
                 value = {text}

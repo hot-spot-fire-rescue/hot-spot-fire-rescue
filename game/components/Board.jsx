@@ -103,11 +103,12 @@ class Board extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const popups = nextProps.victimsPopups.concat(nextProps.playerPopups)
-    popups.forEach(popup => {
-      if (popup.event === 'lost') Alert.error(popup.message)
-      if (popup.event === 'success') Alert.success(popup.message)
-      if (popup.event === 'info') Alert.info(popup.message)
-    })
+    // TODO
+    // popups.forEach(popup => {
+    //   if (popup.event === 'lost') Alert.error(popup.message)
+    //   if (popup.event === 'success') Alert.success(popup.message)
+    //   if (popup.event === 'info') Alert.info(popup.message)
+    // })
     clearPopups()
   }
 
@@ -423,9 +424,10 @@ class Board extends React.Component {
             }
 
             <br></br>
-            <div >
-              <RaisedButton className='endTurnButton' backgroundColor='rgb(255, 187, 51)' disabled={condition} onClick={handleEndTurnClick}>End Turn</RaisedButton>
-            </div>
+            {/*<div >*/}
+              {/*<RaisedButton className='endTurnButton' backgroundColor='rgb(255, 187, 51)' disabled={condition} onClick={handleEndTurnClick}>End Turn</RaisedButton>*/}
+              <button type="button" className='btn btn-lg btn-warning endTurnButton' type="submit" disabled={condition} onClick={handleEndTurnClick}>End Turn</button>
+            {/*</div>*/}
             <br></br>
               <div className='playerAP'>{players.get(currentPlayerId).location===-1? <p style={{position: 'relative', bottom: '50px', right: '70em'}}>Hey there, {this.state.currentUsername}! Please choose your starting point outside of the burning house</p>:null}</div>
               <div className='scoreBoard' id="wrapper">
