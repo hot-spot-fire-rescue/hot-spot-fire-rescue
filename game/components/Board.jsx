@@ -336,8 +336,8 @@ class Board extends React.Component {
       { doNotShowTheBoard
         ? (
           <div className="row">
-            <div className="col-md-4 col-md-offset-4">
-              <h3>Join the game (Min: 2 players, Max: 6 players)</h3>
+            <h3 className="text-center">Join the game (Min: 2 players, Max: 6 players)</h3>
+              <div className="col-md-4 col-md-offset-4">
                 <form onSubmit={this.onPlayerSubmit}>
                   <div className="form-group" style={{display: 'inline-block'}}>
                       <img className='player' src={this.state.value} style={{display: 'inline-block'}}/>
@@ -357,7 +357,7 @@ class Board extends React.Component {
                   </IconButton>
                 </form>
 
-              <MobileTearSheet height='400px' style={{position: 'absolute', right: '100px'}}>
+              <MobileTearSheet height={400} style={{position: 'absolute', right: '100px'}}>
                 <div style={{backgroundColor: 'rgba(85, 107, 47, 0.3)'}}>
                   <List>
                     <Subheader>Current Players</Subheader>
@@ -384,9 +384,9 @@ class Board extends React.Component {
                 <FlatButton disabled={players.size < 1} onClick= {() => {
                   this.setState({userIsPlaying: false})
                 }}> Just Spectating</FlatButton>
-                {
+                { /* {
                   (players.size < 1)?<p>You cannot spectate an empty game</p>: null
-                }
+                } */ }
 
             </div>
           </div>
