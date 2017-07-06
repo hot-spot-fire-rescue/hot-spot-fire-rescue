@@ -354,7 +354,7 @@ class Board extends React.Component {
                     <option value='/images/avatars/Octocat.png'>Octocat</option>
                   </select>
               </div>
-                <IconButton tooltip="SVG Icon" type='submit' disabled={tooManyPlayers} style={{top:'6px'}}>
+                <IconButton tooltip="Use this avatar" type='submit' disabled={tooManyPlayers} style={{top: '6px'}}>
                   <PersonAdd />
                 </IconButton>
               </form>
