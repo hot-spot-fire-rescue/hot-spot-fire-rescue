@@ -347,6 +347,10 @@ class Board extends React.Component {
                   <select id="avatar" onChange={this.handleChange} value={this.state.value}>
                     <option value="--">Select Your Avatar</option>
                     <option value="/images/avatars/Jing.png">Jing</option>
+                    <option value="/images/avatars/Yiling2.png">Yiling</option>
+                    <option value="/images/avatars/Marina2.jpeg">Marina</option>
+                    <option value='/images/avatars/Ketti.jpg'>Ketti</option>
+                    <option value="/images/avatars/sriracha.jpg">Sriracha Fireperson</option>
                     <option value="/images/avatars/Dalmatian.png">Dalmatian</option>
                     <option value='/images/avatars/Firewoman.png'>Firewoman</option>
                     <option value='/images/avatars/Sarah.png'>Schubsman</option>
