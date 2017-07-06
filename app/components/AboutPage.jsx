@@ -7,12 +7,13 @@ const AboutPage = () => {
     <div className='about-page'>
       <div className='about-text-box'>
         <div className='about-us-content'>
-          <h3>About US</h3>
-          <p>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx*</p>
+          <h1 className ='rule-title-h1'>THE CREATORS</h1>
+          <hr />
+        <h4>ANA CALABANO</h4>
+        <h4>LYNNE JIANG</h4>
+        <h4>MARINA HOASHI</h4>
+        <h4>JING WANG</h4>
         </div>
-      </div>
-      <div className='about-enter-game-btn-wrapper'>
-        <button className='about-enter-game btn btn-warning' type="submit" value="enter"><Link to="/home" activeClassName="active">ENTER GAME</Link></button>
       </div>
     </div>
   )
