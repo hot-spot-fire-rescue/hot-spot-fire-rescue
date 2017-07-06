@@ -12,7 +12,7 @@ const NavbarComp = ({ auth }) => {
     <Navbar inverse collapseOnSelect>
       <Navbar.Header>
         <Navbar.Brand>
-          <h3 className='game-title'><Link to="/home" activeClassName="active">HOT SPOT</Link></h3>
+          <h3 className='game-title'><Link to="/home" activeClassName="active" style={{color: 'rgb(255, 187, 51)'}}>HOT SPOT</Link></h3>
         </Navbar.Brand>
         <Navbar.Toggle />
       </Navbar.Header>
