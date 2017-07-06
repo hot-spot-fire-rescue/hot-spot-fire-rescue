@@ -69,7 +69,7 @@ export default class Signup extends Component {
 
   render() {
     return (
-      <div className = 'signup-background text-center'>
+      <div className = 'signup-background'>
         <Form horizontal onSubmit={this.handleSubmit}>
 
           <FormGroup controlId="formName">

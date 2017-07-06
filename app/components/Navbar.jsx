@@ -12,23 +12,22 @@ const NavbarComp = ({ auth }) => {
     <Navbar inverse collapseOnSelect>
       <Navbar.Header>
         <Navbar.Brand>
-          <h3 className='game-title'><Link to="/home" activeClassName="active">HOT SPOT</Link></h3>
+          <h3 className='game-title'><Link to="/home" activeClassName="active" style={{color: 'rgb(255, 187, 51)'}}>HOT SPOT</Link></h3>
         </Navbar.Brand>
         <Navbar.Toggle />
       </Navbar.Header>
       <Navbar.Collapse>
         <Nav>
-          <NavItem className='navItem' eventKey={1} ><Link className='nav-link' to="/home" activeClassName="active">Home</Link></NavItem>
-          <NavItem className='navItem' eventKey={2} ><Link className='nav-link' to="/rules" activeClassName="active">Game Rules</Link></NavItem>
-          <NavItem className='navItem' eventKey={3} ><Link className='nav-link' to="/lobby" activeClassName="active">Lobby</Link></NavItem>
-          <NavItem className='navItem' eventKey={4} ><Link className='nav-link' to="/aboutus" activeClassName="active">About Us</Link></NavItem>
+          <NavItem className='navItem' eventKey={1} ><Link to="/rules" className='nav-link' activeClassName="active">Game Rules</Link></NavItem>
+          <NavItem className='navItem' eventKey={2} ><Link to="/lobby" className='nav-link' activeClassName="active">Lobby</Link></NavItem>
+          <NavItem className='navItem' eventKey={3} ><Link to="/aboutus" className='nav-link' activeClassName="active">About Us</Link></NavItem>
         </Nav>
         <Nav pullRight>
-          {/*<NavItem>
+          <NavItem>
             <div className="login-navbar">
               <WhoAmI auth={auth} />
             </div>
-          </NavItem>*/}
+          </NavItem>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

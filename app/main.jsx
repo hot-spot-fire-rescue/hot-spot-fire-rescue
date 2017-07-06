@@ -30,7 +30,7 @@ const App = ({children}) => (
 render(
   <Router history={browserHistory}>
     <Route path="/" component={App}>
-      <IndexRedirect to="welcome"/>
+      <IndexRedirect to="home"/>
       {Game}
     </Route>
     <Route path='*' component={NotFound}/>
