@@ -130,7 +130,7 @@ class Board extends React.Component {
     let locationToAddSmoke = 0
     while (!isValid(locationToAddSmoke)) {
       locationToAddSmoke = Math.floor(Math.random() * 79) + 1
-      // locationToAddSmoke = 33
+      // locationToAddSmoke = 57
     }
 
     const boundariesObj = this.props.boundaries.toObject()
