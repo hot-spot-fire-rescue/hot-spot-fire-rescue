@@ -102,7 +102,6 @@ class Board extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const popups = nextProps.victimsPopups.concat(nextProps.playerPopups)
-    // also check player knockdown and explosions
     popups.forEach(popup => {
       if (popup.event === 'lost') Alert.error(popup.message)
       if (popup.event === 'success') Alert.success(popup.message)
@@ -324,12 +323,12 @@ class Board extends React.Component {
     let notEnoughPlayers = players.size < 2
     let spectating = this.state.userIsPlaying === false
     let doNotShowTheBoard = (notEnoughPlayers && !spectating) || gameHasStarted ===false
-    if (condition || spectating || this.state.gameStarted === false) {
-      handleCellClick = () => (console.log('It is not your turn yet.  Have patience, padawan'))
-      handleDoorSwitch = () => (console.log('It is not your turn yet.  Have patience, padawan'))
-      handleWallDamage = () => (console.log('It is not your turn yet.  Have patience, padawan'))
-      handleEndTurnClick = () => (console.log('It is not your turn yet.  Have patience, padawan'))
-    }
+    // if (condition || spectating || this.state.gameStarted === false) {
+    //   handleCellClick = () => (console.log('It is not your turn yet.  Have patience, padawan'))
+    //   handleDoorSwitch = () => (console.log('It is not your turn yet.  Have patience, padawan'))
+    //   handleWallDamage = () => (console.log('It is not your turn yet.  Have patience, padawan'))
+    //   handleEndTurnClick = () => (console.log('It is not your turn yet.  Have patience, padawan'))
+    // }
 
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
 
@@ -337,24 +336,24 @@ class Board extends React.Component {
       { doNotShowTheBoard
         ? (
           <div>
-          <h4>Add a Player</h4>
-            <div className="row col-lg-4 col-lg-offset-4">
+          <h4>Join the game (Min: 2 players, Max: 6 players)</h4>
+            <div className="row col-lg-4">
               <form onSubmit={this.onPlayerSubmit}>
-              <div className="form-group" style={{display: 'inline-block'}}>
-                <label htmlFor="avatar"></label>
-                  <img className='player' src= {this.state.value} style={{display: 'block', position: 'inherit'}}/>
-                  <select id="avatar" onChange={this.handleChange} value={this.state.value}>
-                    <option value="--">Select Your Avatar</option>
-                    <option value="/images/avatars/Jing.png">Jing</option>
-                    <option value="/images/avatars/Dalmatian.png">Dalmatian</option>
-                    <option value='/images/avatars/Firewoman.png'>Firewoman</option>
-                    <option value='/images/avatars/Sarah.png'>Schubsman</option>
-                    <option value='/images/avatars/YellowPuppy.png'>Golden Retriever Puppy</option>
-                    <option value='/images/avatars/FirefightingPotato.png'>Firefighting Potato</option>
-                    <option value='/images/avatars/Octocat.png'>Octocat</option>
-                  </select>
-              </div>
-                <IconButton tooltip="Use this avatar" type='submit' disabled={tooManyPlayers} style={{top: '6px'}}>
+                <div className="form-group" style={{display: 'inline-block'}}>
+                  {/*<label htmlFor="avatar">Select an avatar</label>*/}
+                    <img className='player' src={this.state.value} style={{display: 'inline-block'}}/>
+                    <select id="avatar" onChange={this.handleChange} value={this.state.value}>
+                      <option value="--">Select Your Avatar</option>
+                      <option value='/images/avatars/Firewoman.png'>Firewoman</option>
+                      <option value="/images/avatars/Dalmatian.png">Dalmatian</option>
+                      <option value="/images/avatars/Jing.png">Jing</option>
+                      <option value='/images/avatars/Sarah.png'>Schubsman</option>
+                      <option value='/images/avatars/YellowPuppy.png'>Golden Retriever Puppy</option>
+                      <option value='/images/avatars/FirefightingPotato.png'>Firefighting Potato</option>
+                      <option value='/images/avatars/Octocat.png'>Octocat</option>
+                    </select>
+                </div>
+                <IconButton type='submit' disabled={tooManyPlayers} style={{top: '6px'}}>
                   <PersonAdd />
                 </IconButton>
               </form>

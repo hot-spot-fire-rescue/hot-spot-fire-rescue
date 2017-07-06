@@ -67,10 +67,10 @@ export default class extends React.Component {
 
     return <Provider store={store}>
       <Grid className="main-grid">
-        <IconButton tooltip="SVG Icon" onClick={this.clear} style={{top: '6px'}}>
+        <IconButton onClick={this.clear} style={{top: '6px'}}>
           <Clear />
         </IconButton>
-        <span>Clear The Board</span>
+        <span>Reset the board</span>
         <Board fireRef={this.props.fireRef}/>
       </Grid>
     </Provider>
