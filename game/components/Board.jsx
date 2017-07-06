@@ -344,13 +344,17 @@ class Board extends React.Component {
                       <img className='player-select-preview' src={this.state.value} style={{display: 'inline-block'}}/>
                       <select id="avatar" onChange={this.handleChange} value={this.state.value}>
                         <option value="https://images.vexels.com/media/users/3/140260/isolated/preview/d173308adbddefddd5c71c6c59dfdded-firefighter-running-with-axe-by-vexels.png">Select Your Avatar</option>
-                        <option value='/images/avatars/Firewoman.png'>Firewoman</option>
-                        <option value="/images/avatars/Dalmatian.png">Dalmatian</option>
-                        <option value="/images/avatars/Jing.png">Jing</option>
-                        <option value='/images/avatars/Sarah.png'>Schubsman</option>
-                        <option value='/images/avatars/YellowPuppy.png'>Golden Retriever Puppy</option>
-                        <option value='/images/avatars/FirefightingPotato.png'>Firefighting Potato</option>
-                        <option value='/images/avatars/Octocat.png'>Octocat</option>
+                          <option value="/images/avatars/Jing.png">Jing</option>
+                          <option value="/images/avatars/Yiling2.png">Yiling</option>
+                          <option value="/images/avatars/Marina2.jpeg">Marina</option>
+                          <option value='/images/avatars/Ketti.jpg'>Ketti</option>
+                          <option value="/images/avatars/sriracha.jpg">Sriracha Fireperson</option>
+                          <option value="/images/avatars/Dalmatian.png">Dalmatian</option>
+                          <option value='/images/avatars/Firewoman.png'>Firewoman</option>
+                          <option value='/images/avatars/Sarah.png'>Schubsman</option>
+                          <option value='/images/avatars/YellowPuppy.png'>Golden Retriever Puppy</option>
+                          <option value='/images/avatars/FirefightingPotato.png'>Firefighting Potato</option>
+                          <option value='/images/avatars/Octocat.png'>Octocat</option>
                       </select>
                   </div>
                   <IconButton type='submit' disabled={tooManyPlayers} style={{top: '6px'}}>
@@ -358,8 +362,8 @@ class Board extends React.Component {
                   </IconButton>
                 </form>
 
-              <MobileTearSheet height={400} style={{position: 'absolute', right: '100px'}}>
-                <div style={{backgroundColor: 'rgba(85, 107, 47, 0.3)'}}>
+              <MobileTearSheet height={400} style={{position: 'absolute', right: '100px', borderRadius: '20px'}}>
+                <div style={{backgroundColor: 'rgba(85, 107, 47, 0.3)', borderRadius: '20px'}}>
                   <List>
                     <Subheader>Current Players</Subheader>
                     {
@@ -403,7 +407,7 @@ class Board extends React.Component {
                   }
                   return (
                     <div style={{paddingLeft: size}} id='wrapper2'>
-                      <img className='listPlayer' src= {player.avatar} /><p className='text'>{player.username}</p><p style={{position: 'relative', bottom: '2em', left: '1em'}}>AP: {player.ap}</p>
+                      <img className='listPlayer' src= {player.avatar} /><p className='text'>{player.username}</p><p style={{position: 'relative', bottom: '-1em', left: '1em'}}>AP: {player.ap}</p>
                       <div style={{paddingBottom: '20px'}} ></div>
                     </div>
 
@@ -420,10 +424,10 @@ class Board extends React.Component {
 
             <br></br>
             <div >
-              <RaisedButton type="button" className='endTurnButton btn btn-warning' type="submit" value="Signup" backgroundColor='red' disabled={condition} onClick={handleEndTurnClick}>End Turn</RaisedButton>
+              <RaisedButton className='endTurnButton' backgroundColor='rgb(255, 187, 51)' disabled={condition} onClick={handleEndTurnClick}>End Turn</RaisedButton>
             </div>
             <br></br>
-              <div className='playerAP'>{players.get(currentPlayerId).location===-1? <p style={{position: 'relative', bottom: '50px'}}>Hey there, {this.state.currentUsername}! Please choose your starting point outside of the burning house</p>:<h4>Player {currentPlayerId+1} has {remainingAp} AP left</h4>}</div>
+              <div className='playerAP'>{players.get(currentPlayerId).location===-1? <p style={{position: 'relative', bottom: '50px', right: '70em'}}>Hey there, {this.state.currentUsername}! Please choose your starting point outside of the burning house</p>:null}</div>
               <div className='scoreBoard' id="wrapper">
                 <img src='/images/hospital.png' style={{width: '100px', height: '100px', position: 'relative', left: '30px'}} /><h5 className="text"> {rescuedVictimCount()}/10 <p className='text2'>People Saved</p></h5>
                 <img src='/images/skull.png' style={{width: '100px', height: '100px'}} /><h5 className="text"> {lostVictimCount()}/4 <p className='text2'>People Lost</p></h5>

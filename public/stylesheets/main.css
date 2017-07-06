@@ -125,8 +125,11 @@
   line-height: 0px;
   width: 900px;
   height: 720px;
-  z-index: -1;
-  border-radius: 20px
+  z-index: 0;
+  border-radius: 20px;
+  position: relative;
+  top: 0em;
+  left: 15em;
 }
 
 .rule-background {
@@ -246,7 +249,6 @@
 
 .lobby-list {
   position: relative;
-  top: 80px;
   font-size: large;
 }
 
@@ -261,8 +263,8 @@
   text-align: center;
   font-size: x-large;
   font-family: 'Libre Franklin', sans-serif;
-  color: lightgray;
-  background-color: rgba(46, 51, 56, 0.8);
+  color: blanchedalmond;
+  background-color: rgb(255, 187, 51);
   bottom: 50px;
   border-radius: 20px 20px 20px 20px;
   margin-top: 1em;
@@ -553,10 +555,14 @@ s */
 }
 
 .playerList {
-  position: absolute;
+  position: relative;
+  top: 40em;
+  right: 40em;
+  z-index: 1;
+/*   position: absolute;
   top: 25em;
   left: -26px;
-  z-index: 1;
+  z-index: 1; */
 }
 
 .listPlayer {
@@ -575,13 +581,18 @@ s */
   display: flex;
   position: relative;
   float: right;
+  top: 73em;
+/*   display: flex;
+  position: relative;
+  float: right;
   bottom: -51em;
+ */
 }
 
 .playerAP {
   float: left;
   position: relative;
-  bottom: -62px;
+  bottom: -70px;
   left: 54px;
 }
 
@@ -612,7 +623,7 @@ s */
 #wrapper2 .text {
   visibility: hidden;
   position: relative;
-  bottom: 6em;
+  bottom: 7em;
 }
 
 #wrapper2:hover .text {
@@ -642,8 +653,11 @@ s */
   background-color: rgb(255, 187, 51);
   padding: 0px;
   position: relative;
-  top: 8em;
-  left: 36em;
+  top: 25em;
+  right: 41em;
+  color: rgb(255, 187, 51);
+/*   top: 8em;
+  left: 36em; */
 }
 
 .about-text-box {
