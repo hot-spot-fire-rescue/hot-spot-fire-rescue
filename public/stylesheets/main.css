@@ -276,9 +276,10 @@ s */
 
 .playerList {
   position: absolute;
-  bottom: 10px;
-  left: -20px;
+  top: 25em;
+  left: -26px;
   z-index: 1;
+
 }
 
 .listPlayer {
@@ -335,9 +336,23 @@ s */
 
 #wrapper2 .text {
   visibility: hidden;
+  position: relative;
+  bottom: 6em;
 }
 
 #wrapper2:hover .text {
   color: white;
   visibility: visible;
+  position: relative;
+  bottom: 6em;
+  background-color: rgba(85, 107, 47, 0.8);
+  font-weight:bold;
+  background-size: cover;
+  border-radius: 5px;
+}
+
+.endTurnButton {
+  position: relative;
+  top: 8em;
+  left: 36em}}
 }

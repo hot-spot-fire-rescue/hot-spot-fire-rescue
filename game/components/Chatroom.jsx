@@ -19,7 +19,6 @@ export function Chatroom(props) {
   let handleSubmit = props.handleSubmit
   let text = props.text
   let formTitle = props.formTitle
-
   return (
     <div>
       <MobileTearSheet style={{borderRadius: '20px'}}>
@@ -34,7 +33,6 @@ export function Chatroom(props) {
               return (
                 <div>
                   <ListItem
-                    leftAvatar={<Avatar src='https://maxcdn.icons8.com/Share/icon/Users//circled_user_female1600.png' />}
                     secondaryText={
                       <p>
                         <span style={{color: darkBlack}}>{messageUsername}</span> -- {messageText}

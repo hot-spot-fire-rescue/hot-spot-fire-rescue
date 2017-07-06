@@ -20,7 +20,8 @@ import {
   updatePlayer,
   pickUpOrDropVictim,
   checkForFireDamage,
-  isValidNextCell
+  isValidNextCell,
+  isValidStartingCell
 } from '../reducers/player'
 import {
   addNextPoi,
@@ -47,7 +48,7 @@ import FontIcon from 'material-ui/FontIcon'
 import IconButton from 'material-ui/IconButton'
 import PersonAdd from 'material-ui/svg-icons/social/person-add'
 import FlatButton from 'material-ui/FlatButton'
-
+import RaisedButton from 'material-ui/RaisedButton'
 import firebase from 'APP/fire'
 const fbAuth = firebase.auth()
 const fbDB = firebase.database()
@@ -354,7 +355,7 @@ class Board extends React.Component {
                     <option value='/images/avatars/Octocat.png'>Octocat</option>
                   </select>
               </div>
-                <IconButton tooltip="SVG Icon" type='submit' disabled={tooManyPlayers} style={{top:'6px'}}>
+                <IconButton tooltip="SVG Icon" type='submit' disabled={tooManyPlayers} style={{top: '6px'}}>
                   <PersonAdd />
                 </IconButton>
               </form>
@@ -370,7 +371,7 @@ class Board extends React.Component {
                       <ListItem
                         primaryText={player.username}
                         leftAvatar={<Avatar src={player.avatar} />}
-                        rightIcon={<DeleteIcon onClick= {()=> this.removePlayerCallback(idx)} disabled={player.id!==this.state.currentUserId }/>}
+                        rightIcon={<DeleteIcon onClick= {() => this.removePlayerCallback(idx)} disabled={player.id!==this.state.currentUserId }/>}
                       />
                     </div>
                   )
@@ -400,7 +401,7 @@ class Board extends React.Component {
                   }
                   return (
                     <div style={{paddingLeft: size}} id='wrapper2'>
-                      <img className='listPlayer' src= {player.avatar} /><p></p>
+                      <img className='listPlayer' src= {player.avatar} /><p className='text'>{player.username}</p><p style={{position: 'relative', bottom: '2em', left: '1em'}}>AP: {player.ap}</p>
                       <div style={{paddingBottom: '20px'}} ></div>
                     </div>
 
@@ -416,9 +417,11 @@ class Board extends React.Component {
             }
 
             <br></br>
-            <button disabled={condition} onClick={handleEndTurnClick}>End Turn</button>
+            <div >
+              <RaisedButton className='endTurnButton' backgroundColor='red' disabled={condition} onClick={handleEndTurnClick}>End Turn</RaisedButton>
+            </div>
             <br></br>
-              <div className='playerAP'><h4 >Player {currentPlayerId} has {remainingAp} AP left</h4></div>
+              <div className='playerAP'>{players.get(currentPlayerId).location===-1? <p style={{position: 'relative', bottom: '50px'}}>Hey there, {this.state.currentUsername}! Please choose your starting point outside of the burning house</p>:<h4>Player {currentPlayerId+1} has {remainingAp} AP left</h4>}</div>
               <div className='scoreBoard' id="wrapper">
                 <img src='/images/hospital.png' style={{width: '100px', height: '100px', position: 'relative', left: '30px'}} /><h5 className="text"> {rescuedVictimCount()}/10 <p className='text2'>People Saved</p></h5>
                 <img src='/images/skull.png' style={{width: '100px', height: '100px'}} /><h5 className="text"> {lostVictimCount()}/4 <p className='text2'>People Lost</p></h5>
@@ -439,9 +442,11 @@ class Board extends React.Component {
                   const player = players.find((val) => val.location === cell.cellNum)
                   const poi = victims.find((val) => val.location === cell.cellNum)
                   const fire = danger.get(cell.cellNum)
+                  console.log('CELL NUMMMMMM', cell.cellNum)
+                  console.log(players.get(currentPlayerId).location)
                   return (
                     <div key={cell.cellNum} id={cell.cellNum}
-                      className={isLegalCell(cell) ? 'cell-highlighted' : 'cell'}
+                      className={isLegalCell(cell) || (players.get(currentPlayerId).location===-1 && isValidStartingCell(cell.cellNum))? 'cell-highlighted' : 'cell'}
                       onClick={(evt) => handleCellClick(evt, cell)}>
                       {
                         fire
