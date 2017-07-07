@@ -14,10 +14,13 @@
 .gamePage {
   background-image: url("/images/lightblur.jpg");
   background-size: cover;
+  height:100vh;
 }
 
-.play-area {
-  margin: 20px;
+.center {
+    margin: auto;
+    width: 60%;
+    padding: 10px;
 }
 
 .panel-heading {
@@ -115,7 +118,7 @@
 
 .play-area {
   background-image: url('/images/game-page-background.jpeg');
-  background-size: cover
+  background-size: cover;
 }
 
 .gameboard {
@@ -127,9 +130,6 @@
   height: 720px;
   z-index: 0;
   border-radius: 20px;
-  position: relative;
-  top: 0em;
-  left: 15em;
 }
 
 .rule-background {
@@ -555,14 +555,7 @@ s */
 }
 
 .playerList {
-  position: relative;
-  top: 40em;
-  right: 40em;
-  z-index: 1;
-/*   position: absolute;
-  top: 25em;
-  left: -26px;
-  z-index: 1; */
+  float: right;
 }
 
 .listPlayer {
@@ -579,10 +572,6 @@ s */
 
 .scoreBoard {
   display: flex;
-  position: relative;
-  float: right;
-  top: 60em;
-  right: 2em;
 }
 
 .playerAP {
@@ -626,7 +615,7 @@ s */
   color: white;
   visibility: visible;
   position: relative;
-  bottom: 6em;
+  bottom: 0em;
   background-color: rgba(85, 107, 47, 0.8);
   font-weight: bold;
   background-size: cover;
@@ -644,16 +633,16 @@ s */
 }
 
 .endTurnButton {
-  position: absolute;
   margin-top: 30px;
   /* background-color: rgb(255, 187, 51); */
   padding: 0px;
-  top: 25em;
   /* color: rgb(255, 187, 51); */
   width: 150px;
   height: 100px;
   font-size: x-large;
-  z-index: 10
+  z-index: 10;
+  position: fixed;
+  left:45em;
 }
 
 .about-text-box {
