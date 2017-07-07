@@ -35,7 +35,8 @@
 .homepage-background {
   background-image: url('/images/homepage_bg.jpg');
   background-size: cover;
-  height: 100vh
+  overflow: hidden;
+  height: 900px;
 }
 
 #golobby {
@@ -106,7 +107,7 @@
   color: lightgray;
   /* background-color: rgba(46, 51, 56, 0.8); */
   cursor: pointer;
-  margin: 22% 45%;
+  margin: 22% 47%;
 }
 
 .google-login {
@@ -275,10 +276,10 @@
   position: absolute;
   left: 0px;
   width: 100%;
-  height: 88%;
+  height: 100%;
   z-index: 15;
   background-image: url('/images/lobby-background.jpg');
-  background-size: cover
+  background-size: 100%;
 }
 
 .navItem {
@@ -642,7 +643,7 @@ s */
   font-size: x-large;
   z-index: 10;
   position: fixed;
-  left:45em;
+  left: 46em;
 }
 
 .about-text-box {
