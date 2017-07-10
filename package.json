@@ -1,7 +1,7 @@
 {
-  "name": "firebase-test",
-  "version": "0.0.1",
-  "description": "A happy little burning skeleton.",
+  "name": "hot-spot-fire-rescue",
+  "version": "1.0.0",
+  "description": "An online version of the board game Flash Point: Fire Rescue.",
   "main": "index.js",
   "engines": {
     "node": ">= 7.0.0"

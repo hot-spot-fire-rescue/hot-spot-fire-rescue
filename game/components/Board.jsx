@@ -339,7 +339,7 @@ class Board extends React.Component {
         ? (
           <div className="row">
             <h3 className="text-center">Join the game (Min: 2 players, Max: 6 players)</h3>
-              <div className="col-md-4 col-md-offset-4">
+              <div className="col-md-4 col-md-offset-4" style={{'marginLeft': '38%'}}>
                 <form onSubmit={this.onPlayerSubmit}>
                   <div className="form-group" style={{display: 'inline-block'}}>
                       <img className='player-select-preview' src={this.state.value} style={{display: 'inline-block'}}/>
