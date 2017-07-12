@@ -96,6 +96,7 @@ class Board extends React.Component {
   }
 
   handleChange(event) {
+    event.preventDefault()
     this.setState({value: event.target.value})
   }
 
@@ -360,9 +361,9 @@ class Board extends React.Component {
                           <option value='/images/avatars/Octocat.png'>Octocat</option>
                       </select>
                   </div>
-                  <IconButton type='submit' disabled={tooManyPlayers} style={{top: '6px'}}>
-                    <PersonAdd />
-                  </IconButton>
+                  <button type='submit' disabled={tooManyPlayers} className='join-game-buttons btn btn-warning' style={{display: 'flex'}}>
+                    Click to Add Yourself!
+                  </button>
                 </form>
 
               <MobileTearSheet height={400} style={{position: 'absolute', right: '100px', borderRadius: '20px'}}>
