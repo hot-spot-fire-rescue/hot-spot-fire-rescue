@@ -6,7 +6,8 @@ const reducer = combineReducers({
   boundary: require('./boundary').default,
   danger: require('./danger').default,
   victim: require('./victim').default,
-  message: require('./message').default
+  message: require('./message').default,
+  game: require('./game').default
 })
 
 // This is a custom combineReducers function that first passes
