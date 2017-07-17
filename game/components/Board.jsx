@@ -80,11 +80,9 @@ class Board extends React.Component {
   }
 
   componentWillMount() {
-    console.log('on BOARD.JS', this.props)
     this.props.fireRef.once('value', (snapshot) => {
       if (!snapshot.exists()) this.props.fetchInitialData()
     })
-    console.log('on BOARD.JS', this.props)
   }
 
   componentDidMount() {
