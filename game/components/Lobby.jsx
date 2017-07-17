@@ -23,7 +23,6 @@ class Lobby extends React.Component {
   }
 
   onLobbySubmit() {
-    console.log(this)
     let currentNhere = Math.floor(Math.random() * (1000 - 6 + 1)) + 6
     this.setState({currentN: currentNhere})
     this.setState({gamesArray: this.state.gamesArray.concat(currentNhere)})
@@ -48,8 +47,6 @@ class Lobby extends React.Component {
               <img src="/images/avatars/YellowPuppy.png" style={{width: '70px', height: '70px'}}/> Add Lobby</button>
           </div>
         </div>
-        {console.log('CURRENT N', this.state.currentN)}
-        {console.log('CURRENT ARRAY', this.state.gamesArray)}
       </div>
     )
   }
