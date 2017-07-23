@@ -201,7 +201,6 @@ const dangerReducer = (state = initial, action) => {
     }
 
   case END_TURN:
-    console.log('location to add smoke', action.location)
     if (checkCellDangerStatus(state, action.location) !== 'fire') {
       if (checkCellDangerStatus(state, action.location) === 'smoke') {
         return state.set(action.location, fromJS({
@@ -247,7 +246,6 @@ const dangerReducer = (state = initial, action) => {
     return state
 
   case EXPLODE:
-    console.log('fire explosion location', action.location)
     const adjacentCells = [action.location - 10, action.location + 10, action.location + 1, action.location - 1]
 
     const toSetFire = []
@@ -274,14 +272,10 @@ const dangerReducer = (state = initial, action) => {
           adjToCheckSpread = adjToCheckSpread + locAdjust
         }
         if (openBoundary(currentLoc, adjToCheckSpread, action.boundaries) && isRealAdj(currentLoc, adjToCheckSpread)) {
-          console.log('loopcrrent:', currentLoc)
-          console.log('loopadj', adjToCheckSpread)
           toSetFire.push(adjToCheckSpread)
         }
       }
     }
-    console.log('explosion cause fire', toSetFire)
-    console.log('FIRE EXPLOSION DONE ~~~~~~~')
     let newState
     for (var j = 0; j < toSetFire.length; j++) {
       const fireLoc = Number(toSetFire[j])
@@ -298,4 +292,3 @@ const dangerReducer = (state = initial, action) => {
 }
 
 export default dangerReducer
-

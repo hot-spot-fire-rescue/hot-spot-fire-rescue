@@ -21,7 +21,7 @@ export class GameEnd extends React.Component {
     this.setState({open: false})
   }
 
-  
+
 
   render() {
     const actions = [
@@ -39,12 +39,11 @@ export class GameEnd extends React.Component {
       </Link>,
     ]
 
-    const image = (this.props.info[0] === 'GAME OVER' ) ? '/images/gameover.jpg' : '/images/source.gif'
-    console.log(this.props.info)
+    const image = (this.props.info[0] === 'GAME OVER') ? '/images/gameover.jpg' : '/images/source.gif'
     const customContentStyle = {
       backgroundImage: `url(${image})`,
-      backgrounRepeat: "no-repeat",
-      backgroundSize: "cover",
+      backgrounRepeat: 'no-repeat',
+      backgroundSize: 'cover',
     }
 
     return (
@@ -69,7 +68,7 @@ export class GameEnd extends React.Component {
 const mapStateToProps = (state, ownProps) => ({
   info: ownProps.info
 })
-//info is supposed to be an array like this: 
+//info is supposed to be an array like this:
 //['YOU WON', 'Great job! You rescued 7 victims from the burning buliding'] or ['GAME OVER', 'The building collapsed'] or ['GAME OVER', '4 victims were lost']
 
 export default connect(mapStateToProps)(GameEnd)

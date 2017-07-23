@@ -263,16 +263,15 @@ class Board extends React.Component {
       // Building collapsed!
       // console.info(`GAME OVER: The building collapsed`)
       info = results[1]
-      console.log('info', info)
     }
     if (this.lostVictimCount() > 3) {
       // Defeat - 4 victims were lost
-      console.info(`GAME OVER: 4 victims were lost`)
+      // console.info(`GAME OVER: 4 victims were lost`)
       info = results[2]
     }
     if (this.rescuedVictimCount > 6) {
       // Victory - 7 victims were rescued!
-      console.info(`YOU WON! You rescued 7 victims from the burning buliding`)
+      // console.info(`YOU WON! You rescued 7 victims from the burning buliding`)
       info = results[0]
     }
     return info
