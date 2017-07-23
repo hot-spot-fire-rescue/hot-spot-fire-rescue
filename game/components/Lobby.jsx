@@ -28,6 +28,7 @@ class Lobby extends React.Component {
     this.setState({gamesArray: this.state.gamesArray.concat(currentNhere)})
     this.setState({didUserAddNewLobby: true})
   }
+
   render() {
     return (
       <div className='lobby-background'>

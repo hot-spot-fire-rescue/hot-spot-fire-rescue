@@ -384,12 +384,12 @@ class Board extends React.Component {
                   </List>
                 </div>
               </MobileTearSheet>
-                <button type="button" className='join-game-buttons btn btn-warning' type="submit" value="join-game" disabled={players.size < 2} onClick={this.handleGameStatusChange}>
+                <button type="button" className='join-game-buttons btn btn-large btn-warning' type="submit" value="join-game" disabled={players.size < 2} onClick={this.handleGameStatusChange}>
                   Start/ Resume Game</button>
                 <br />
-                <button className='join-game-buttons btn btn-warning' type="submit" value="join-game" disabled={players.size < 1} onClick= {() => {
+                {/* <button className='join-game-buttons btn btn-warning' type="submit" value="join-game" disabled={players.size < 1} onClick= {() => {
                   this.setState({userIsPlaying: false})
-                }}> Just Spectating</button>
+                }}> Just Spectating</button> */}
                 { /* {
                   (players.size < 1)?<p>You cannot spectate an empty game</p>: null
                 } */ }
