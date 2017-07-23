@@ -33,10 +33,9 @@
 }
 
 .homepage-background {
-  background-image: url('/images/homepage_bg.jpg');
+  background-image: url(/images/homepage_bg.jpg);
   background-size: cover;
   overflow: hidden;
-  height: 900px;
 }
 
 #golobby {
