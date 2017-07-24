@@ -263,16 +263,15 @@ class Board extends React.Component {
       // Building collapsed!
       // console.info(`GAME OVER: The building collapsed`)
       info = results[1]
-      console.log('info', info)
     }
     if (this.lostVictimCount() > 3) {
       // Defeat - 4 victims were lost
-      console.info(`GAME OVER: 4 victims were lost`)
+      // console.info(`GAME OVER: 4 victims were lost`)
       info = results[2]
     }
     if (this.rescuedVictimCount > 6) {
       // Victory - 7 victims were rescued!
-      console.info(`YOU WON! You rescued 7 victims from the burning buliding`)
+      // console.info(`YOU WON! You rescued 7 victims from the burning buliding`)
       info = results[0]
     }
     return info
@@ -385,12 +384,12 @@ class Board extends React.Component {
                   </List>
                 </div>
               </MobileTearSheet>
-                <button type="button" className='join-game-buttons btn btn-warning' type="submit" value="join-game" disabled={players.size < 2} onClick={this.handleGameStatusChange}>
+                <button type="button" className='join-game-buttons btn btn-large btn-warning' type="submit" value="join-game" disabled={players.size < 2} onClick={this.handleGameStatusChange}>
                   Start/ Resume Game</button>
                 <br />
-                <button className='join-game-buttons btn btn-warning' type="submit" value="join-game" disabled={players.size < 1} onClick= {() => {
+                {/* <button className='join-game-buttons btn btn-warning' type="submit" value="join-game" disabled={players.size < 1} onClick= {() => {
                   this.setState({userIsPlaying: false})
-                }}> Just Spectating</button>
+                }}> Just Spectating</button> */}
                 { /* {
                   (players.size < 1)?<p>You cannot spectate an empty game</p>: null
                 } */ }

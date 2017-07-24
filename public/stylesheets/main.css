@@ -33,10 +33,9 @@
 }
 
 .homepage-background {
-  background-image: url('/images/homepage_bg.jpg');
+  background-image: url(/images/homepage_bg.jpg);
   background-size: cover;
   overflow: hidden;
-  height: 900px;
 }
 
 #golobby {
@@ -46,9 +45,7 @@
 }
 
 .panel {
-  /*text-align:center;*/
   position: relative;
-  /*left: 370px;*/
   left: 30%;
   top: 150px;
   width: 680px;
@@ -56,14 +53,12 @@
   font-size: x-large;
   margin-bottom: 20px;
   border-radius: 20px;
-  /*background-color: rgba(85, 107, 47, 0.8);*/
   background: rgba(46, 51, 56, 0.7)!important;
   border-color: rgba(46, 51, 56, 0.9)!important;
 }
 
 .form-group {
   position: relative;
-  /*left: 45px;*/
   margin-bottom: 12px;
 }
 
@@ -665,6 +660,10 @@ s */
   height: 100%;
   width: 100%;
   text-align: center;
+}
+
+.link {
+  color: white;
 }
 
 .join-game-buttons {
