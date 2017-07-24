@@ -22,7 +22,7 @@ export default <Route path="/home" component={({ children }) => children}>
   <IndexRoute component={WelcomePage} />
   <Route path='/home' component={WelcomePage} />
   <Route path='/aboutus' component={AboutPage} />
-  <Route path='/lobby/:id' component={LobbyPageWrapper} />
+  <Route path='/lobby' component={LobbyPageWrapper} />
   <Route path='/rules' component={RulePage} />
   <Route path='/game/:id' component={GamePageWrapper} />
 </Route>
