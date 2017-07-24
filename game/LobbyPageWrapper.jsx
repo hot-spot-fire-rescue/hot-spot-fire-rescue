@@ -7,5 +7,5 @@ import LobbyPage from './components/LobbyPage'
 
 export default ({params: {id}}) =>
     <div className='lobbyPage'>
-      <LobbyPage />
+      <LobbyPage fireRef={db.ref('lobbies').child(id)}/>
   </div>

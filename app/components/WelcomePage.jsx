@@ -8,7 +8,7 @@ const WelcomePage = () => {
   return (
     <div className='homepage-background'>
       <button className='enter-game btn btn-default'>
-        <Link to="/lobby" activeClassName="active">ENTER GAME</Link>
+        <Link to="/lobby/1" activeClassName="active">ENTER GAME</Link>
       </button>
     </div>
   )
