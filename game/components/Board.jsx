@@ -101,7 +101,7 @@ class Board extends React.Component {
   }
 
   handleLaptopView() {
-    this.setState({switchedToLaptopView: true})
+    this.setState({switchedToLaptopView: !this.state.switchedToLaptopView})
   }
 
   handleGameStatusChange() {
@@ -407,7 +407,9 @@ class Board extends React.Component {
           </div>
         ) : (
           <div className="row">
-            <button onClick={this.handleLaptopView} className='btn-link' style={{ float: 'right', paddingTop: '10px' }}><p> Switch to Laptop View</p></button>
+            {
+              !this.state.switchedToLaptopView?(<button onClick={this.handleLaptopView} className='btn-link' style={{ float: 'right', paddingTop: '10px' }}><p> Switch to Laptop View</p></button>):(<button onClick={this.handleLaptopView} className='btn-link' style={{ float: 'right', paddingTop: '10px' }}><p> Switch to Desktop View</p></button>)
+            }
             <div className="col-lg-12">
               <div style= {{paddingBottom: '20px'}}>
                 {players.get(currentPlayerId).location===-1? <p>Hey there, {this.state.currentUsername}! Please choose your starting point outside of the burning house</p>:<p></p>}
