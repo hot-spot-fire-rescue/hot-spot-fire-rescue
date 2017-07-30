@@ -20,13 +20,17 @@ class Lobby extends React.Component {
     }
 
     this.onLobbySubmit=this.onLobbySubmit.bind(this)
+    this.removeGameCallback= this.removeGameCallback.bind(this)
   }
 
   onLobbySubmit() {
-    let currentNhere = Math.floor(Math.random() * (1000 - 6 + 1)) + 6
-    this.setState({currentN: currentNhere})
-    this.setState({gamesArray: this.state.gamesArray.concat(currentNhere)})
-    this.setState({didUserAddNewLobby: true})
+    this.props.createAGame(this.state.gamesArray.length + this.props.games.size+1)
+  }
+
+  removeGameCallback(event) {
+    const removeAGame = this.props.removeAGame
+    event.stopPropagation()
+    removeAGame(event.target.id)
   }
 
   render() {
@@ -40,8 +44,19 @@ class Lobby extends React.Component {
           </p>
           <div className ='lobby-list text-center'>
             {
-              (this.state.didUserAddNewLobby===true)?
-                <p>Have you and your friends paste this link to your URL bar: hotspot-boardgame.com/game/{this.state.currentN} </p>: this.state.gamesArray.map((game) => (<h2><Link key={game} className='lobby-link' to={`/game/${game}`}>GAME  LOBBY: {game}</Link></h2>))
+               this.state.gamesArray.map((game) => (<h2><Link key={game} className='lobby-link' to={`/game/${game}`}>GAME  LOBBY: {game}</Link></h2>))
+            }
+            {
+               (this.props.games.size>0)?
+               this.props.games.map((game) => {
+                 let idx= this.props.games.indexOf(game)
+                 return (
+                 <div key={idx}><h2><Link className='lobby-link' to={`/game/${game.id}`}>GAME  LOBBY: {game.id}</Link></h2>
+                   {/* <button className="btn btn-default" name="delete" id={idx} onClick={this.removeGameCallback}>X</button> */}
+                 </div>)
+               })
+
+                 :<div></div>
 
             }
             <button className='add-lobby' type="button" onClick={this.onLobbySubmit}>
@@ -53,11 +68,11 @@ class Lobby extends React.Component {
   }
 }
 
-const mapStateToProps = ({games}) => ({
-  games: games
+const mapStateToProps = ({game}) => ({
+  games: game.games
 })
 const mapDispatchToProps = dispatch => ({
-  createGame: (id) => {
+  createAGame: (id) => {
     dispatch(createGame(id))
   },
   removeAGame: (id) => {
@@ -65,4 +80,4 @@ const mapDispatchToProps = dispatch => ({
   }
 })
 
-export default Lobby
+export default connect(mapStateToProps, mapDispatchToProps)(Lobby)

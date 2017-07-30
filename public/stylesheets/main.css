@@ -117,6 +117,14 @@
   background-size: cover;
 }
 
+.play-areaLaptop{
+  background-image: url('/images/game-page-background.jpeg');
+  background-size: cover;
+  -moz-transform: scale(0.75, 0.75); /* Moz-browsers */
+  zoom: 0.75; /* Other non-webkit browsers */
+  zoom: 75%; /* Webkit browsers */
+}
+
 .gameboard {
   background-image: url('/images/board.jpg');
   background-size: 900px 720px;

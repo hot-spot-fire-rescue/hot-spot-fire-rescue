@@ -61,7 +61,8 @@ class Board extends React.Component {
       currentUsername: '',
       userIsPlaying: true,
       gameStarted: false,
-      value: 'https://images.vexels.com/media/users/3/140260/isolated/preview/d173308adbddefddd5c71c6c59dfdded-firefighter-running-with-axe-by-vexels.png'
+      value: 'https://images.vexels.com/media/users/3/140260/isolated/preview/d173308adbddefddd5c71c6c59dfdded-firefighter-running-with-axe-by-vexels.png',
+      switchedToLaptopView: false
     }
     this.isLegalCell = this.isLegalCell.bind(this)
     this.handleCellClick = this.handleCellClick.bind(this)
@@ -77,6 +78,7 @@ class Board extends React.Component {
     this.removePlayerCallback = this.removePlayerCallback.bind(this)
     this.handleGameStatusChange=this.handleGameStatusChange.bind(this)
     this.handleChange= this.handleChange.bind(this)
+    this.handleLaptopView= this.handleLaptopView.bind(this)
   }
 
   componentWillMount() {
@@ -96,6 +98,10 @@ class Board extends React.Component {
   handleChange(event) {
     event.preventDefault()
     this.setState({value: event.target.value})
+  }
+
+  handleLaptopView() {
+    this.setState({switchedToLaptopView: !this.state.switchedToLaptopView})
   }
 
   handleGameStatusChange() {
@@ -333,8 +339,11 @@ class Board extends React.Component {
     }
 
     const remainingAp = players.get(currentPlayerId) ? players.get(currentPlayerId).ap : 0
-
-    return <div className="play-area">
+    let playAreaStyle= "play-area"
+    if (this.state.switchedToLaptopView===true) {
+      playAreaStyle= "play-areaLaptop"
+    }
+    return <div className= {playAreaStyle}>
       { doNotShowTheBoard
         ? (
           <div className="row">
@@ -398,8 +407,13 @@ class Board extends React.Component {
           </div>
         ) : (
           <div className="row">
+            {
+              !this.state.switchedToLaptopView?(<button onClick={this.handleLaptopView} className='btn-link' style={{ float: 'right', paddingTop: '10px' }}><p> Switch to Laptop View</p></button>):(<button onClick={this.handleLaptopView} className='btn-link' style={{ float: 'right', paddingTop: '10px' }}><p> Switch to Desktop View</p></button>)
+            }
             <div className="col-lg-12">
-              {players.get(currentPlayerId).location===-1? <p style={{paddingBottom: '20px'}}>Hey there, {this.state.currentUsername}! Please choose your starting point outside of the burning house</p>:<p style={{paddingBottom: '20px'}}></p>}
+              <div style= {{paddingBottom: '20px'}}>
+                {players.get(currentPlayerId).location===-1? <p>Hey there, {this.state.currentUsername}! Please choose your starting point outside of the burning house</p>:<p></p>}
+              </div>
               <br></br>
               <div className="row">
             {

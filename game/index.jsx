@@ -7,7 +7,7 @@ import AboutPage from 'APP/app/components/AboutPage'
 
 import Signup from 'APP/app/components/Signup'
 import Signin from 'APP/app/components/Signin'
-import Lobby from './components/Lobby'
+import LobbyPageWrapper from './LobbyPageWrapper'
 import RulePage from './components/Rulepage'
 import GamePageWrapper from './GamePageWrapper'
 
@@ -22,7 +22,7 @@ export default <Route path="/home" component={({ children }) => children}>
   <IndexRoute component={WelcomePage} />
   <Route path='/home' component={WelcomePage} />
   <Route path='/aboutus' component={AboutPage} />
-  <Route path='/lobby' component={Lobby} />
+  <Route path='/lobby' component={LobbyPageWrapper} />
   <Route path='/rules' component={RulePage} />
   <Route path='/game/:id' component={GamePageWrapper} />
 </Route>

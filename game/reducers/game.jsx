@@ -3,9 +3,9 @@ import {List} from 'immutable'
 // -- // -- // Actions // -- // -- //
 
 export const CREATE_GAME = 'CREATE_GAME'
-export const createGame = (name) => ({
+export const createGame = (id) => ({
   type: CREATE_GAME,
-  name,
+  id,
 })
 
 export const REMOVE_GAME = 'REMOVE_GAME'
@@ -15,9 +15,9 @@ export const removeGame = (gameIndex) => ({
 })
 
 export const UPDATE_GAME = 'UPDATE_GAME'
-export const updateGame = (name) => ({
+export const updateGame = (id) => ({
   type: UPDATE_GAME,
-  name
+  id
 })
 
 // -- // -- // Helpers // -- // -- //
@@ -35,7 +35,7 @@ const gameReducer = (state = initial, action) => {
   case CREATE_GAME:
     return {...state,
       games: state.games.push({
-        name: action.name,
+        id: action.id,
         error: null
       })
     }
@@ -46,11 +46,12 @@ const gameReducer = (state = initial, action) => {
     }
   case UPDATE_GAME:
     return {...state,
-      games: state.games.set(action.name, {
-        ...state.games.get(action.name)
+      games: state.games.set(action.id, {
+        ...state.games.get(action.id)
       })
     }
   }
+  return state
 }
 
 export default gameReducer
