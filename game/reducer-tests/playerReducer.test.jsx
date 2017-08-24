@@ -15,11 +15,11 @@ import mainReducer from '../reducers/index'
 
 describe('createPlayer', () => {
   it('returns properly formatted action', () => {
-    const testId='testId'
-    const testAp=5
-    const testLocation= -1
-    const testAvatar= 'someavatar'
-    const someUsername= 'someUsername'
+    const testId = 'testId'
+    const testAp = 5
+    const testLocation = -1
+    const testAvatar = 'someavatar'
+    const someUsername = 'someUsername'
     expect(createPlayer(testId, testAp, testLocation, testAvatar, someUsername)).to.be.deep.equal({
       type: 'CREATE_PLAYER',
       id: testId,
